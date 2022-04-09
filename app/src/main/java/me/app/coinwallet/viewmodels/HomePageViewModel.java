@@ -1,9 +1,12 @@
-package me.app.coinwallet;
+package me.app.coinwallet.viewmodels;
 
 import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import me.app.coinwallet.LocalWallet;
+import me.app.coinwallet.LocalWalletListener;
+import me.app.coinwallet.WalletNotificationType;
 import org.bitcoinj.core.Transaction;
 
 import java.util.List;

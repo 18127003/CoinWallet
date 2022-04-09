@@ -9,9 +9,9 @@ import android.os.Bundle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import me.app.coinwallet.HomePageViewModel;
+import me.app.coinwallet.viewmodels.HomePageViewModel;
 import me.app.coinwallet.R;
-import me.app.coinwallet.TxHistoryAdapter;
+import me.app.coinwallet.adapters.TxHistoryAdapter;
 
 public class HomeActivity extends AppCompatActivity {
 

@@ -1,8 +1,12 @@
-package me.app.coinwallet;
+package me.app.coinwallet.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import me.app.coinwallet.LocalWallet;
+import me.app.coinwallet.LocalWalletListener;
+import me.app.coinwallet.R;
+import me.app.coinwallet.WalletNotificationType;
 
 public class SetupPageViewModel extends ViewModel implements LocalWalletListener {
     LocalWallet localWallet = LocalWallet.getInstance();

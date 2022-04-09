@@ -1,4 +1,4 @@
-package me.app.coinwallet;
+package me.app.coinwallet.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import me.app.coinwallet.R;
 import org.bitcoinj.core.Transaction;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TxHistoryAdapter extends RecyclerView.Adapter<TxHistoryAdapter.ViewHolder> {

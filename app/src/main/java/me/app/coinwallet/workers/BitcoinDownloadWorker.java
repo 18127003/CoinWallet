@@ -1,4 +1,4 @@
-package me.app.coinwallet;
+package me.app.coinwallet.workers;
 
 import android.content.Context;
 import android.os.Handler;
@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.work.ForegroundInfo;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+import me.app.coinwallet.LocalWallet;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;

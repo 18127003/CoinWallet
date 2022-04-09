@@ -8,10 +8,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-import me.app.coinwallet.BitcoinDownloadWorker;
+import me.app.coinwallet.workers.BitcoinDownloadWorker;
 import me.app.coinwallet.R;
-import me.app.coinwallet.SetupPageViewModel;
-import me.app.coinwallet.activities.HomeActivity;
+import me.app.coinwallet.viewmodels.SetupPageViewModel;
 
 public class MainActivity extends AppCompatActivity {
     private TextView sync;
