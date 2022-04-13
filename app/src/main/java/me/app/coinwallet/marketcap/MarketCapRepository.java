@@ -4,8 +4,8 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import androidx.room.InvalidationTracker;
 import com.google.common.base.Stopwatch;
+import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.Moshi;
-import me.app.coinwallet.Configuration;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.WalletApplication;
 import okhttp3.*;
@@ -85,12 +85,9 @@ public class MarketCapRepository {
                 Log.e("HD","Market cap request success");
                 try {
                     if (response.isSuccessful()) {
-                        Log.e("HD","Response: "+response.code());
                         List<MarketCapEntry> data = marketCapHost.parse(response.body().source());
-                        Log.e("HD","Data size: "+data.size());
                         for (final MarketCapEntry marketCapEntry : data)
                         {
-                            Log.e("HD",String.valueOf(marketCapEntry.getCurrentPrice()));
                             dao.insertOrUpdate(marketCapEntry);
                         }
 
@@ -98,13 +95,14 @@ public class MarketCapRepository {
                         watch.stop();
                         log.info("fetched exchange rates from {}, took {}", marketCapHost.url("usd"), watch);
                     } else {
-                        Log.e("HD","Response: "+response.message());
                         log.warn("http status {} {} when fetching exchange rates from {}", response.code(),
                                 response.message(), marketCapHost.url("usd"));
                     }
                 } catch (final IOException x) {
                     Log.e("HD",x.getMessage());
                     log.warn("problem fetching exchange rates from " + marketCapHost.url("usd"), x);
+                } catch (final JsonDataException j) {
+                    Log.e("HD",j.getMessage());
                 }
             }
 

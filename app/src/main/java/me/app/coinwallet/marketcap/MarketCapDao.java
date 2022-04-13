@@ -16,9 +16,9 @@ public interface MarketCapDao {
     @Query("SELECT * FROM market_caps ORDER BY name COLLATE LOCALIZED ASC")
     LiveData<List<MarketCapEntry>> findAll();
 
-    @Query("SELECT * FROM market_caps WHERE name LIKE '%' || :constraint || '%' ORDER BY name " +
+    @Query("SELECT * FROM market_caps WHERE name LIKE '%' || :filter || '%' ORDER BY name " +
             "COLLATE LOCALIZED ASC")
-    LiveData<List<MarketCapEntry>> findByConstraint(String constraint);
+    LiveData<List<MarketCapEntry>> findByFilter(String filter);
 
     @Query("SELECT * FROM market_caps WHERE name = :name")
     MarketCapEntry findByName(String name);

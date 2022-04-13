@@ -5,7 +5,6 @@ import android.util.Log;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.ViewModel;
 import me.app.coinwallet.WalletApplication;
 import me.app.coinwallet.marketcap.MarketCapDao;
 import me.app.coinwallet.marketcap.MarketCapEntry;
@@ -36,7 +35,7 @@ public class MarketCapViewModel extends AndroidViewModel {
         if (underlyingMarketCapLiveData != null)
             marketCapLiveData.removeSource(underlyingMarketCapLiveData);
         if (filter != null) {
-            underlyingMarketCapLiveData = marketCapDao.findByConstraint(filter.toLowerCase(Locale.US));
+            underlyingMarketCapLiveData = marketCapDao.findByFilter(filter.toLowerCase(Locale.US));
             isFiltered = true;
         } else {
             Log.e("HD","Market cap find all");

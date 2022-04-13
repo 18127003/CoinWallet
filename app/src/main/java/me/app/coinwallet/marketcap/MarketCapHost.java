@@ -1,10 +1,7 @@
 package me.app.coinwallet.marketcap;
 
 import android.util.Log;
-import com.squareup.moshi.Json;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Types;
+import com.squareup.moshi.*;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okio.BufferedSource;
@@ -53,25 +50,14 @@ public class MarketCapHost {
         return builder.build();
     }
 
-    public List<MarketCapEntry> parse(final BufferedSource jsonSource) throws IOException {
+    public List<MarketCapEntry> parse(final BufferedSource jsonSource) throws IOException, JsonDataException {
         Type responseType = Types.newParameterizedType(List.class, MarketCapJson.class);
         final JsonAdapter<List<MarketCapJson>> jsonAdapter = moshi.adapter(responseType);
-        try{
-            final List<MarketCapJson> jsonResponse = jsonAdapter.fromJson(jsonSource);
-            Log.e("HD","Parse size: "+jsonResponse.size());
-            final List<MarketCapEntry> result = new ArrayList<>(jsonResponse.size());
-            for (MarketCapJson json : jsonResponse) {
-                result.add(new MarketCapEntry(SOURCE, json));
-            }
-            return result;
-        } catch (Exception e){
-            Log.e("HD","Exception: "+e);
+        final List<MarketCapJson> jsonResponse = jsonAdapter.fromJson(jsonSource);
+        final List<MarketCapEntry> result = new ArrayList<>(jsonResponse.size());
+        for (MarketCapJson json : jsonResponse) {
+            result.add(new MarketCapEntry(SOURCE, json));
         }
-     return null;
-    }
-
-
-    private static class Response {
-        public Map<String, MarketCapJson> caps;
+        return result;
     }
 }
