@@ -13,7 +13,7 @@ import me.app.coinwallet.viewmodels.HomePageViewModel;
 import me.app.coinwallet.R;
 import me.app.coinwallet.adapters.TxHistoryAdapter;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
     private TextView balance;
     private Button sendButton;
