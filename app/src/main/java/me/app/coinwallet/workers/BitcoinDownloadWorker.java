@@ -22,8 +22,6 @@ import java.util.Date;
 
 public class BitcoinDownloadWorker extends Worker {
 
-    private static final NetworkParameters PARAMETER = TestNet3Params.get();
-
     public BitcoinDownloadWorker(
             @NonNull Context context,
             @NonNull WorkerParameters parameters) {
@@ -42,7 +40,6 @@ public class BitcoinDownloadWorker extends Worker {
 
     private void download() {
         LocalWallet wallet = LocalWallet.getInstance();
-        wallet.setParameters(PARAMETER);
-        wallet.initWallet(getApplicationContext().getFilesDir());
+        wallet.initWallet();
     }
 }

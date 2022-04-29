@@ -1,6 +1,7 @@
 package me.app.coinwallet.activities;
 
 import android.content.Intent;
+import android.util.Log;
 import android.widget.TextView;
 import android.os.Bundle;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,10 +19,14 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         this.application = getWalletApplication();
         setContentView(R.layout.activity_main);
+        Intent comingIntent = getIntent();
+        String label = comingIntent.getStringExtra("label");
+        String mnemonic = comingIntent.getStringExtra("mnemonic");
         sync = findViewById(R.id.sync);
         status = findViewById(R.id.status);
         final SetupPageViewModel walletViewModel = new ViewModelProvider(this)
                 .get(SetupPageViewModel.class);
+        walletViewModel.initWallet(label, mnemonic);
         walletViewModel.getSyncProgress().observe(this, s -> sync.setText(s));
         walletViewModel.getStatus().observe(this, (i)->{
             status.setText(i);
@@ -30,6 +35,6 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-
+        walletViewModel.startSync();
     }
 }

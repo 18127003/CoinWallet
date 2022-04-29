@@ -18,6 +18,7 @@ public class HomeActivity extends BaseActivity {
     private TextView balance;
     private Button sendButton;
     private Button utxoButton;
+    private Button extractMnemonicBtn;
     private TextView address;
     private EditText sendAmount;
     private EditText sendAddress;
@@ -35,6 +36,7 @@ public class HomeActivity extends BaseActivity {
         sendAmount = findViewById(R.id.send_text);
         sendAddress = findViewById(R.id.send_address_text);
         RecyclerView history = findViewById(R.id.tx_history);
+        extractMnemonicBtn = findViewById(R.id.extract_mnemonic_button);
         history.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         TxHistoryAdapter historyAdapter = new TxHistoryAdapter();
         history.setAdapter(historyAdapter);
@@ -42,6 +44,7 @@ public class HomeActivity extends BaseActivity {
         Log.e("HD",address.getText().toString());
         sendButton.setOnClickListener(v -> viewModel.send(sendAddress.getText().toString(), sendAmount.getText().toString()));
         utxoButton.setOnClickListener(v->viewModel.checkUxto());
+        extractMnemonicBtn.setOnClickListener(v->viewModel.extractMnemonic(getApplicationContext().getFilesDir()));
         viewModel.getBalance().observe(this, s->balance.setText(s));
         viewModel.getHistory().observe(this, historyAdapter::updateHistory);
     }

@@ -9,6 +9,10 @@ import me.app.coinwallet.LocalWalletListener;
 import me.app.coinwallet.WalletNotificationType;
 import org.bitcoinj.core.Transaction;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +33,21 @@ public class HomePageViewModel extends ViewModel implements LocalWalletListener 
             localWallet.send(sendAddress, doubleValue);
         } catch (NumberFormatException e){
             Log.e("HD","Send amount not in number format");
+        }
+    }
+
+    public void extractMnemonic(File root){
+        String mnemonicCode = localWallet.wallet().getKeyChainSeed().getMnemonicString();
+        Log.e("HD","Mnemonic code: "+mnemonicCode);
+        File file = new File(root,"mnemonic");
+        try {
+            FileOutputStream fis = new FileOutputStream(file);
+            fis.write(mnemonicCode.getBytes());
+            fis.close();
+        } catch (FileNotFoundException ex){
+            Log.e("HD","File not found "+ file.getName());
+        } catch (IOException e){
+            Log.e("HD","File write fail "+file.getName());
         }
     }
 

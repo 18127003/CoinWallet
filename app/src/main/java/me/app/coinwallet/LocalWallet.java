@@ -7,7 +7,9 @@ import org.bitcoinj.core.*;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.script.Script;
+import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.SendRequest;
+import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
 import java.io.File;
 import java.math.BigDecimal;
@@ -15,7 +17,6 @@ import java.util.*;
 
 public class LocalWallet {
     private static LocalWallet _instance = null;
-    private static final String WALLET_FILE_PREFIX = "_wak";
 
     private final List<LocalWalletListener> observers = new ArrayList<>();
 
@@ -36,6 +37,7 @@ public class LocalWallet {
         return _instance;
     }
 
+    private File directory;
     private WalletAppKit walletAppKit;
     private NetworkParameters parameters;
 
@@ -43,13 +45,15 @@ public class LocalWallet {
         this.parameters = parameters;
     }
 
+    public void setDirectory(File directory) { this.directory = directory; }
+
     public Address getAddress(){
         Log.e("HD","CRA: "+walletAppKit.wallet().currentReceiveAddress().toString());
         Log.e("HD","CCA: "+walletAppKit.wallet().currentChangeAddress().toString());
         for(ECKey k: walletAppKit.wallet().getIssuedReceiveKeys()){
             Log.e("HD","IRK: "+Address.fromKey(parameters,k, Script.ScriptType.P2PKH));
         }
-        return Address.fromKey(parameters, walletAppKit.wallet().getImportedKeys().get(0), Script.ScriptType.P2PKH);
+        return walletAppKit.wallet().currentReceiveAddress();
     }
 
     public String getPlainBalance(){
@@ -59,6 +63,10 @@ public class LocalWallet {
     public void addKey(){
         String mnemonic = walletAppKit.wallet().getKeyChainSeed().getMnemonicString();
         Log.e("HD", mnemonic);
+    }
+
+    public Wallet wallet(){
+        return walletAppKit.wallet();
     }
 
     public List<Transaction> history(){
@@ -126,16 +134,16 @@ public class LocalWallet {
         });
     }
 
-    public void initWallet(File dir){
-        walletAppKit = new WalletAppKit(parameters, dir, WALLET_FILE_PREFIX) {
+    public boolean hasChainFileDownloaded(String prefix){
+        File chainFile = new File(directory, prefix + ".spvchain");
+        return chainFile.exists();
+    }
+
+    public void configWallet(String prefix){
+        walletAppKit = new WalletAppKit(parameters, directory, prefix) {
             @Override
             protected void onSetupCompleted() {
                 Log.e("HD", "Set up complete");
-                if (wallet().getImportedKeys().size() < 1) {
-                    wallet().importKey(new ECKey());
-                    Log.e("HD",wallet().getImportedKeys().get(0).getPrivateKeyAsHex());
-                }
-
                 notifyObservers(WalletNotificationType.SETUP_COMPLETED, "");
             }
 
@@ -154,8 +162,22 @@ public class LocalWallet {
         };
         walletAppKit.setDownloadListener(BTCListener);
         walletAppKit.setBlockingStartup(false);
+    }
+
+    public void initWallet(){
         walletAppKit.startAsync();
         walletAppKit.awaitRunning();
         addListeners();
+
+    }
+
+    public void restoreWallet(String mnemonic){
+        try{
+            String passphrase = "";
+            long creationTime = 1409478661L;
+            walletAppKit.restoreWalletFromSeed(new DeterministicSeed(mnemonic, null, passphrase, creationTime));
+        } catch (UnreadableWalletException ex){
+            Log.e("HD","Unreadable wallet");
+        }
     }
 }

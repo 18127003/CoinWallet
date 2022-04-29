@@ -5,5 +5,6 @@
 	<string name="balance_label">Balance</string>
 	<string name="send_button_label">Send</string>
 	<string name="check_utxo_button_label">Check utxo</string>
+	<string name="extract_mnemonic_button_label">Extract mnemonic</string>
 	<string name="hint_send_amount">0.0001</string>
 </resources>
