@@ -50,9 +50,6 @@ public class LocalWallet {
     public Address getAddress(){
         Log.e("HD","CRA: "+walletAppKit.wallet().currentReceiveAddress().toString());
         Log.e("HD","CCA: "+walletAppKit.wallet().currentChangeAddress().toString());
-        for(ECKey k: walletAppKit.wallet().getIssuedReceiveKeys()){
-            Log.e("HD","IRK: "+Address.fromKey(parameters,k, Script.ScriptType.P2PKH));
-        }
         return walletAppKit.wallet().currentReceiveAddress();
     }
 

@@ -12,4 +12,6 @@
 	<string name="choose_wallet">Choose your wallet</string>
 	<string name="channel_name">Notification channel</string>
 	<string name="channel_description">Coin wallet notification channel</string>
+	<string name="positive_dialog_button">Yes</string>
+	<string name="negative_dialog_button">No</string>
 </resources>
