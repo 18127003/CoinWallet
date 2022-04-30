@@ -9,6 +9,8 @@ import org.bitcoinj.script.Script;
 import java.util.concurrent.TimeUnit;
 
 public final class Constants {
+    public static final String NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL_ID";
+
     public static final NetworkParameters NETWORK_PARAMETERS = TestNet3Params.get();
 
     public static final Script.ScriptType DEFAULT_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2WPKH;

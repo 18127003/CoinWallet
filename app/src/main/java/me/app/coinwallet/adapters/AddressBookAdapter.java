@@ -8,49 +8,49 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.R;
-import me.app.coinwallet.wallets.WalletInfoEntry;
+import me.app.coinwallet.addressbook.AddressBookEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WalletInfoAdapter extends RecyclerView.Adapter<WalletInfoAdapter.ViewHolder> {
+public class AddressBookAdapter extends RecyclerView.Adapter<AddressBookAdapter.ViewHolder> {
 
-    private List<WalletInfoEntry> walletInfos;
+    private List<AddressBookEntry> addressBookEntries;
     private final OnItemClickListener onClickListener;
 
-    public WalletInfoAdapter(OnItemClickListener onClickListener){
-        walletInfos = new ArrayList<>();
+    public AddressBookAdapter(OnItemClickListener onClickListener){
+        addressBookEntries = new ArrayList<>();
         this.onClickListener = onClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.wallet_info_card,parent,false);
+        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.address_book_card,parent,false);
         return new ViewHolder(rootView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        WalletInfoEntry entry = walletInfos.get(position);
+        AddressBookEntry entry = addressBookEntries.get(position);
         holder.getLabel().setText(entry.getLabel());
         holder.getLabel().setOnClickListener(v -> onClickListener.onClick(entry));
     }
 
     @Override
     public int getItemCount() {
-        return walletInfos.size();
+        return addressBookEntries.size();
     }
 
-    public void updateWalletInfos(final List<WalletInfoEntry> newWalletInfos){
-        Log.e("HD", "Update wallet info "+newWalletInfos.size());
-        walletInfos.clear();
-        walletInfos = newWalletInfos;
+    public void updateAddressBook(final List<AddressBookEntry> newAddressBooks){
+        Log.e("HD", "Update address book " + newAddressBooks.size());
+        addressBookEntries.clear();
+        addressBookEntries = newAddressBooks;
         notifyDataSetChanged();
     }
 
     public interface OnItemClickListener{
-        void onClick(WalletInfoEntry walletInfoEntry);
+        void onClick(AddressBookEntry addressBookEntry);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -60,7 +60,7 @@ public class WalletInfoAdapter extends RecyclerView.Adapter<WalletInfoAdapter.Vi
             super(view);
             // Define click listener for the ViewHolder's View
 
-            label = view.findViewById(R.id.wallet_info_label);
+            label = view.findViewById(R.id.address_label);
         }
 
         public TextView getLabel() {

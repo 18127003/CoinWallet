@@ -1,26 +1,23 @@
 package me.app.coinwallet.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import me.app.coinwallet.LocalWallet;
-import me.app.coinwallet.LocalWalletListener;
 import me.app.coinwallet.R;
 import me.app.coinwallet.WalletNotificationType;
 import me.app.coinwallet.workers.BitcoinDownloadWorker;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.params.TestNet3Params;
 
-public class SetupPageViewModel extends AndroidViewModel implements LocalWalletListener {
+import java.io.File;
+
+public class SetupPageViewModel extends AndroidViewModel implements LocalWallet.EventListener {
     LocalWallet localWallet = LocalWallet.getInstance();
-    private static final NetworkParameters PARAMETERS = TestNet3Params.get();
     private final MutableLiveData<String> syncProgress = new MutableLiveData<>();
     private final MutableLiveData<Integer> status = new MutableLiveData<>();
 
@@ -35,9 +32,9 @@ public class SetupPageViewModel extends AndroidViewModel implements LocalWalletL
         return status;
     }
 
-    public void initWallet(String label, String mnemonic){
-        localWallet.setDirectory(getApplication().getFilesDir());
-        localWallet.setParameters(PARAMETERS);
+    public void initWallet(String label, String mnemonic, File directory, NetworkParameters parameters){
+        localWallet.setDirectory(directory);
+        localWallet.setParameters(parameters);
         localWallet.configWallet(label);
         if (mnemonic!=null){
             localWallet.restoreWallet(mnemonic);

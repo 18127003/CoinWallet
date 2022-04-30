@@ -2,9 +2,13 @@ package me.app.coinwallet;
 
 import android.app.ActivityManager;
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import androidx.multidex.MultiDexApplication;
 import androidx.preference.PreferenceManager;
 import androidx.work.OneTimeWorkRequest;
@@ -36,6 +40,8 @@ public class WalletApplication extends MultiDexApplication {
 
         final Configuration config = getConfiguration();
         config.updateLastVersionCode(packageInfo.versionCode);
+
+        createNotificationChannel();
     }
 
     public synchronized Configuration getConfiguration() {
@@ -55,5 +61,20 @@ public class WalletApplication extends MultiDexApplication {
             }
         }
         return packageInfo;
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            channel.enableLights(true);
+            channel.setLightColor(Color.CYAN);
+            channel.enableVibration(true);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

@@ -17,6 +17,8 @@
 			android:roundIcon="@mipmap/ic_launcher_round"
 			android:supportsRtl="true"
 			android:theme="@style/Theme.CoinWallet">
+		<activity android:name=".activities.TransferActivity">
+		</activity>
 		<activity android:name=".activities.InitActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -25,7 +27,6 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".activities.EncryptActivity">
-
 		</activity>
 		<activity android:name=".activities.MarketCapActivity">
 		</activity>

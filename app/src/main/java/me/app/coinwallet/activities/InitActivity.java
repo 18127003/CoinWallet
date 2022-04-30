@@ -10,11 +10,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.R;
-import me.app.coinwallet.RecyclerViewClickListener;
 import me.app.coinwallet.adapters.WalletInfoAdapter;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
+import me.app.coinwallet.wallets.WalletInfoEntry;
 
-public class InitActivity extends AppCompatActivity implements RecyclerViewClickListener {
+public class InitActivity extends AppCompatActivity implements WalletInfoAdapter.OnItemClickListener {
 
     Button createBtn;
     InitPageViewModel viewModel;
@@ -62,8 +62,7 @@ public class InitActivity extends AppCompatActivity implements RecyclerViewClick
     }
 
     @Override
-    public void onItemClickListener(View view) {
-        TextView label = view.findViewById(R.id.wallet_info_label);
-        moveToSync(label.getText().toString(), null);
+    public void onClick(WalletInfoEntry walletInfoEntry) {
+        moveToSync(walletInfoEntry.getLabel(), null);
     }
 }

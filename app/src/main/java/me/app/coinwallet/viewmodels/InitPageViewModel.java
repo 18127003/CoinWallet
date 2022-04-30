@@ -17,10 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class InitPageViewModel extends AndroidViewModel {
-    private LocalWallet localWallet = LocalWallet.getInstance();
     private final WalletInfoDao walletInfoDao;
-    private final Application application = getApplication();
-//    private LiveData<List<WalletInfoEntry>> walletInfos = new MediatorLiveData<>(Collections.emptyList());
 
     public InitPageViewModel(@NonNull final Application application) {
         super(application);
@@ -31,17 +28,11 @@ public class InitPageViewModel extends AndroidViewModel {
         return walletInfoDao.getAll();
     }
 
-//    public void fetch(){
-//        walletInfos = walletInfoDao.getAll();
-//    }
 
     public void saveWalletInfo(String label){
         walletInfoDao.insertOrUpdate(new WalletInfoEntry(label,"BITCOIN"));
     }
 
-//    public void restoreWallet(String label){
-//        saveWalletInfo(label, restoreMnemonic());
-//    }
 
     public String restoreMnemonic(){
         File file = new File(getApplication().getFilesDir(),"mnemonic");

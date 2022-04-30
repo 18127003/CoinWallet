@@ -18,14 +18,14 @@ import java.util.*;
 public class LocalWallet {
     private static LocalWallet _instance = null;
 
-    private final List<LocalWalletListener> observers = new ArrayList<>();
+    private final List<EventListener> observers = new ArrayList<>();
 
-    public void subscribe(LocalWalletListener listener){
+    public void subscribe(EventListener listener){
         observers.add(listener);
     }
 
     private void notifyObservers(WalletNotificationType type, String content){
-        for(LocalWalletListener l : observers){
+        for(EventListener l : observers){
             l.update(type, content);
         }
     }
@@ -119,6 +119,7 @@ public class LocalWallet {
         walletAppKit.wallet().addCoinsReceivedEventListener((wallet, tx, prevBalance, newBalance) -> {
             Coin value = tx.getValueSentToMe(wallet);
             Log.e("HD","Received tx for " + value.toFriendlyString() + ": " + tx);
+            notifyObservers(WalletNotificationType.TX_RECEIVED, "");
             Futures.addCallback(tx.getConfidence().getDepthFuture(1), new FutureCallback<TransactionConfidence>() {
                 @Override
                 public void onSuccess(TransactionConfidence result) {
@@ -179,5 +180,9 @@ public class LocalWallet {
         } catch (UnreadableWalletException ex){
             Log.e("HD","Unreadable wallet");
         }
+    }
+
+    public interface EventListener {
+        void update(WalletNotificationType type, String content);
     }
 }

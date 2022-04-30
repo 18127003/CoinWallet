@@ -5,22 +5,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.work.ForegroundInfo;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import me.app.coinwallet.LocalWallet;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.listeners.DownloadProgressTracker;
-import org.bitcoinj.kits.WalletAppKit;
-import org.bitcoinj.params.TestNet3Params;
+import me.app.coinwallet.NotificationHandler;
+import me.app.coinwallet.WalletNotificationType;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.utils.Threading;
 
-import java.io.File;
-import java.util.Date;
-
-public class BitcoinDownloadWorker extends Worker {
+public class BitcoinDownloadWorker extends Worker implements LocalWallet.EventListener {
 
     public BitcoinDownloadWorker(
             @NonNull Context context,
@@ -40,6 +33,17 @@ public class BitcoinDownloadWorker extends Worker {
 
     private void download() {
         LocalWallet wallet = LocalWallet.getInstance();
+        wallet.subscribe(this);
         wallet.initWallet();
+    }
+
+    @Override
+    public void update(WalletNotificationType type, String content) {
+        Log.e("HD","Notified");
+        switch (type){
+            case TX_RECEIVED:
+                NotificationHandler.sendNotification(getApplicationContext(), "Transaction received","Body");
+                break;
+        }
     }
 }
