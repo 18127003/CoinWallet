@@ -6,9 +6,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import me.app.coinwallet.WalletApplication;
-import me.app.coinwallet.marketcap.MarketCapDao;
-import me.app.coinwallet.marketcap.MarketCapEntry;
-import me.app.coinwallet.marketcap.MarketCapRepository;
+import me.app.coinwallet.data.marketcap.MarketCapDao;
+import me.app.coinwallet.data.marketcap.MarketCapEntry;
+import me.app.coinwallet.data.marketcap.MarketCapRepository;
 
 import java.util.List;
 import java.util.Locale;

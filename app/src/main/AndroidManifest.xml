@@ -17,22 +17,20 @@
 			android:roundIcon="@mipmap/ic_launcher_round"
 			android:supportsRtl="true"
 			android:theme="@style/Theme.CoinWallet">
-		<activity android:name=".activities.TransferActivity">
+		<activity android:name=".ui.activities.TransferActivity">
 		</activity>
-		<activity android:name=".activities.InitActivity">
+		<activity android:name=".ui.activities.InitActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
-		<activity android:name=".activities.EncryptActivity">
+		<activity android:name=".ui.activities.MarketCapActivity">
 		</activity>
-		<activity android:name=".activities.MarketCapActivity">
+		<activity android:name=".ui.activities.HomeActivity">
 		</activity>
-		<activity android:name=".activities.HomeActivity">
-		</activity>
-		<activity android:name=".activities.MainActivity">
+		<activity android:name=".ui.activities.MainActivity">
 		</activity>
 	</application>
 

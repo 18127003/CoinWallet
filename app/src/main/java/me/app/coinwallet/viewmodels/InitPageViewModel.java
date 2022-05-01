@@ -5,15 +5,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
-import me.app.coinwallet.LocalWallet;
-import me.app.coinwallet.wallets.WalletInfoDao;
-import me.app.coinwallet.wallets.WalletInfoDatabase;
-import me.app.coinwallet.wallets.WalletInfoEntry;
+import me.app.coinwallet.data.wallets.WalletInfoDao;
+import me.app.coinwallet.data.wallets.WalletInfoDatabase;
+import me.app.coinwallet.data.wallets.WalletInfoEntry;
 
 import java.io.*;
-import java.util.Collections;
 import java.util.List;
 
 public class InitPageViewModel extends AndroidViewModel {

@@ -19,6 +19,7 @@ public class HomePageViewModel extends ViewModel implements LocalWallet.EventLis
     private final MutableLiveData<String> balance = new MutableLiveData<>();
     private final MutableLiveData<List<Transaction>> history = new MutableLiveData<>();
     private final MutableLiveData<String> address = new MutableLiveData<>();
+    private final MutableLiveData<String> encryptBtnLabel = new MutableLiveData<>();
 
     public LiveData<String> getBalance(){ return balance; }
 
@@ -41,8 +42,25 @@ public class HomePageViewModel extends ViewModel implements LocalWallet.EventLis
         }
     }
 
-    public void checkUxto(){
+    public void checkUtxo(){
         localWallet.check();
+    }
+
+    public MutableLiveData<String> getEncryptBtnLabel() {
+        return encryptBtnLabel;
+    }
+
+    public void encryptOrDecrypt(String password){
+        if(localWallet.isEncrypted()){
+            localWallet.decryptWallet(password);
+        } else {
+            localWallet.encryptWallet(password);
+        }
+        refreshEncryptBtn();
+    }
+
+    public void encryptCheck(){
+        Log.e("HD","Is encrypt: "+localWallet.wallet().isEncrypted());
     }
 
     public void refresh(){
@@ -51,8 +69,13 @@ public class HomePageViewModel extends ViewModel implements LocalWallet.EventLis
         address.postValue(localWallet.getAddress().toString());
     }
 
+    private void refreshEncryptBtn(){
+        encryptBtnLabel.postValue(localWallet.isEncrypted()?"Decrypt":"Encrypt");
+    }
+
     public HomePageViewModel(){
         localWallet.subscribe(this);
+        refreshEncryptBtn();
         refresh();
     }
 

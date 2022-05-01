@@ -5,12 +5,15 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import org.bitcoinj.core.*;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
+import org.bitcoinj.crypto.KeyCrypterException;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
+import org.bouncycastle.crypto.params.KeyParameter;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
@@ -53,7 +56,10 @@ public class LocalWallet {
         return walletAppKit.wallet().currentReceiveAddress();
     }
 
+    public boolean isEncrypted(){ return walletAppKit.wallet().isEncrypted(); }
+
     public String getPlainBalance(){
+        Log.e("HD","null "+(walletAppKit==null));
         return walletAppKit.wallet().getBalance().toPlainString();
     }
 
@@ -83,7 +89,7 @@ public class LocalWallet {
         }
     }
 
-    public void send(String sendAddress, double value){
+    public void send(String sendAddress, double value, String password){
         final Coin amountToSend = Coin.ofBtc(BigDecimal.valueOf(value));
         Log.e("HD","Amount to send: "+amountToSend.toPlainString());
 
@@ -91,6 +97,9 @@ public class LocalWallet {
             final Address sendTo = Address.fromString(parameters, sendAddress);
             SendRequest request = SendRequest.to(sendTo, amountToSend);
             request.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
+            if (password != null){
+                request.aesKey = Objects.requireNonNull(walletAppKit.wallet().getKeyCrypter()).deriveKey(password);
+            }
             final Wallet.SendResult sendResult = walletAppKit.wallet().sendCoins(walletAppKit.peerGroup(), request);
             Log.e("HD","Sending "+amountToSend.toPlainString()+" BTC");
             sendResult.broadcastComplete.addListener(() -> {
@@ -109,6 +118,8 @@ public class LocalWallet {
             Log.e("HD","Wrong address format");
         } catch (IllegalArgumentException i){
             Log.e("HD","Double spending");
+        } catch (Wallet.BadWalletEncryptionKeyException ke){
+            Log.e("HD","Wrong password");
         }
     }
 
@@ -176,6 +187,20 @@ public class LocalWallet {
             walletAppKit.restoreWalletFromSeed(new DeterministicSeed(mnemonic, null, passphrase, creationTime));
         } catch (UnreadableWalletException ex){
             Log.e("HD","Unreadable wallet");
+        }
+    }
+
+    public void encryptWallet(String passphrase){
+        walletAppKit.wallet().encrypt(passphrase);
+    }
+
+    public void decryptWallet(String passphrase){
+        try{
+            walletAppKit.wallet().decrypt(passphrase);
+        } catch (Wallet.BadWalletEncryptionKeyException e){
+            Log.e("HD","Wrong password");
+        } catch (KeyCrypterException ke){
+            Log.e("HD","Key crypter fail");
         }
     }
 

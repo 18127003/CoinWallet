@@ -6,9 +6,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import me.app.coinwallet.LocalWallet;
-import me.app.coinwallet.addressbook.AddressBookDao;
-import me.app.coinwallet.addressbook.AddressBookDatabase;
-import me.app.coinwallet.addressbook.AddressBookEntry;
+import me.app.coinwallet.data.addressbook.AddressBookDao;
+import me.app.coinwallet.data.addressbook.AddressBookDatabase;
+import me.app.coinwallet.data.addressbook.AddressBookEntry;
 
 import java.util.List;
 
@@ -32,10 +32,10 @@ public class TransferPageViewModel extends AndroidViewModel {
         return balance;
     }
 
-    public void send(String sendAddress, String value){
+    public void send(String sendAddress, String value, String password){
         try{
             double doubleValue = Double.parseDouble(value);
-            localWallet.send(sendAddress, doubleValue);
+            localWallet.send(sendAddress, doubleValue, password);
         } catch (NumberFormatException e){
             Log.e("HD","Send amount not in number format");
         }
@@ -43,5 +43,9 @@ public class TransferPageViewModel extends AndroidViewModel {
 
     public void saveToAddressBook(String label, String address){
         addressBookDao.insertOrUpdate(new AddressBookEntry(address, label));
+    }
+
+    public boolean isWalletEncrypted(){
+        return localWallet.isEncrypted();
     }
 }
