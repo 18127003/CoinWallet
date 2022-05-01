@@ -3,6 +3,7 @@
 	<string name="app_setup_completed">Setup Completed</string>
 	<string name="app_sync_completed">Sync Completed</string>
 	<string name="balance_label">Balance</string>
+	<string name="expected_balance_label">Expected Balance</string>
 	<string name="send_button_label">Send</string>
 	<string name="market_cap_button_label">Market Cap</string>
 	<string name="add_address_book_button_label">Add contact</string>

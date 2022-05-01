@@ -59,8 +59,11 @@ public class LocalWallet {
     public boolean isEncrypted(){ return walletAppKit.wallet().isEncrypted(); }
 
     public String getPlainBalance(){
-        Log.e("HD","null "+(walletAppKit==null));
         return walletAppKit.wallet().getBalance().toPlainString();
+    }
+
+    public String getExpectedBalance(){
+        return walletAppKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED).toPlainString();
     }
 
     public void addKey(){

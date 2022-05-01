@@ -29,6 +29,10 @@ public class HomePageViewModel extends ViewModel implements LocalWallet.EventLis
 
     public void extractMnemonic(File root){
         String mnemonicCode = localWallet.wallet().getKeyChainSeed().getMnemonicString();
+        if (mnemonicCode == null){
+            // TODO: Toast to notify user to decrypt wallet
+            return;
+        }
         Log.e("HD","Mnemonic code: "+mnemonicCode);
         File file = new File(root,"mnemonic");
         try {

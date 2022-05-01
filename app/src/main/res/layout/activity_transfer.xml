@@ -16,7 +16,7 @@
 				android:layout_height="wrap_content"
 				android:text="@string/balance_label"
 				app:layout_constraintLeft_toLeftOf="parent"
-				app:layout_constraintRight_toRightOf="parent"
+				app:layout_constraintRight_toLeftOf="@id/expected_balance_label"
 				app:layout_constraintTop_toTopOf="parent"/>
 		<TextView
 				android:id="@+id/balance"
@@ -24,8 +24,24 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="15dp"
 				app:layout_constraintLeft_toLeftOf="parent"
-				app:layout_constraintRight_toRightOf="parent"
+				app:layout_constraintRight_toLeftOf="@+id/expected_balance"
 				app:layout_constraintTop_toBottomOf="@id/balance_label"/>
+		<TextView
+				android:id="@+id/expected_balance_label"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/expected_balance_label"
+				app:layout_constraintLeft_toRightOf="@id/balance_label"
+				app:layout_constraintRight_toRightOf="parent"
+				app:layout_constraintTop_toTopOf="parent"/>
+		<TextView
+				android:id="@+id/expected_balance"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="15dp"
+				app:layout_constraintLeft_toRightOf="@id/balance"
+				app:layout_constraintRight_toRightOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/expected_balance_label"/>
 		<EditText
 				android:id="@+id/send_address_text"
 				android:layout_width="0dp"

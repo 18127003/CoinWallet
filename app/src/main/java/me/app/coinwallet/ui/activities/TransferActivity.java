@@ -24,6 +24,7 @@ public class TransferActivity extends AppCompatActivity implements AddressBookAd
     Button sendBtn;
     Button addAddressBtn;
     TextView balance;
+    TextView expectedBalance;
     RecyclerView addressBook;
     TransferPageViewModel viewModel;
 
@@ -35,10 +36,12 @@ public class TransferActivity extends AppCompatActivity implements AddressBookAd
         sendAmount = findViewById(R.id.send_text);
         sendBtn = findViewById(R.id.send_button);
         balance = findViewById(R.id.balance);
+        expectedBalance = findViewById(R.id.expected_balance);
         addressBook = findViewById(R.id.address_book);
         addAddressBtn = findViewById(R.id.add_address_book_button);
         viewModel = new ViewModelProvider(this).get(TransferPageViewModel.class);
         viewModel.getBalance().observe(this,s -> balance.setText(s));
+        viewModel.getExpectedBalance().observe(this, s -> expectedBalance.setText(s));
         sendBtn.setOnClickListener(v -> sendPasswordDialog());
         addAddressBtn.setOnClickListener(v -> showAddContactDialog());
         AddressBookAdapter adapter = new AddressBookAdapter(this);
