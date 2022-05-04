@@ -32,7 +32,8 @@ public class InitActivity extends AppCompatActivity implements WalletInfoAdapter
         viewModel.getWalletInfos().observe(this, adapter::updateWalletInfos);
 
         restoreBtn.setOnClickListener((v)-> {
-            String mnemonic = viewModel.restoreMnemonic();
+            // TODO: select from list saved label - mnemonic preferences
+            String mnemonic = viewModel.restoreMnemonic("wallet");
             String label = "wallet";
             viewModel.saveWalletInfo(label);
             moveToSync(label, mnemonic);

@@ -1,22 +1,25 @@
 package me.app.coinwallet.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
+import android.content.Context;
+import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import me.app.coinwallet.R;
 import me.app.coinwallet.data.wallets.WalletInfoDao;
 import me.app.coinwallet.data.wallets.WalletInfoDatabase;
 import me.app.coinwallet.data.wallets.WalletInfoEntry;
-
-import java.io.*;
+import me.app.coinwallet.utils.CryptoEngine;
 import java.util.List;
 
 public class InitPageViewModel extends AndroidViewModel {
     private final WalletInfoDao walletInfoDao;
+    private final Application application;
 
     public InitPageViewModel(@NonNull final Application application) {
         super(application);
+        this.application = application;
         walletInfoDao = WalletInfoDatabase.getDatabase(application.getApplicationContext()).walletInfoDao();
     }
 
@@ -30,30 +33,13 @@ public class InitPageViewModel extends AndroidViewModel {
     }
 
 
-    public String restoreMnemonic(){
-        File file = new File(getApplication().getFilesDir(),"mnemonic");
-        String mnemonic = "";
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            mnemonic = convertStreamToString(fis);
-            fis.close();
-        } catch (FileNotFoundException ex){
-            Log.e("HD","File not found "+ file.getName());
-        } catch (IOException e){
-            Log.e("HD","File read fail "+file.getName());
-        }
-        Log.e("HD","Restore mnemonic: "+ mnemonic);
-        return mnemonic;
+    public String restoreMnemonic(String label){
+        SharedPreferences preferences = application.getSharedPreferences(
+                application.getString(R.string.mnemonic_preference_file), Context.MODE_PRIVATE);
+        String encrypted = preferences.getString(label, null);
+        CryptoEngine engine = CryptoEngine.getInstance();
+        return engine.decipher(label, encrypted);
     }
 
-    private static String convertStreamToString(InputStream is) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-        reader.close();
-        return sb.toString();
-    }
+
 }

@@ -45,21 +45,31 @@ public class HomeActivity extends BaseActivity {
         history.setAdapter(historyAdapter);
         sendButton.setOnClickListener(v -> moveTo(TransferActivity.class));
         utxoButton.setOnClickListener(v-> viewModel.checkUtxo());
-        extractMnemonicBtn.setOnClickListener(v-> viewModel.extractMnemonic(getApplicationContext().getFilesDir()));
+        extractMnemonicBtn.setOnClickListener(v-> showExtractMnemonicPasswordDialog());
         encryptCheckBtn.setOnClickListener(v->viewModel.encryptCheck());
         viewModel.getEncryptBtnLabel().observe(this, s->encryptBtn.setText(s));
-        encryptBtn.setOnClickListener(v -> showPasswordDialog());
+        encryptBtn.setOnClickListener(v -> showEncryptPasswordDialog());
         marketCapBtn.setOnClickListener(v -> moveTo(MarketCapActivity.class));
         viewModel.getBalance().observe(this, s->balance.setText(s));
         viewModel.getAddress().observe(this, s->address.setText(s));
         viewModel.getHistory().observe(this, historyAdapter::updateHistory);
+        Button testBtn = findViewById(R.id.test_btn);
+        testBtn.setOnClickListener(v->viewModel.test2());
     }
 
-    private void showPasswordDialog(){
+    private void showEncryptPasswordDialog(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
             ConfirmDialog dialog = CustomDialog.passwordDialog(getLayoutInflater(),
                     (password)->viewModel.encryptOrDecrypt(password));
-            dialog.show(getSupportFragmentManager(),"Password_dialog");
+            dialog.show(getSupportFragmentManager(),"encrypt_password_dialog");
+        }
+    }
+
+    private void showExtractMnemonicPasswordDialog(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            ConfirmDialog dialog = CustomDialog.passwordDialog(getLayoutInflater(),
+                    (password)->viewModel.extractMnemonic(password));
+            dialog.show(getSupportFragmentManager(),"extract_password_dialog");
         }
     }
 

@@ -1,25 +1,30 @@
 package me.app.coinwallet.viewmodels;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import me.app.coinwallet.LocalWallet;
+import me.app.coinwallet.R;
 import me.app.coinwallet.WalletNotificationType;
+import me.app.coinwallet.utils.CryptoEngine;
 import org.bitcoinj.core.Transaction;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
-public class HomePageViewModel extends ViewModel implements LocalWallet.EventListener {
+public class HomePageViewModel extends AndroidViewModel implements LocalWallet.EventListener {
     private final LocalWallet localWallet = LocalWallet.getInstance();
     private final MutableLiveData<String> balance = new MutableLiveData<>();
     private final MutableLiveData<List<Transaction>> history = new MutableLiveData<>();
     private final MutableLiveData<String> address = new MutableLiveData<>();
     private final MutableLiveData<String> encryptBtnLabel = new MutableLiveData<>();
+    private final Application application;
 
     public LiveData<String> getBalance(){ return balance; }
 
@@ -27,23 +32,30 @@ public class HomePageViewModel extends ViewModel implements LocalWallet.EventLis
 
     public LiveData<String> getAddress(){return address;}
 
-    public void extractMnemonic(File root){
+    public void extractMnemonic(String password){
         String mnemonicCode = localWallet.wallet().getKeyChainSeed().getMnemonicString();
         if (mnemonicCode == null){
             // TODO: Toast to notify user to decrypt wallet
             return;
         }
-        Log.e("HD","Mnemonic code: "+mnemonicCode);
-        File file = new File(root,"mnemonic");
-        try {
-            FileOutputStream fis = new FileOutputStream(file);
-            fis.write(mnemonicCode.getBytes());
-            fis.close();
-        } catch (FileNotFoundException ex){
-            Log.e("HD","File not found "+ file.getName());
-        } catch (IOException e){
-            Log.e("HD","File write fail "+file.getName());
-        }
+        CryptoEngine cryptoEngine = CryptoEngine.getInstance();
+        String walletLabel = localWallet.getLabel();
+        String encrypted = cryptoEngine.cipher(walletLabel, mnemonicCode);
+
+        SharedPreferences preferences = application.getSharedPreferences(
+                application.getString(R.string.mnemonic_preference_file), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(walletLabel, encrypted);
+        editor.apply();
+
+    }
+
+    public void test2(){
+        SharedPreferences preferences = application.getSharedPreferences(
+                application.getString(R.string.mnemonic_preference_file), Context.MODE_PRIVATE);
+        String encrypted = preferences.getString(localWallet.getLabel(), null);
+        CryptoEngine engine = CryptoEngine.getInstance();
+        Log.e("HD","Decrypted value: "+engine.decipher(localWallet.getLabel(), encrypted));
     }
 
     public void checkUtxo(){
@@ -77,7 +89,9 @@ public class HomePageViewModel extends ViewModel implements LocalWallet.EventLis
         encryptBtnLabel.postValue(localWallet.isEncrypted()?"Decrypt":"Encrypt");
     }
 
-    public HomePageViewModel(){
+    public HomePageViewModel(Application application){
+        super(application);
+        this.application = application;
         localWallet.subscribe(this);
         refreshEncryptBtn();
         refresh();

@@ -43,6 +43,7 @@ public class LocalWallet {
     private File directory;
     private WalletAppKit walletAppKit;
     private NetworkParameters parameters;
+    private String label;
 
     public void setParameters(NetworkParameters parameters) {
         this.parameters = parameters;
@@ -64,6 +65,10 @@ public class LocalWallet {
 
     public String getExpectedBalance(){
         return walletAppKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED).toPlainString();
+    }
+
+    public String getLabel() {
+        return label;
     }
 
     public void addKey(){
@@ -151,8 +156,9 @@ public class LocalWallet {
         return chainFile.exists();
     }
 
-    public void configWallet(String prefix){
-        walletAppKit = new WalletAppKit(parameters, directory, prefix) {
+    public void configWallet(String label){
+        this.label = label;
+        walletAppKit = new WalletAppKit(parameters, directory, label) {
             @Override
             protected void onSetupCompleted() {
                 Log.e("HD", "Set up complete");
