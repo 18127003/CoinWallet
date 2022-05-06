@@ -2,17 +2,26 @@ package me.app.coinwallet.ui.activities;
 
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.os.Bundle;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.app.coinwallet.exceptions.MnemonicInaccessibleException;
 import me.app.coinwallet.ui.dialogs.ConfirmDialog;
 import me.app.coinwallet.ui.dialogs.CustomDialog;
+import me.app.coinwallet.utils.BiometricUtil;
+import me.app.coinwallet.utils.ToastUtil;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.adapters.TxHistoryAdapter;
+import me.app.coinwallet.viewmodels.factory.HomePageViewModelFactory;
 
 public class HomeActivity extends BaseActivity {
 
@@ -25,12 +34,16 @@ public class HomeActivity extends BaseActivity {
     private Button encryptCheckBtn;
     private TextView address;
     private HomePageViewModel viewModel;
+    private ToastUtil toastUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        viewModel = new ViewModelProvider(this).get(HomePageViewModel.class);
+        BiometricUtil biometricUtil = new BiometricUtil(this);
+        ToastUtil toastUtil = new ToastUtil(this);
+        viewModel = new ViewModelProvider(this, new HomePageViewModelFactory(getApplication(), biometricUtil))
+                .get(HomePageViewModel.class);
         balance = findViewById(R.id.balance);
         sendButton = findViewById(R.id.send_page_button);
         utxoButton = findViewById(R.id.utxo_button);
@@ -45,7 +58,14 @@ public class HomeActivity extends BaseActivity {
         history.setAdapter(historyAdapter);
         sendButton.setOnClickListener(v -> moveTo(TransferActivity.class));
         utxoButton.setOnClickListener(v-> viewModel.checkUtxo());
-        extractMnemonicBtn.setOnClickListener(v-> showExtractMnemonicPasswordDialog());
+        extractMnemonicBtn.setOnClickListener(v-> {
+            try{
+                viewModel.extractMnemonic();
+            } catch (MnemonicInaccessibleException e){
+                Log.e("HD","Mnemonic is not accessible");
+                toastUtil.postToast(e.getMessage(),Toast.LENGTH_SHORT);
+            }
+        });
         encryptCheckBtn.setOnClickListener(v->viewModel.encryptCheck());
         viewModel.getEncryptBtnLabel().observe(this, s->encryptBtn.setText(s));
         encryptBtn.setOnClickListener(v -> showEncryptPasswordDialog());
@@ -58,19 +78,9 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void showEncryptPasswordDialog(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            ConfirmDialog dialog = CustomDialog.passwordDialog(getLayoutInflater(),
-                    (password)->viewModel.encryptOrDecrypt(password));
-            dialog.show(getSupportFragmentManager(),"encrypt_password_dialog");
-        }
-    }
-
-    private void showExtractMnemonicPasswordDialog(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            ConfirmDialog dialog = CustomDialog.passwordDialog(getLayoutInflater(),
-                    (password)->viewModel.extractMnemonic(password));
-            dialog.show(getSupportFragmentManager(),"extract_password_dialog");
-        }
+        ConfirmDialog dialog = CustomDialog.passwordDialog(getLayoutInflater(),
+                (password)->viewModel.encryptOrDecrypt(password));
+        dialog.show(getSupportFragmentManager(),"encrypt_password_dialog");
     }
 
     private void moveTo(Class<?> dest){

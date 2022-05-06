@@ -3,9 +3,9 @@ package me.app.coinwallet.utils;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
+import android.security.keystore.UserNotAuthenticatedException;
 import android.util.Base64;
 import android.util.Log;
-import androidx.annotation.RequiresApi;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -47,17 +47,11 @@ public class CryptoEngine {
     public String cipher(String alias, String input) {
         Key key;
         try{
-//            keyStore.deleteEntry(alias);
+            keyStore.deleteEntry(alias);
             if(!keyStore.containsAlias(alias)){
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    Log.e("HD","Keystore not contains alias, generating secret key with key generator");
-                    key = generateKeyAndroidM(alias);
+                Log.e("HD","Keystore not contains alias, generating secret key with key generator");
+                key = generateKeyAndroidM(alias);
 
-                } else {
-                    // TODO: Self generate aes key and import to key store's secret key entry later
-                    Log.e("HD","Keystore not contains alias, generating secret key with password and salt");
-                    key = getKeyFromPassword("Dang2539", SALT.getBytes());
-                }
             } else {
                 Log.e("HD","Keystore contains alias, get secret key from key store");
                 key = keyStore.getKey(alias, null);
@@ -66,9 +60,10 @@ public class CryptoEngine {
             byte[] encrypted = encrypt(key, input.getBytes());
             return Base64.encodeToString(encrypted, Base64.DEFAULT);
 
+        } catch (UserNotAuthenticatedException e) {
+            Log.e("HD","Unauthorized");
         } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-            Log.e("HD","invalid algo param");
+            Log.e("HD","Invalid algo param");
         } catch (UnrecoverableKeyException e) {
             Log.e("HD","unrecoverable key");
         } catch (NoSuchPaddingException e) {
@@ -76,18 +71,16 @@ public class CryptoEngine {
         } catch (IllegalBlockSizeException e) {
             Log.e("HD","illegal block size");
         } catch (KeyStoreException e) {
+            e.printStackTrace();
             Log.e("HD","key store exception");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
             Log.e("HD","no such algo");
-        } catch (InvalidKeySpecException e) {
-            Log.e("HD","invalid key spec");
         } catch (BadPaddingException e) {
             Log.e("HD","bad padding");
         } catch (NoSuchProviderException e) {
             Log.e("HD","no such provider");
-        } catch (InvalidKeyException e) {
-            Log.e("HD","invalid key");
+        } catch (InvalidKeyException e){
+            Log.e("HD", "Invalid key");
         }
         return null;
     }
@@ -99,48 +92,38 @@ public class CryptoEngine {
                 byte[] decrypted = decrypt(key, Base64.decode(input, Base64.DEFAULT));
                 return new String(decrypted);
             }
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (UnrecoverableKeyException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException |
+                BadPaddingException | InvalidKeyException | NoSuchProviderException | UnrecoverableKeyException |
+                KeyStoreException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private SecretKey generateKeyAndroidM(String alias) throws NoSuchAlgorithmException, NoSuchProviderException,
             InvalidAlgorithmParameterException {
         KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
-        KeyGenParameterSpec spec = new KeyGenParameterSpec.Builder(
+        KeyGenParameterSpec.Builder builder = new KeyGenParameterSpec.Builder(
                 alias,
                 KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT
         )
                 .setKeySize(256)
                 .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
-                .setRandomizedEncryptionRequired(false)
-                .build();
-        keyGenerator.init(spec);
+                .setRandomizedEncryptionRequired(true)
+                .setUserAuthenticationRequired(true);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            builder.setUserAuthenticationParameters(10, KeyProperties.AUTH_DEVICE_CREDENTIAL | KeyProperties.AUTH_BIOMETRIC_STRONG);
+        } else {
+            builder.setUserAuthenticationValidityDurationSeconds(10);
+        }
+        keyGenerator.init(builder.build());
         return keyGenerator.generateKey();
     }
 
     private byte[] encrypt(Key secretKey, byte[] input) throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException,
-            NoSuchProviderException {
+            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException,
+            NoSuchProviderException, InvalidKeyException {
 
         Cipher cipher = Cipher.getInstance(AES_MODE, KEYSTORE_WORKAROUND_CIPHER_PROVIDER);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);

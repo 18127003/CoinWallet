@@ -3,19 +3,19 @@ package me.app.coinwallet.viewmodels;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.biometric.BiometricPrompt;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import me.app.coinwallet.LocalWallet;
 import me.app.coinwallet.R;
 import me.app.coinwallet.WalletNotificationType;
+import me.app.coinwallet.exceptions.MnemonicInaccessibleException;
+import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.utils.CryptoEngine;
 import org.bitcoinj.core.Transaction;
-
 import java.util.List;
 
 public class HomePageViewModel extends AndroidViewModel implements LocalWallet.EventListener {
@@ -25,6 +25,7 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
     private final MutableLiveData<String> address = new MutableLiveData<>();
     private final MutableLiveData<String> encryptBtnLabel = new MutableLiveData<>();
     private final Application application;
+    private final BiometricUtil biometricUtil;
 
     public LiveData<String> getBalance(){ return balance; }
 
@@ -32,22 +33,37 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
 
     public LiveData<String> getAddress(){return address;}
 
-    public void extractMnemonic(String password){
+    public void extractMnemonic() throws MnemonicInaccessibleException{
         String mnemonicCode = localWallet.wallet().getKeyChainSeed().getMnemonicString();
         if (mnemonicCode == null){
-            // TODO: Toast to notify user to decrypt wallet
-            return;
+            throw new MnemonicInaccessibleException();
         }
+        if(biometricUtil.canAuthenticate()){
+            BiometricPrompt.PromptInfo promptInfo = biometricUtil.getPromptInfo("Biometric login for my app",
+                    "Log in using your biometric credential", null);
+            biometricUtil.setAuthenticationCallback(new BiometricPrompt.AuthenticationCallback() {
+                @Override
+                public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                    super.onAuthenticationSucceeded(result);
+                    encryptMnemonic(mnemonicCode);
+                }
+            });
+            BiometricPrompt prompt = biometricUtil.getBiometricPrompt();
+            prompt.authenticate(promptInfo);
+        }
+    }
+
+    private void encryptMnemonic(String mnemonicCode){
+
         CryptoEngine cryptoEngine = CryptoEngine.getInstance();
         String walletLabel = localWallet.getLabel();
         String encrypted = cryptoEngine.cipher(walletLabel, mnemonicCode);
-
+        Log.e("HD","Encrypted to "+encrypted);
         SharedPreferences preferences = application.getSharedPreferences(
                 application.getString(R.string.mnemonic_preference_file), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(walletLabel, encrypted);
         editor.apply();
-
     }
 
     public void test2(){
@@ -89,9 +105,10 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
         encryptBtnLabel.postValue(localWallet.isEncrypted()?"Decrypt":"Encrypt");
     }
 
-    public HomePageViewModel(Application application){
+    public HomePageViewModel(Application application, BiometricUtil biometricUtil){
         super(application);
         this.application = application;
+        this.biometricUtil = biometricUtil;
         localWallet.subscribe(this);
         refreshEncryptBtn();
         refresh();

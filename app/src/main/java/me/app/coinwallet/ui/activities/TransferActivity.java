@@ -51,22 +51,18 @@ public class TransferActivity extends AppCompatActivity implements AddressBookAd
     }
 
     public void showAddContactDialog(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            ConfirmDialog dialog = CustomDialog.labelDialog(getLayoutInflater(),
-                    (label)-> viewModel.saveToAddressBook(label, sendAddress.getText().toString()));
-            dialog.show(getSupportFragmentManager(), "add_address");
-        }
+        ConfirmDialog dialog = CustomDialog.labelDialog(getLayoutInflater(),
+                (label)-> viewModel.saveToAddressBook(label, sendAddress.getText().toString()));
+        dialog.show(getSupportFragmentManager(), "add_address");
     }
 
     void sendPasswordDialog(){
         final String sendAddressText = sendAddress.getText().toString();
         final String sendAmountText =  sendAmount.getText().toString();
         if(viewModel.isWalletEncrypted()){
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                ConfirmDialog dialog = CustomDialog.passwordDialog(getLayoutInflater(),
-                        (password) -> viewModel.send(sendAddressText, sendAmountText, password));
-                dialog.show(getSupportFragmentManager(), "password_send");
-            }
+            ConfirmDialog dialog = CustomDialog.passwordDialog(getLayoutInflater(),
+                    (password) -> viewModel.send(sendAddressText, sendAmountText, password));
+            dialog.show(getSupportFragmentManager(), "password_send");
         } else {
             viewModel.send(sendAddressText, sendAddressText, null);
         }

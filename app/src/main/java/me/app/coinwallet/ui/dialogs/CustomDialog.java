@@ -14,7 +14,6 @@ import java.util.function.Consumer;
 public class CustomDialog {
     private static final int SINGLE_EDIT_TEXT_LAYOUT = R.layout.single_edit_text_dialog;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static ConfirmDialog labelDialog(LayoutInflater inflater, Consumer<String> onLabelSubmit){
         String message = "Input your label";
         String label = "Label";
@@ -22,7 +21,6 @@ public class CustomDialog {
         return singleTextDialog(inflater, onLabelSubmit, message, label, inputType);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static ConfirmDialog passwordDialog(LayoutInflater inflater, Consumer<String> onPasswordSubmit){
         String message = "Input your password";
         String label = "Password";
@@ -30,7 +28,6 @@ public class CustomDialog {
         return singleTextDialog(inflater, onPasswordSubmit, message, label, inputType);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private static ConfirmDialog singleTextDialog(LayoutInflater inflater, Consumer<String> callback, String message,
                                                   String label, int inputType){
         View view = inflater.inflate(SINGLE_EDIT_TEXT_LAYOUT, null);
