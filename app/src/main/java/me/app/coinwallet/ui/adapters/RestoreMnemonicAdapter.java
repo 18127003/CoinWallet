@@ -26,6 +26,7 @@ public class RestoreMnemonicAdapter extends BaseAdapter<String, RestoreMnemonicA
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String label = data.get(position);
         holder.getLabel().setText(label);
+        holder.getLabel().setOnClickListener(v -> listener.onClick(label));
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

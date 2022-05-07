@@ -82,4 +82,13 @@ public class BiometricUtil {
                 return false;
         }
     }
+
+    public void authenticate(){
+        if(canAuthenticate()){
+            BiometricPrompt.PromptInfo promptInfo = getPromptInfo("Biometric login for my app",
+                    "Log in using your biometric credential", null);
+            BiometricPrompt prompt = getBiometricPrompt();
+            prompt.authenticate(promptInfo);
+        }
+    }
 }

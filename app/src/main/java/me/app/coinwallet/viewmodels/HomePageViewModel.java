@@ -38,19 +38,14 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
         if (mnemonicCode == null){
             throw new MnemonicInaccessibleException();
         }
-        if(biometricUtil.canAuthenticate()){
-            BiometricPrompt.PromptInfo promptInfo = biometricUtil.getPromptInfo("Biometric login for my app",
-                    "Log in using your biometric credential", null);
-            biometricUtil.setAuthenticationCallback(new BiometricPrompt.AuthenticationCallback() {
-                @Override
-                public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                    super.onAuthenticationSucceeded(result);
-                    encryptMnemonic(mnemonicCode);
-                }
-            });
-            BiometricPrompt prompt = biometricUtil.getBiometricPrompt();
-            prompt.authenticate(promptInfo);
-        }
+        biometricUtil.setAuthenticationCallback(new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                encryptMnemonic(mnemonicCode);
+            }
+        });
+        biometricUtil.authenticate();
     }
 
     private void encryptMnemonic(String mnemonicCode){
@@ -64,14 +59,6 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(walletLabel, encrypted);
         editor.apply();
-    }
-
-    public void test2(){
-        SharedPreferences preferences = application.getSharedPreferences(
-                application.getString(R.string.mnemonic_preference_file), Context.MODE_PRIVATE);
-        String encrypted = preferences.getString(localWallet.getLabel(), null);
-        CryptoEngine engine = CryptoEngine.getInstance();
-        Log.e("HD","Decrypted value: "+engine.decipher(localWallet.getLabel(), encrypted));
     }
 
     public void checkUtxo(){

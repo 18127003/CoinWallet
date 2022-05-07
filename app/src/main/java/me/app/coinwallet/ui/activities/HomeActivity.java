@@ -1,15 +1,11 @@
 package me.app.coinwallet.ui.activities;
 
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.os.Bundle;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.biometric.BiometricPrompt;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +18,7 @@ import me.app.coinwallet.utils.ToastUtil;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.adapters.TxHistoryAdapter;
-import me.app.coinwallet.viewmodels.factory.HomePageViewModelFactory;
+import me.app.coinwallet.viewmodels.factory.BiometricViewModelFactory;
 import org.bitcoinj.core.Transaction;
 
 public class HomeActivity extends BaseActivity implements BaseAdapter.OnItemClickListener<Transaction> {
@@ -43,8 +39,8 @@ public class HomeActivity extends BaseActivity implements BaseAdapter.OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         BiometricUtil biometricUtil = new BiometricUtil(this);
-        ToastUtil toastUtil = new ToastUtil(this);
-        viewModel = new ViewModelProvider(this, new HomePageViewModelFactory(getApplication(), biometricUtil))
+        toastUtil = new ToastUtil(this);
+        viewModel = new ViewModelProvider(this, new BiometricViewModelFactory(getApplication(), biometricUtil))
                 .get(HomePageViewModel.class);
         balance = findViewById(R.id.balance);
         sendButton = findViewById(R.id.send_page_button);
@@ -75,8 +71,6 @@ public class HomeActivity extends BaseActivity implements BaseAdapter.OnItemClic
         viewModel.getBalance().observe(this, s->balance.setText(s));
         viewModel.getAddress().observe(this, s->address.setText(s));
         viewModel.getHistory().observe(this, historyAdapter::update);
-        Button testBtn = findViewById(R.id.test_btn);
-        testBtn.setOnClickListener(v->viewModel.test2());
     }
 
     private void showEncryptPasswordDialog(){

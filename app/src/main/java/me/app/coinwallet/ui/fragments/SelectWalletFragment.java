@@ -76,21 +76,18 @@ public class SelectWalletFragment extends Fragment implements BaseAdapter.OnItem
         createBtn.setOnClickListener((v)-> {
             String label = "wallet";
             viewModel.saveWalletInfo(label);
-            moveToSync(label, null);
+            createAndSync(label);
         });
     }
 
-    private void moveToSync(String label, String mnemonic){
+    private void createAndSync(String label){
         Intent intent = new Intent(requireActivity(), MainActivity.class);
         intent.putExtra("label", label);
-        if (mnemonic != null){
-            intent.putExtra("mnemonic", mnemonic);
-        }
         startActivity(intent);
     }
 
     @Override
     public void onClick(WalletInfoEntry walletInfoEntry) {
-        moveToSync(walletInfoEntry.getLabel(), null);
+        createAndSync(walletInfoEntry.getLabel());
     }
 }

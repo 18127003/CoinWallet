@@ -9,11 +9,11 @@ import me.app.coinwallet.utils.BiometricUtil;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class HomePageViewModelFactory implements ViewModelProvider.Factory {
+public class BiometricViewModelFactory implements ViewModelProvider.Factory {
     private final BiometricUtil biometricUtil;
     private final Application application;
 
-    public HomePageViewModelFactory(Application application, BiometricUtil biometricUtil){
+    public BiometricViewModelFactory(Application application, BiometricUtil biometricUtil){
         this.application = application;
         this.biometricUtil = biometricUtil;
     }
