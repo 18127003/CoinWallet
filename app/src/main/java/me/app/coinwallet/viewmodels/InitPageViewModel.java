@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.wallets.WalletInfoDao;
 import me.app.coinwallet.data.wallets.WalletInfoDatabase;
@@ -16,11 +17,16 @@ import java.util.List;
 public class InitPageViewModel extends AndroidViewModel {
     private final WalletInfoDao walletInfoDao;
     private final Application application;
+    private MutableLiveData<List<String>> mnemonicLabels = new MutableLiveData<>();
 
     public InitPageViewModel(@NonNull final Application application) {
         super(application);
         this.application = application;
         walletInfoDao = WalletInfoDatabase.getDatabase(application.getApplicationContext()).walletInfoDao();
+    }
+
+    public MutableLiveData<List<String>> getMnemonicLabels() {
+        return mnemonicLabels;
     }
 
     public LiveData<List<WalletInfoEntry>> getWalletInfos() {

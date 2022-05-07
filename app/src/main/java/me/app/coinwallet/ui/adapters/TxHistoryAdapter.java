@@ -13,12 +13,10 @@ import org.bitcoinj.core.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TxHistoryAdapter extends RecyclerView.Adapter<TxHistoryAdapter.ViewHolder> {
+public class TxHistoryAdapter extends BaseAdapter<Transaction, TxHistoryAdapter.ViewHolder> {
 
-    private List<Transaction> history;
-
-    public TxHistoryAdapter(){
-        history = new ArrayList<>();
+    public TxHistoryAdapter(OnItemClickListener<Transaction> listener){
+        super(listener);
     }
 
     @NonNull
@@ -30,20 +28,8 @@ public class TxHistoryAdapter extends RecyclerView.Adapter<TxHistoryAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Transaction tx = history.get(position);
+        Transaction tx = data.get(position);
         holder.getTextView().setText(tx.getTxId().toString());
-    }
-
-    @Override
-    public int getItemCount() {
-        return history.size();
-    }
-
-    public void updateHistory(final List<Transaction> newHistory){
-        Log.e("HD", "Update history "+newHistory.size());
-        history.clear();
-        history = newHistory;
-        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

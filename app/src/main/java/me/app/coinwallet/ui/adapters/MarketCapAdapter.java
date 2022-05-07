@@ -13,12 +13,10 @@ import me.app.coinwallet.data.marketcap.MarketCapEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarketCapAdapter extends RecyclerView.Adapter<MarketCapAdapter.ViewHolder> {
+public class MarketCapAdapter extends BaseAdapter<MarketCapEntry, MarketCapAdapter.ViewHolder> {
 
-    private List<MarketCapEntry> marketCaps;
-
-    public MarketCapAdapter(){
-        marketCaps = new ArrayList<>();
+    public MarketCapAdapter(OnItemClickListener<MarketCapEntry> listener){
+        super(listener);
     }
 
     @NonNull
@@ -30,20 +28,8 @@ public class MarketCapAdapter extends RecyclerView.Adapter<MarketCapAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MarketCapEntry entry = marketCaps.get(position);
+        MarketCapEntry entry = data.get(position);
         holder.getCurrentPrice().setText(String.valueOf(entry.getCurrentPrice()));
-    }
-
-    @Override
-    public int getItemCount() {
-        return marketCaps.size();
-    }
-
-    public void updateMarketCaps(final List<MarketCapEntry> newMarketCaps){
-        Log.e("HD", "Update market caps "+newMarketCaps.size());
-        marketCaps.clear();
-        marketCaps = newMarketCaps;
-        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

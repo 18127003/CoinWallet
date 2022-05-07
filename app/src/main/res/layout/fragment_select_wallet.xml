@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".ui.fragments.SelectWalletFragment"
+             xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+		<TextView
+				android:id="@+id/choose_wallet_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				app:layout_constraintRight_toRightOf="parent"
+				app:layout_constraintLeft_toLeftOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				android:text="@string/choose_wallet"/>
+		<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/wallet_info_list"
+				android:layout_marginTop="15dp"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:layout_constraintTop_toTopOf="@id/choose_wallet_text"/>
+		<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/create_wallet_btn"
+				android:text="Create"
+				app:layout_constraintTop_toBottomOf="@id/wallet_info_list"
+				app:layout_constraintLeft_toLeftOf="parent"
+				app:layout_constraintRight_toRightOf="parent"
+				/>
+		<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/restore_wallet_btn"
+				android:text="Restore"
+				app:layout_constraintTop_toBottomOf="@+id/create_wallet_btn"
+				app:layout_constraintLeft_toLeftOf="parent"
+				app:layout_constraintRight_toRightOf="parent"
+				/>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

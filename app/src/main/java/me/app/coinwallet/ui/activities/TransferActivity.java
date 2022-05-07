@@ -1,7 +1,5 @@
 package me.app.coinwallet.ui.activities;
 
-import android.os.Build;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -10,6 +8,7 @@ import android.os.Bundle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.dialogs.ConfirmDialog;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.adapters.AddressBookAdapter;
@@ -17,7 +16,7 @@ import me.app.coinwallet.data.addressbook.AddressBookEntry;
 import me.app.coinwallet.ui.dialogs.CustomDialog;
 import me.app.coinwallet.viewmodels.TransferPageViewModel;
 
-public class TransferActivity extends AppCompatActivity implements AddressBookAdapter.OnItemClickListener {
+public class TransferActivity extends AppCompatActivity implements BaseAdapter.OnItemClickListener<AddressBookEntry> {
 
     EditText sendAddress;
     EditText sendAmount;
@@ -47,7 +46,7 @@ public class TransferActivity extends AppCompatActivity implements AddressBookAd
         AddressBookAdapter adapter = new AddressBookAdapter(this);
         addressBook.setAdapter(adapter);
         addressBook.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        viewModel.getAddressBook().observe(this, adapter::updateAddressBook);
+        viewModel.getAddressBook().observe(this, adapter::update);
     }
 
     public void showAddContactDialog(){

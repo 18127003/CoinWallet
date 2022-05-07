@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.exceptions.MnemonicInaccessibleException;
+import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.dialogs.ConfirmDialog;
 import me.app.coinwallet.ui.dialogs.CustomDialog;
 import me.app.coinwallet.utils.BiometricUtil;
@@ -22,8 +23,9 @@ import me.app.coinwallet.viewmodels.HomePageViewModel;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.adapters.TxHistoryAdapter;
 import me.app.coinwallet.viewmodels.factory.HomePageViewModelFactory;
+import org.bitcoinj.core.Transaction;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements BaseAdapter.OnItemClickListener<Transaction> {
 
     private TextView balance;
     private Button sendButton;
@@ -54,7 +56,7 @@ public class HomeActivity extends BaseActivity {
         RecyclerView history = findViewById(R.id.tx_history);
         extractMnemonicBtn = findViewById(R.id.extract_mnemonic_button);
         history.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        TxHistoryAdapter historyAdapter = new TxHistoryAdapter();
+        TxHistoryAdapter historyAdapter = new TxHistoryAdapter(this);
         history.setAdapter(historyAdapter);
         sendButton.setOnClickListener(v -> moveTo(TransferActivity.class));
         utxoButton.setOnClickListener(v-> viewModel.checkUtxo());
@@ -72,7 +74,7 @@ public class HomeActivity extends BaseActivity {
         marketCapBtn.setOnClickListener(v -> moveTo(MarketCapActivity.class));
         viewModel.getBalance().observe(this, s->balance.setText(s));
         viewModel.getAddress().observe(this, s->address.setText(s));
-        viewModel.getHistory().observe(this, historyAdapter::updateHistory);
+        viewModel.getHistory().observe(this, historyAdapter::update);
         Button testBtn = findViewById(R.id.test_btn);
         testBtn.setOnClickListener(v->viewModel.test2());
     }
@@ -86,5 +88,10 @@ public class HomeActivity extends BaseActivity {
     private void moveTo(Class<?> dest){
         Intent intent = new Intent(this, dest);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(Transaction item) {
+
     }
 }
