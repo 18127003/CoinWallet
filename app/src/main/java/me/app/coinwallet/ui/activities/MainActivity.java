@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.os.Bundle;
 import androidx.lifecycle.ViewModelProvider;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import me.app.coinwallet.Configuration;
 import me.app.coinwallet.WalletApplication;
 import me.app.coinwallet.R;

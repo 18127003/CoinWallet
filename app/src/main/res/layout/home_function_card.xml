@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:backgroundTint="@color/yellow"
+
+>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="20dp"
+    >
+        <Button
+                android:id="@+id/send_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/send_button_label"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+        />
+        <Space
+                android:layout_height="wrap_content"
+                android:layout_width="1dp"
+                android:layout_toStartOf="@+id/qr_code"
+        />
+        <Button
+                android:id="@+id/qr_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/qr_code"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+        />
+        <Space
+                android:layout_height="wrap_content"
+                android:layout_width="2dp"
+                android:layout_toStartOf="@+id/scan_text_button"
+        />
+        <Button
+                android:id="@+id/scan_text_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/qr_code_scanner"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+        />
+    </RelativeLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

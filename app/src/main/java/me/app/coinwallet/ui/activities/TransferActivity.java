@@ -34,7 +34,7 @@ public class TransferActivity extends AppCompatActivity implements BaseAdapter.O
         sendAddress = findViewById(R.id.send_address_text);
         sendAmount = findViewById(R.id.send_text);
         sendBtn = findViewById(R.id.send_button);
-        balance = findViewById(R.id.balance);
+        balance = findViewById(R.id.balance_text);
         expectedBalance = findViewById(R.id.expected_balance);
         addressBook = findViewById(R.id.address_book);
         addAddressBtn = findViewById(R.id.add_address_book_button);

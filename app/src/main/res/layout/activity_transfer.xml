@@ -14,12 +14,12 @@
 				android:id="@+id/balance_label"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/balance_label"
+				android:text="@string/available_balance_label"
 				app:layout_constraintLeft_toLeftOf="parent"
 				app:layout_constraintRight_toLeftOf="@id/expected_balance_label"
 				app:layout_constraintTop_toTopOf="parent"/>
 		<TextView
-				android:id="@+id/balance"
+				android:id="@+id/balance_text"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="15dp"
@@ -39,7 +39,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="15dp"
-				app:layout_constraintLeft_toRightOf="@id/balance"
+				app:layout_constraintLeft_toRightOf="@id/balance_text"
 				app:layout_constraintRight_toRightOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/expected_balance_label"/>
 		<EditText
@@ -49,7 +49,7 @@
 				android:inputType="text"
 				android:layout_marginTop="30dp"
 				android:layout_marginHorizontal="30dp"
-				app:layout_constraintTop_toBottomOf="@+id/balance"
+				app:layout_constraintTop_toBottomOf="@+id/balance_text"
 				app:layout_constraintRight_toLeftOf="@id/add_address_book_button"
 				app:layout_constraintLeft_toLeftOf="parent"
 				android:hint=""/>
@@ -60,7 +60,7 @@
 				android:text="@string/add_address_book_button_label"
 				android:layout_marginTop="30dp"
 				android:layout_marginRight="30dp"
-				app:layout_constraintTop_toBottomOf="@+id/balance"
+				app:layout_constraintTop_toBottomOf="@+id/balance_text"
 				app:layout_constraintLeft_toRightOf="@+id/send_address_text"
 				app:layout_constraintRight_toRightOf="parent"
 				/>

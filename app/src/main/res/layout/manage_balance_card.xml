@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:backgroundTint="@color/yellow"
+>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+    >
+        <TextView
+                android:paddingEnd="5dp"
+                android:id="@+id/balance_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="@string/available_balance_label"
+                style="@style/h6.black"/>
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/balance_label"
+                app:layout_constraintLeft_toRightOf="@+id/balance_label"
+                app:layout_constraintBottom_toBottomOf="@id/balance_label"
+                android:background="@drawable/ic_visibility_off"
+                android:id="@+id/invisible_button"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/balance_text"
+                app:layout_constraintTop_toBottomOf="@id/balance_label"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:visibility="invisible"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/invisible"
+                app:layout_constraintTop_toBottomOf="@id/balance_label"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="@string/invisible_placeholder"
+                android:visibility="visible"/>
+
+        <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/manage_wallet_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:text="@string/manage_wallet_label"
+                android:drawableEnd="@drawable/ic_navigate_next"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+        />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

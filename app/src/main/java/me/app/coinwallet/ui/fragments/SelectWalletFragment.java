@@ -65,14 +65,8 @@ public class SelectWalletFragment extends Fragment implements BaseAdapter.OnItem
         walletInfoList.setAdapter(adapter);
         viewModel.getWalletInfos().observe(this, adapter::update);
 
-        restoreBtn.setOnClickListener((v)-> {
-            // TODO: select from list saved label - mnemonic preferences
-//            String mnemonic = viewModel.restoreMnemonic("wallet");
-//            String label = "wallet";
-//            viewModel.saveWalletInfo(label);
-//            moveToSync(label, mnemonic);
-            ((BaseActivity) requireActivity()).loadFragment(MnemonicRestoreFragment.newInstance());
-        });
+        restoreBtn.setOnClickListener((v)->
+                ((BaseActivity) requireActivity()).loadFragment(MnemonicRestoreFragment.newInstance()));
         createBtn.setOnClickListener((v)-> {
             String label = "wallet";
             viewModel.saveWalletInfo(label);

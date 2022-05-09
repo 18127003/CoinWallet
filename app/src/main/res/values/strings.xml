@@ -2,7 +2,7 @@
 	<string name="app_name">Coin Wallet</string>
 	<string name="app_setup_completed">Setup Completed</string>
 	<string name="app_sync_completed">Sync Completed</string>
-	<string name="balance_label">Balance</string>
+	<string name="available_balance_label">Balance</string>
 	<string name="expected_balance_label">Expected Balance</string>
 	<string name="send_button_label">Send</string>
 	<string name="market_cap_button_label">Market Cap</string>
@@ -18,6 +18,49 @@
 	<string name="cancel_option">Cancel</string>
 	<string name="mnemonic_preference_file">mnemonic_preference</string>
 	<string name="restore_mnemonic_label">Mnemonic available to restore</string>
-	<!-- TODO: Remove or change this placeholder text -->
 	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name="language_english" translatable="false">English</string>
+	<string name="language_vietnamese" translatable="false">Tiếng Việt</string>
+
+	<string-array name="language_names">
+		<item>@string/language_english</item>
+		<item>@string/language_vietnamese</item>
+	</string-array>
+	<string name="language_english_code" translatable="false">en</string>
+
+	<string name="language_vietnamese_code" translatable="false">vi</string>
+
+	<string-array name="language_codes">
+		<item>@string/language_english_code</item>
+		<item>@string/language_vietnamese_code</item>
+	</string-array>
+	<string name="bottom_nav_label_home">Home</string>
+	<string name="bottom_nav_label_history">History</string>
+	<string name="bottom_nav_label_transfer_rate">Transfer</string>
+	<string name="bottom_nav_label_setting">Settings</string>
+	<string name="page_title">Crypto Wallet</string>
+	<string name="title_activity_qr_code_scanner" translatable="false">QrCodeScannerActivity</string>
+	<string name="qr_code_scanner">Scanner</string>
+	<string name="qr_code">Qr code</string>
+	<string name="manage_wallet_label">Manage Wallet</string>
+	<string name="last_transaction">Latest Transaction</string>
+	<string name="market_cap" translatable="false">Coin Market Cap</string>
+	<string name="success">Success</string>
+	<string name="fail">Fail</string>
+	<string name="pending">Pending</string>
+	<string name="income">Income</string>
+	<string name="expend">Expend</string>
+	<string name="address">Address</string>
+	<string name="amount">Amount</string>
+	<string name="address_book">Address Book</string>
+	<string name="change_password">Change Password</string>
+	<string name="fingerprint">Fingerprint</string>
+	<string name="language">Language</string>
+	<string name="about">About</string>
+	<string name="title_activity_language_option" translatable="false">LanguageOptionActivity</string>
+	<string name="english">English</string>
+	<string name="vietnam">Vietnamese</string>
+	<string name="invisible_placeholder">**********</string>
+	<string name="notification">Notification</string>
+	<string name="profile">Person</string>
 </resources>
