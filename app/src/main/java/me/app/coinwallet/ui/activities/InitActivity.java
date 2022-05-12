@@ -26,7 +26,7 @@ public class InitActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init);
         InitPageViewModel viewModel = new ViewModelProvider(this).get(InitPageViewModel.class);
-        loadFragment(SelectWalletFragment.newInstance());
+        loadFragment(SelectWalletFragment.class);
     }
 
     @Override

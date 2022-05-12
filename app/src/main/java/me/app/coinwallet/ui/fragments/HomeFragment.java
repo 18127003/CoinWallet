@@ -1,6 +1,8 @@
 package me.app.coinwallet.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import me.app.coinwallet.R;
+import me.app.coinwallet.ui.activities.TransferActivity;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 
 public class HomeFragment extends Fragment {
@@ -19,6 +22,7 @@ public class HomeFragment extends Fragment {
     TextView invisibleText;
     ImageButton visible;
     HomePageViewModel viewModel;
+    Button sendBtn;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -49,9 +53,11 @@ public class HomeFragment extends Fragment {
         balance = view.findViewById(R.id.balance_text);
         invisibleText = view.findViewById(R.id.invisible);
         visible=view.findViewById(R.id.invisible_button);
+        sendBtn = view.findViewById(R.id.send_button);
         visible.setBackgroundResource(R.drawable.ic_visibility_off);
         visible.setOnClickListener(v-> hideOrShow());
         viewModel.getBalance().observe(this, s -> balance.setText(s));
+        sendBtn.setOnClickListener(v->startActivity(new Intent(requireActivity(), TransferActivity.class)));
     }
 
     private void hideOrShow() {

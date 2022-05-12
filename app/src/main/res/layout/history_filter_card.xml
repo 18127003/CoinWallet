@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="20dp"
+    >
+        <Button
+                android:id="@+id/success"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:text="@string/success"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+        />
+        <Space
+                android:layout_height="wrap_content"
+                android:layout_width="1dp"
+                android:layout_toLeftOf="@+id/qr_code"
+        />
+        <Button
+                android:id="@+id/fail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/success"
+
+                android:text="@string/fail"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+        />
+        <Space
+                android:layout_height="wrap_content"
+                android:layout_width="2dp"
+                android:layout_toLeftOf="@+id/scan"
+        />
+        <Button
+                android:id="@+id/pending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/fail"
+                android:text="@string/pending"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+        />
+        <ImageButton android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:background="@drawable/ic_filter"
+                     android:id="@+id/filter"
+                     android:layout_alignParentEnd="true"
+                     android:layout_centerVertical="true"
+        />
+    </RelativeLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

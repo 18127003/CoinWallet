@@ -8,12 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.R;
+import me.app.coinwallet.ui.adapters.TxHistoryAdapter;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 
 public class HistoryFragment extends Fragment {
 
     private HomePageViewModel viewModel;
+    private RecyclerView history;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -41,5 +45,10 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageViewModel.class);
+        history = view.findViewById(R.id.history_list);
+        TxHistoryAdapter adapter = new TxHistoryAdapter();
+        history.setAdapter(adapter);
+        history.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        viewModel.getMonthlyReports().observe(this, adapter::update);
     }
 }

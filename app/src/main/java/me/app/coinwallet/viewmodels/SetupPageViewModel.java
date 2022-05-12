@@ -47,10 +47,10 @@ public class SetupPageViewModel extends AndroidViewModel implements LocalWallet.
     }
 
     @Override
-    public void update(WalletNotificationType type, String content) {
+    public void update(WalletNotificationType type, Object content) {
         switch (type){
             case SYNC_PROGRESS:
-                syncProgress.postValue(content);
+                syncProgress.postValue((String) content);
                 break;
             case SYNC_COMPLETED:
                 status.postValue(R.string.app_sync_completed);

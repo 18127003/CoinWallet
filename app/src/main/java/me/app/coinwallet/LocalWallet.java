@@ -17,6 +17,7 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class LocalWallet {
     private static LocalWallet _instance = null;
@@ -27,7 +28,7 @@ public class LocalWallet {
         observers.add(listener);
     }
 
-    private void notifyObservers(WalletNotificationType type, String content){
+    private void  notifyObservers(WalletNotificationType type, Object content){
         for(EventListener l : observers){
             l.update(type, content);
         }
@@ -60,11 +61,11 @@ public class LocalWallet {
     public boolean isEncrypted(){ return walletAppKit.wallet().isEncrypted(); }
 
     public String getPlainBalance(){
-        return walletAppKit.wallet().getBalance().toPlainString();
+        return walletAppKit.wallet().getBalance().toFriendlyString();
     }
 
     public String getExpectedBalance(){
-        return walletAppKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED).toPlainString();
+        return walletAppKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED).toFriendlyString();
     }
 
     public String getLabel() {
@@ -81,8 +82,8 @@ public class LocalWallet {
     }
 
     public List<Transaction> history(){
-        Set<Transaction> txs = walletAppKit.wallet().getTransactions(true);
-        return new ArrayList<>(txs);
+        return walletAppKit.wallet().getTransactions(true)
+                .stream().sorted(Transaction.SORT_TX_BY_UPDATE_TIME).collect(Collectors.toList());
     }
 
     private void addListeners(){
@@ -111,8 +112,8 @@ public class LocalWallet {
             final Wallet.SendResult sendResult = walletAppKit.wallet().sendCoins(walletAppKit.peerGroup(), request);
             Log.e("HD","Sending "+amountToSend.toPlainString()+" BTC");
             sendResult.broadcastComplete.addListener(() -> {
-                Log.e("HD", "Tx accepted");
-                notifyObservers(WalletNotificationType.TX_ACCEPTED, "");
+                Log.e("HD", "Tx broadcast completed");
+                notifyObservers(WalletNotificationType.TX_BROADCAST_COMPLETED, "");
             }, Runnable::run);
         } catch (InsufficientMoneyException e){
             Log.e("HD","Insufficient money");
@@ -135,12 +136,12 @@ public class LocalWallet {
         walletAppKit.wallet().addCoinsReceivedEventListener((wallet, tx, prevBalance, newBalance) -> {
             Coin value = tx.getValueSentToMe(wallet);
             Log.e("HD","Received tx for " + value.toFriendlyString() + ": " + tx);
-            notifyObservers(WalletNotificationType.TX_RECEIVED, "");
+            notifyObservers(WalletNotificationType.TX_RECEIVED, tx);
             Futures.addCallback(tx.getConfidence().getDepthFuture(1), new FutureCallback<TransactionConfidence>() {
                 @Override
                 public void onSuccess(TransactionConfidence result) {
                     Log.e("HD","Receipt of "+result.getTransactionHash().toString()+" reached 1 confirmation");
-                    notifyObservers(WalletNotificationType.TX_ACCEPTED,"");
+                    notifyObservers(WalletNotificationType.TX_ACCEPTED, tx);
                 }
 
                 @Override
@@ -214,6 +215,6 @@ public class LocalWallet {
     }
 
     public interface EventListener {
-        void update(WalletNotificationType type, String content);
+        void update(WalletNotificationType type, Object content);
     }
 }

@@ -43,7 +43,7 @@ public class TransferPageViewModel extends AndroidViewModel implements LocalWall
             double doubleValue = Double.parseDouble(value);
             localWallet.send(sendAddress, doubleValue, password);
         } catch (NumberFormatException e){
-            Log.e("HD","Send amount not in number format");
+            Log.e("HD","Send amount not in number format "+value);
         }
     }
 
@@ -61,7 +61,7 @@ public class TransferPageViewModel extends AndroidViewModel implements LocalWall
     }
 
     @Override
-    public void update(WalletNotificationType type, String content) {
+    public void update(WalletNotificationType type, Object content) {
         switch (type){
             case TX_RECEIVED:
                 refreshBalance();

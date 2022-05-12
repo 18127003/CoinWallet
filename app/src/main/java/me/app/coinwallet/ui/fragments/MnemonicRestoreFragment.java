@@ -65,7 +65,7 @@ public class MnemonicRestoreFragment extends Fragment implements BaseAdapter.OnI
         cancelBtn = view.findViewById(R.id.cancel_button);
         mnemonicLabels = view.findViewById(R.id.restore_mnemonic_list);
         viewModel = new ViewModelProvider(requireActivity()).get(InitPageViewModel.class);
-        cancelBtn.setOnClickListener(v->((BaseActivity) requireActivity()).loadFragment(SelectWalletFragment.newInstance()));
+        cancelBtn.setOnClickListener(v->((BaseActivity) requireActivity()).loadFragment(SelectWalletFragment.class));
         RestoreMnemonicAdapter adapter = new RestoreMnemonicAdapter(this);
         mnemonicLabels.setAdapter(adapter);
         mnemonicLabels.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

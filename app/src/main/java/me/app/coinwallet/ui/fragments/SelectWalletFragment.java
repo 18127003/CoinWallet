@@ -66,7 +66,7 @@ public class SelectWalletFragment extends Fragment implements BaseAdapter.OnItem
         viewModel.getWalletInfos().observe(this, adapter::update);
 
         restoreBtn.setOnClickListener((v)->
-                ((BaseActivity) requireActivity()).loadFragment(MnemonicRestoreFragment.newInstance()));
+                ((BaseActivity) requireActivity()).loadFragment(MnemonicRestoreFragment.class));
         createBtn.setOnClickListener((v)-> {
             String label = "wallet";
             viewModel.saveWalletInfo(label);

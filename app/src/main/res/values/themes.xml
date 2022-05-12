@@ -2,16 +2,16 @@
 	<!-- Base application theme. -->
 	<style name="Theme.CoinWallet" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 		<!-- Primary brand color. -->
-		<item name="colorPrimary">@color/black</item>
+		<item name="colorPrimary">@color/blue_black</item>
 		<item name="colorPrimaryVariant">@color/yellow</item>
 		<item name="colorOnPrimary">@color/yellow</item>
 		<!-- Secondary brand color. -->
 		<item name="colorSecondary">@color/yellow</item>
-		<item name="colorSecondaryVariant">@color/black</item>
-		<item name="colorOnSecondary">@color/black</item>
+		<item name="colorSecondaryVariant">@color/blue_black</item>
+		<item name="colorOnSecondary">@color/blue_black</item>
 		<!-- Status bar color. -->
 		<item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 		<!-- Customize your theme here. -->
-		<item name="android:windowBackground">@color/black</item>
+		<item name="android:windowBackground">@color/blue_black</item>
 	</style>
 </resources>

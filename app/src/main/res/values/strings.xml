@@ -49,7 +49,7 @@
 	<string name="fail">Fail</string>
 	<string name="pending">Pending</string>
 	<string name="income">Income</string>
-	<string name="expend">Expend</string>
+	<string name="outcome">Outcome</string>
 	<string name="address">Address</string>
 	<string name="amount">Amount</string>
 	<string name="address_book">Address Book</string>

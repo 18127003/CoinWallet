@@ -7,6 +7,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
+import me.app.coinwallet.ui.fragments.HistoryFragment;
 import me.app.coinwallet.ui.fragments.HomeFragment;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
@@ -50,10 +51,10 @@ public class HomeActivity extends BaseActivity implements BaseAdapter.OnItemClic
         bottomAppBar.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.page_home:
-                    loadFragment(HomeFragment.newInstance());
+                    loadFragment(HomeFragment.class);
                     break;
                 case R.id.page_history:
-//                    loadFragment(fragment);
+                    loadFragment(HistoryFragment.class);
                     break;
                 case R.id.page_transfer_rate:
 //                    loadFragment(fragment);
@@ -71,7 +72,7 @@ public class HomeActivity extends BaseActivity implements BaseAdapter.OnItemClic
     @Override
     protected void onStart() {
         super.onStart();
-        loadFragment(HomeFragment.newInstance());
+        loadFragment(HomeFragment.class);
     }
 
     private void moveTo(Class<?> dest){

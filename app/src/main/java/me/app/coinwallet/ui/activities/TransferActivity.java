@@ -63,7 +63,7 @@ public class TransferActivity extends AppCompatActivity implements BaseAdapter.O
                     (password) -> viewModel.send(sendAddressText, sendAmountText, password));
             dialog.show(getSupportFragmentManager(), "password_send");
         } else {
-            viewModel.send(sendAddressText, sendAddressText, null);
+            viewModel.send(sendAddressText, sendAmountText, null);
         }
     }
 

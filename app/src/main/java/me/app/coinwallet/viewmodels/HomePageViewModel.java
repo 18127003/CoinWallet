@@ -12,26 +12,29 @@ import androidx.lifecycle.MutableLiveData;
 import me.app.coinwallet.LocalWallet;
 import me.app.coinwallet.R;
 import me.app.coinwallet.WalletNotificationType;
+import me.app.coinwallet.data.livedata.WalletLiveData;
+import me.app.coinwallet.data.transaction.MonthlyReport;
+import me.app.coinwallet.data.transaction.TransactionWrapper;
 import me.app.coinwallet.exceptions.MnemonicInaccessibleException;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.utils.CryptoEngine;
+import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.Transaction;
 import java.util.List;
 
 public class HomePageViewModel extends AndroidViewModel implements LocalWallet.EventListener {
     private final LocalWallet localWallet = LocalWallet.getInstance();
-    private final MutableLiveData<String> balance = new MutableLiveData<>();
-    private final MutableLiveData<List<Transaction>> history = new MutableLiveData<>();
-    private final MutableLiveData<String> address = new MutableLiveData<>();
-    private final MutableLiveData<String> encryptBtnLabel = new MutableLiveData<>();
     private final Application application;
     private final BiometricUtil biometricUtil;
+    private final WalletLiveData walletLiveData;
 
-    public LiveData<String> getBalance(){ return balance; }
+    public LiveData<String> getBalance(){ return walletLiveData.getAvailableBalance(); }
 
-    public LiveData<List<Transaction>> getHistory(){return history;}
+    public MutableLiveData<List<MonthlyReport>> getMonthlyReports() {
+        return walletLiveData.getMonthlyReports();
+    }
 
-    public LiveData<String> getAddress(){return address;}
+    public LiveData<String> getAddress(){return walletLiveData.getCurrentReceivingAddress();}
 
     public void extractMnemonic() throws MnemonicInaccessibleException{
         String mnemonicCode = localWallet.wallet().getKeyChainSeed().getMnemonicString();
@@ -65,53 +68,27 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
         localWallet.check();
     }
 
-    public MutableLiveData<String> getEncryptBtnLabel() {
-        return encryptBtnLabel;
-    }
-
-    public void encryptOrDecrypt(String password){
-        if(localWallet.isEncrypted()){
-            localWallet.decryptWallet(password);
-        } else {
-            localWallet.encryptWallet(password);
-        }
-        refreshEncryptBtn();
-    }
-
-    public void encryptCheck(){
-        Log.e("HD","Is encrypt: "+localWallet.wallet().isEncrypted());
-    }
-
-    public void refresh(){
-        balance.postValue(localWallet.getPlainBalance());
-        history.postValue(localWallet.history());
-        address.postValue(localWallet.getAddress().toString());
-    }
-
-    private void refreshEncryptBtn(){
-        encryptBtnLabel.postValue(localWallet.isEncrypted()?"Decrypt":"Encrypt");
-    }
-
     public HomePageViewModel(Application application, BiometricUtil biometricUtil){
         super(application);
         this.application = application;
         this.biometricUtil = biometricUtil;
         localWallet.subscribe(this);
-        refreshEncryptBtn();
-        refresh();
+        walletLiveData = new WalletLiveData(localWallet);
+        walletLiveData.refreshAll();
     }
 
     @Override
-    public void update(WalletNotificationType type, String content) {
+    public void update(WalletNotificationType type, Object content) {
         switch (type){
             case TX_ACCEPTED:
-                refresh();
+                walletLiveData.refreshAvailableBalance();
+                walletLiveData.refreshTxHistory((Transaction) content);
+                walletLiveData.refreshAvailableBalance();
                 break;
             case TX_RECEIVED:
-                refresh();
-                break;
-            case BALANCE_CHANGED:
-                refresh();
+                walletLiveData.refreshCurrentReceivingAddress();
+                walletLiveData.refreshExpectedBalance();
+                walletLiveData.refreshTxHistory((Transaction) content);
                 break;
         }
     }

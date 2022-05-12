@@ -1,13 +1,18 @@
 package me.app.coinwallet.ui.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import me.app.coinwallet.R;
 import me.app.coinwallet.WalletApplication;
+import me.app.coinwallet.ui.fragments.HomeFragment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
 
 public abstract class BaseActivity extends AppCompatActivity {
     private WalletApplication application;
@@ -27,13 +32,24 @@ public abstract class BaseActivity extends AppCompatActivity {
     /***
      * load fragment with default frame id = R.id.frame_container
      */
-    public void loadFragment(Fragment fragment){
+    public void loadFragment(Class<? extends Fragment> fragment){
         loadFragment(fragment, R.id.frame_container);
     }
 
-    protected void loadFragment(Fragment fragment, int frameId){
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(frameId, fragment);
+    protected void loadFragment(Class<? extends Fragment> fragment, int frameId){
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction =manager.beginTransaction();
+        boolean fragmentPopped = manager.popBackStackImmediate (fragment.getSimpleName(), 0);
+        Fragment current = manager.findFragmentByTag(fragment.getSimpleName());
+        if(!fragmentPopped && current == null){
+            try {
+                current = (Fragment) fragment.getMethod("newInstance").invoke(null);
+            } catch (NoSuchMethodException| IllegalAccessException| IllegalArgumentException| InvocationTargetException e){
+                // Ignore
+            }
+            transaction.addToBackStack(null);
+        }
+        transaction.replace(frameId, current, fragment.getSimpleName());
         transaction.addToBackStack(null);
         transaction.commit();
     }

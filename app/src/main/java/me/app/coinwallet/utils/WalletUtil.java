@@ -6,16 +6,20 @@ import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.TypefaceSpan;
 import androidx.annotation.Nullable;
-import com.google.common.base.Stopwatch;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import me.app.coinwallet.Constants;
+import me.app.coinwallet.data.transaction.MonthlyReport;
+import me.app.coinwallet.data.transaction.TransactionWrapper;
 import org.bitcoinj.core.*;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptException;
-import org.bitcoinj.wallet.Protos;
 import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.WalletProtobufSerializer;
 
-import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class WalletUtil {
     /***

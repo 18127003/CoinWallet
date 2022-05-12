@@ -7,8 +7,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="vertical"
-		tools:context=".ui.activities.HomeActivity"
-		android:background="@color/material_on_primary_disabled">
+		tools:context=".ui.activities.HomeActivity">
 
 	<FrameLayout
 			android:id="@+id/frame_container"
