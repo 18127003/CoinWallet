@@ -7,10 +7,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.card.MaterialCardView;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 
 public class TransactionAdapter extends BaseAdapter<TransactionWrapper, TransactionAdapter.ViewHolder> {
@@ -44,6 +43,7 @@ public class TransactionAdapter extends BaseAdapter<TransactionWrapper, Transact
             case BUILDING:
                 holder.status.setBackgroundResource(R.drawable.ic_done);
         }
+        holder.txCard.setOnClickListener(v->listener.onClick(tx));
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -52,16 +52,16 @@ public class TransactionAdapter extends BaseAdapter<TransactionWrapper, Transact
         private final TextView amount;
         private final TextView confirmNum;
         private final ImageView status;
+        private final MaterialCardView txCard;
 
         public ViewHolder(View view) {
             super(view);
-            // Define click listener for the ViewHolder's View
-
             receiver = view.findViewById(R.id.tx_receiver);
             time = view.findViewById(R.id.tx_time);
             amount = view.findViewById(R.id.tx_amount);
             confirmNum = view.findViewById(R.id.tx_confirmation_number);
             status = view.findViewById(R.id.tx_status);
+            txCard = view.findViewById(R.id.transaction_item_card);
         }
     }
 }
