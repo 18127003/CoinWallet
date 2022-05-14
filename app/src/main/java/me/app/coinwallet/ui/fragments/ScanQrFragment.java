@@ -29,8 +29,6 @@ import java.util.concurrent.ExecutorService;
 public class ScanQrFragment extends Fragment {
 
     DecoratedBarcodeView barcodeView;
-    Executor executor;
-    private final static int cameraPermissionReqCode = 250;
     private boolean askedPermission = false;
 
     public ScanQrFragment() {
@@ -47,7 +45,6 @@ public class ScanQrFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        executor = ((BaseActivity) requireActivity()).configuration.executorService;
     }
 
     @Override
@@ -62,9 +59,7 @@ public class ScanQrFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         barcodeView = view.findViewById(R.id.barcode_view);
         barcodeView.setStatusText("");
-        executor.execute(()->{
-            barcodeView.decodeSingle(result -> barcodeView.setStatusText(result.getText()));
-        });
+        barcodeView.decodeSingle(result -> barcodeView.setStatusText(result.getText()));
     }
 
     @Override

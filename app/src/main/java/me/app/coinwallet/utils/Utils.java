@@ -1,11 +1,5 @@
 package me.app.coinwallet.utils;
 
-import android.content.Context;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
-import me.app.coinwallet.R;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
