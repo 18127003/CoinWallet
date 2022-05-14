@@ -12,6 +12,9 @@ import androidx.lifecycle.MutableLiveData;
 import me.app.coinwallet.LocalWallet;
 import me.app.coinwallet.R;
 import me.app.coinwallet.WalletNotificationType;
+import me.app.coinwallet.data.addressbook.AddressBookDao;
+import me.app.coinwallet.data.addressbook.AddressBookDatabase;
+import me.app.coinwallet.data.addressbook.AddressBookEntry;
 import me.app.coinwallet.data.livedata.WalletLiveData;
 import me.app.coinwallet.data.transaction.MonthlyReport;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
@@ -27,6 +30,7 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
     private final Application application;
     private final BiometricUtil biometricUtil;
     private final WalletLiveData walletLiveData;
+    private final AddressBookDao addressBookDao;
 
     public LiveData<String> getBalance(){ return walletLiveData.getAvailableBalance(); }
 
@@ -35,6 +39,27 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
     }
 
     public LiveData<String> getAddress(){return walletLiveData.getCurrentReceivingAddress();}
+
+    public LiveData<List<AddressBookEntry>> getAddressBook() {
+        return addressBookDao.getAll();
+    }
+
+    public boolean isWalletEncrypted(){
+        return localWallet.isEncrypted();
+    }
+
+    public void send(String sendAddress, String value, String password){
+        try{
+            double doubleValue = Double.parseDouble(value);
+            localWallet.send(sendAddress, doubleValue, password);
+        } catch (NumberFormatException e){
+            Log.e("HD","Send amount not in number format "+value);
+        }
+    }
+
+    public void saveToAddressBook(String label, String address){
+        addressBookDao.insertOrUpdate(new AddressBookEntry(address, label));
+    }
 
     public void extractMnemonic() throws MnemonicInaccessibleException{
         String mnemonicCode = localWallet.wallet().getKeyChainSeed().getMnemonicString();
@@ -73,6 +98,7 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
         this.application = application;
         this.biometricUtil = biometricUtil;
         localWallet.subscribe(this);
+        addressBookDao = AddressBookDatabase.getDatabase(application.getApplicationContext()).addressBookDao();
         walletLiveData = new WalletLiveData(localWallet);
         walletLiveData.refreshAll();
     }

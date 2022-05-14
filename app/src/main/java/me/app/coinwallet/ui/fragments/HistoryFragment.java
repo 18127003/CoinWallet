@@ -11,10 +11,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.R;
+import me.app.coinwallet.data.transaction.TransactionWrapper;
+import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.TxHistoryAdapter;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements BaseAdapter.OnItemClickListener<TransactionWrapper> {
 
     private HomePageViewModel viewModel;
     private RecyclerView history;
@@ -46,9 +48,17 @@ public class HistoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageViewModel.class);
         history = view.findViewById(R.id.history_list);
-        TxHistoryAdapter adapter = new TxHistoryAdapter();
+        TxHistoryAdapter adapter = new TxHistoryAdapter(this);
         history.setAdapter(adapter);
         history.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         viewModel.getMonthlyReports().observe(this, adapter::update);
+    }
+
+    /***
+     * on click method for each transaction card
+     */
+    @Override
+    public void onClick(TransactionWrapper item) {
+        // TODO: Move to transaction detail page
     }
 }

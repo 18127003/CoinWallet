@@ -11,6 +11,10 @@ import java.util.concurrent.TimeUnit;
 public final class Constants {
     public static final String NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL_ID";
 
+    public static final int QR_BITMAP_SCALE_HEIGHT = 500;
+
+    public static final int QR_BITMAP_SCALE_WIDTH = 500;
+
     public static final NetworkParameters NETWORK_PARAMETERS = TestNet3Params.get();
 
     public static final Script.ScriptType DEFAULT_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2WPKH;

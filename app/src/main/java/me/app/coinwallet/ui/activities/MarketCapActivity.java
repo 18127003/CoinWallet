@@ -19,13 +19,11 @@ public class MarketCapActivity extends BaseActivity implements BaseAdapter.OnIte
 
     private MarketCapViewModel viewModel;
     private MarketCapAdapter adapter;
-    private Configuration configuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_market_cap);
-        configuration = getWalletApplication().getConfiguration();
         viewModel = new ViewModelProvider(this).get(MarketCapViewModel.class);
         RecyclerView marketCaps = findViewById(R.id.market_caps);
         marketCaps.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));

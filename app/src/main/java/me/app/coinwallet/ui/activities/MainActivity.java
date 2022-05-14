@@ -14,14 +14,10 @@ import me.app.coinwallet.viewmodels.SetupPageViewModel;
 public class MainActivity extends BaseActivity {
     private TextView sync;
     private TextView status;
-    private WalletApplication application;
-    private Configuration configuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.application = getWalletApplication();
-        this.configuration = application.getConfiguration();
         setContentView(R.layout.activity_main);
         Intent comingIntent = getIntent();
         String label = comingIntent.getStringExtra("label");

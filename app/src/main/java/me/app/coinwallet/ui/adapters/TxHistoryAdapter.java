@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.transaction.MonthlyReport;
+import me.app.coinwallet.data.transaction.TransactionWrapper;
 
 public class TxHistoryAdapter extends BaseAdapter<MonthlyReport, TxHistoryAdapter.ViewHolder> {
 
@@ -18,9 +19,11 @@ public class TxHistoryAdapter extends BaseAdapter<MonthlyReport, TxHistoryAdapte
      */
     private Context context;
     private final RecyclerView.RecycledViewPool viewPool;
+    private final OnItemClickListener<TransactionWrapper> txListener;
 
-    public TxHistoryAdapter(){
+    public TxHistoryAdapter(OnItemClickListener<TransactionWrapper> txListener){
         super(null);
+        this.txListener = txListener;
         viewPool = new RecyclerView.RecycledViewPool();
     }
 
@@ -35,7 +38,7 @@ public class TxHistoryAdapter extends BaseAdapter<MonthlyReport, TxHistoryAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MonthlyReport monthlyReport = data.get(position);
-        TransactionAdapter adapter = new TransactionAdapter();
+        TransactionAdapter adapter = new TransactionAdapter(txListener);
         adapter.update(monthlyReport.getTransactions());
         holder.transactions.setAdapter(adapter);
         holder.transactions.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));

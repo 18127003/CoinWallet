@@ -15,8 +15,8 @@ import org.bitcoinj.core.TransactionConfidence;
 
 public class TransactionAdapter extends BaseAdapter<TransactionWrapper, TransactionAdapter.ViewHolder> {
 
-    public TransactionAdapter() {
-        super(null);
+    public TransactionAdapter(OnItemClickListener<TransactionWrapper> listener) {
+        super(listener);
     }
 
     @NonNull

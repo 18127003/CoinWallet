@@ -63,4 +63,6 @@
 	<string name="invisible_placeholder">**********</string>
 	<string name="notification">Notification</string>
 	<string name="profile">Person</string>
+	<string name="save_contact">Save contact</string>
+	<string name="contact">Contact</string>
 </resources>

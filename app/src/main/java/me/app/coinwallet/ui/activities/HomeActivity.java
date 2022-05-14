@@ -9,13 +9,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.fragments.HistoryFragment;
 import me.app.coinwallet.ui.fragments.HomeFragment;
+import me.app.coinwallet.ui.fragments.TransferFragment;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 import me.app.coinwallet.R;
 import me.app.coinwallet.viewmodels.factory.BiometricViewModelFactory;
 import org.bitcoinj.core.Transaction;
 
-public class HomeActivity extends BaseActivity implements BaseAdapter.OnItemClickListener<Transaction> {
+public class HomeActivity extends BaseActivity {
 
     private HomePageViewModel viewModel;
     private FloatingActionButton scanBtn;
@@ -30,7 +31,7 @@ public class HomeActivity extends BaseActivity implements BaseAdapter.OnItemClic
         viewModel = new ViewModelProvider(this, new BiometricViewModelFactory(getApplication(), biometricUtil))
                 .get(HomePageViewModel.class);
         scanBtn = findViewById(R.id.scan_fab);
-//        scanBtn.setOnClickListener(v -> moveTo(CodeActivity.class));
+        scanBtn.setOnClickListener(v -> moveTo(ScanQrActivity.class));
 
         materialToolbar=findViewById(R.id.top_app_bar);
         materialToolbar.setOnMenuItemClickListener(item -> {
@@ -56,8 +57,8 @@ public class HomeActivity extends BaseActivity implements BaseAdapter.OnItemClic
                 case R.id.page_history:
                     loadFragment(HistoryFragment.class);
                     break;
-                case R.id.page_transfer_rate:
-//                    loadFragment(fragment);
+                case R.id.page_transfer:
+                    loadFragment(TransferFragment.class);
                     break;
                 case R.id.page_setting:
 //                    loadFragment(fragment);
@@ -78,10 +79,5 @@ public class HomeActivity extends BaseActivity implements BaseAdapter.OnItemClic
     private void moveTo(Class<?> dest){
         Intent intent = new Intent(this, dest);
         startActivity(intent);
-    }
-
-    @Override
-    public void onClick(Transaction item) {
-
     }
 }

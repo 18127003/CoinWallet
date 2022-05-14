@@ -8,15 +8,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Configuration {
     public final int lastVersionCode;
     public final File directory;
-    public final NetworkParameters parameters = TestNet3Params.get();
+    public final NetworkParameters parameters;
+    public final ExecutorService executorService;
 
     private final SharedPreferences prefs;
     private final Resources res;
     private static final String PREFS_KEY_LAST_VERSION = "last_version";
+    private static final int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
     private static final Logger log = LoggerFactory.getLogger(Configuration.class);
 
@@ -25,6 +29,8 @@ public class Configuration {
         this.res = res;
         this.directory = directory;
         this.lastVersionCode = prefs.getInt(PREFS_KEY_LAST_VERSION, 0);
+        this.parameters = TestNet3Params.get();
+        this.executorService = Executors.newFixedThreadPool(NUMBER_OF_CORES);
     }
 
     public void updateLastVersionCode(final int currentVersionCode) {

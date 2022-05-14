@@ -56,6 +56,12 @@ public class WalletLiveData {
         refreshTxHistory();
     }
 
+    public void refreshAllExceptHistory(){
+        refreshAvailableBalance();
+        refreshExpectedBalance();
+        refreshCurrentReceivingAddress();
+    }
+
     public MutableLiveData<List<MonthlyReport>> getMonthlyReports() {
         return monthlyReports;
     }

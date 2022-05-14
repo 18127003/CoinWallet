@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import me.app.coinwallet.R;
-import me.app.coinwallet.ui.activities.TransferActivity;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 
 public class HomeFragment extends Fragment {
@@ -57,7 +56,6 @@ public class HomeFragment extends Fragment {
         visible.setBackgroundResource(R.drawable.ic_visibility_off);
         visible.setOnClickListener(v-> hideOrShow());
         viewModel.getBalance().observe(this, s -> balance.setText(s));
-        sendBtn.setOnClickListener(v->startActivity(new Intent(requireActivity(), TransferActivity.class)));
     }
 
     private void hideOrShow() {
