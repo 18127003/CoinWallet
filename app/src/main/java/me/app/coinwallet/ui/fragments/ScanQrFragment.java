@@ -1,6 +1,7 @@
 package me.app.coinwallet.ui.fragments;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,8 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.journeyapps.barcodescanner.*;
 import com.journeyapps.barcodescanner.camera.CameraSettings;
+import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.BaseActivity;
+import me.app.coinwallet.ui.activities.TransferActivity;
 import me.app.coinwallet.utils.QRUtil;
 import me.app.coinwallet.utils.ToastUtil;
 
@@ -59,7 +62,11 @@ public class ScanQrFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         barcodeView = view.findViewById(R.id.barcode_view);
         barcodeView.setStatusText("");
-        barcodeView.decodeSingle(result -> barcodeView.setStatusText(result.getText()));
+        barcodeView.decodeSingle(result -> {
+            Intent intent = new Intent(getContext(), TransferActivity.class);
+            intent.putExtra(Constants.SEND_TO_ADDRESS_EXTRA_NAME, result.getText());
+            startActivity(intent);
+        });
     }
 
     @Override

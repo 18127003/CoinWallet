@@ -40,27 +40,6 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
 
     public LiveData<String> getAddress(){return walletLiveData.getCurrentReceivingAddress();}
 
-    public LiveData<List<AddressBookEntry>> getAddressBook() {
-        return addressBookDao.getAll();
-    }
-
-    public boolean isWalletEncrypted(){
-        return localWallet.isEncrypted();
-    }
-
-    public void send(String sendAddress, String value, String password){
-        try{
-            double doubleValue = Double.parseDouble(value);
-            localWallet.send(sendAddress, doubleValue, password);
-        } catch (NumberFormatException e){
-            Log.e("HD","Send amount not in number format "+value);
-        }
-    }
-
-    public void saveToAddressBook(String label, String address){
-        addressBookDao.insertOrUpdate(new AddressBookEntry(address, label));
-    }
-
     public void extractMnemonic() throws MnemonicInaccessibleException{
         String mnemonicCode = localWallet.wallet().getKeyChainSeed().getMnemonicString();
         if (mnemonicCode == null){

@@ -13,12 +13,12 @@ public class ScanQrActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_qr);
-        Toolbar toolbar = findViewById(R.id.topAppBar);
+        Toolbar toolbar = findViewById(R.id.top_app_bar);
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        BottomNavigationView bottomNavigationView= findViewById(R.id.bottomNavigation);
+        BottomNavigationView bottomNavigationView= findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()){
                 case R.id.scanner:

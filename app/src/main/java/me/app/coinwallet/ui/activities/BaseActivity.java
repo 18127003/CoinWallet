@@ -35,14 +35,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         loadFragment(fragment, R.id.frame_container);
     }
 
-    protected void loadFragment(Class<? extends Fragment> fragment, int frameId, Object... args){
+    protected void loadFragment(Class<? extends Fragment> fragment, int frameId){
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction =manager.beginTransaction();
         boolean fragmentPopped = manager.popBackStackImmediate (fragment.getSimpleName(), 0);
         Fragment current = manager.findFragmentByTag(fragment.getSimpleName());
         if(!fragmentPopped && current == null){
             try {
-                current = (Fragment) fragment.getMethod("newInstance").invoke(null, args);
+                current = (Fragment) fragment.getMethod("newInstance").invoke(null);
             } catch (NoSuchMethodException| IllegalAccessException| IllegalArgumentException| InvocationTargetException e){
                 // Ignore
             }
