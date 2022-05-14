@@ -7,6 +7,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.RequiresApi;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import me.app.coinwallet.R;
 
 import java.util.function.Consumer;
@@ -31,12 +33,12 @@ public class CustomDialog {
     private static ConfirmDialog singleTextDialog(LayoutInflater inflater, Consumer<String> callback, String message,
                                                   String label, int inputType){
         View view = inflater.inflate(SINGLE_EDIT_TEXT_LAYOUT, null);
-        EditText text = view.findViewById(R.id.dialog_edit_text);
+        TextInputEditText text = view.findViewById(R.id.dialog_edit_text);
         text.setInputType(inputType);
         TextView messageView = view.findViewById(R.id.dialog_message);
         messageView.setText(message);
-        TextView labelView = view.findViewById(R.id.dialog_label);
-        labelView.setText(label);
+        TextInputLayout textLayout = view.findViewById(R.id.dialog_edit_text_layout);
+        textLayout.setHint(label);
         return new ConfirmDialog(view, () -> callback.accept(text.getText().toString()));
     }
 }

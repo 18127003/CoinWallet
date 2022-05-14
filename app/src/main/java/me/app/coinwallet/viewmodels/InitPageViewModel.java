@@ -22,7 +22,7 @@ import java.util.List;
 public class InitPageViewModel extends AndroidViewModel {
     private final WalletInfoDao walletInfoDao;
     private final Application application;
-    private MutableLiveData<List<String>> mnemonicLabels = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> mnemonicLabels = new MutableLiveData<>();
 
     public InitPageViewModel(@NonNull final Application application) {
         super(application);

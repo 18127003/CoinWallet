@@ -46,6 +46,15 @@ public class SetupPageViewModel extends AndroidViewModel implements LocalWallet.
         WorkManager.getInstance(getApplication().getApplicationContext()).enqueue(workRequest);
     }
 
+    public boolean checkPassword(String password){
+        try{
+            return localWallet.checkPassword(password);
+        } catch (IllegalStateException e){
+            localWallet.encryptWallet(password);
+            return true;
+        }
+    }
+
     @Override
     public void update(WalletNotificationType type, Object content) {
         switch (type){

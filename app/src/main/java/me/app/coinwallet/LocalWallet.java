@@ -98,6 +98,10 @@ public class LocalWallet {
         }
     }
 
+    public boolean checkPassword(String password) throws IllegalStateException{
+        return walletAppKit.wallet().checkPassword(password);
+    }
+
     public void send(String sendAddress, double value, String password){
         final Coin amountToSend = Coin.ofBtc(BigDecimal.valueOf(value));
         Log.e("HD","Amount to send: "+amountToSend.toPlainString());

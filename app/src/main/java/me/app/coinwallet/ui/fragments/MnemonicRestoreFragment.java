@@ -15,12 +15,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.R;
-import me.app.coinwallet.data.wallets.WalletInfoEntry;
 import me.app.coinwallet.ui.activities.BaseActivity;
-import me.app.coinwallet.ui.activities.MainActivity;
+import me.app.coinwallet.ui.activities.SetupActivity;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.RestoreMnemonicAdapter;
-import me.app.coinwallet.ui.adapters.WalletInfoAdapter;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
 
@@ -87,7 +85,7 @@ public class MnemonicRestoreFragment extends Fragment implements BaseAdapter.OnI
     }
 
     public void restoreAndSync(String label, String mnemonic){
-        Intent intent = new Intent(requireActivity(), MainActivity.class);
+        Intent intent = new Intent(requireActivity(), SetupActivity.class);
         intent.putExtra("label", label);
         intent.putExtra("mnemonic", mnemonic);
         startActivity(intent);

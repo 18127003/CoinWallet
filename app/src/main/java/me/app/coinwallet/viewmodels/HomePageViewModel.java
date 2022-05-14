@@ -30,7 +30,6 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
     private final Application application;
     private final BiometricUtil biometricUtil;
     private final WalletLiveData walletLiveData;
-    private final AddressBookDao addressBookDao;
 
     public LiveData<String> getBalance(){ return walletLiveData.getAvailableBalance(); }
 
@@ -77,7 +76,6 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
         this.application = application;
         this.biometricUtil = biometricUtil;
         localWallet.subscribe(this);
-        addressBookDao = AddressBookDatabase.getDatabase(application.getApplicationContext()).addressBookDao();
         walletLiveData = new WalletLiveData(localWallet);
         walletLiveData.refreshAll();
     }

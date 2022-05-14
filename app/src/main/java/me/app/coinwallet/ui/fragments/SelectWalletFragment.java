@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.wallets.WalletInfoEntry;
 import me.app.coinwallet.ui.activities.BaseActivity;
-import me.app.coinwallet.ui.activities.MainActivity;
+import me.app.coinwallet.ui.activities.SetupActivity;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.WalletInfoAdapter;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
@@ -75,7 +75,7 @@ public class SelectWalletFragment extends Fragment implements BaseAdapter.OnItem
     }
 
     private void createAndSync(String label){
-        Intent intent = new Intent(requireActivity(), MainActivity.class);
+        Intent intent = new Intent(requireActivity(), SetupActivity.class);
         intent.putExtra("label", label);
         startActivity(intent);
     }
