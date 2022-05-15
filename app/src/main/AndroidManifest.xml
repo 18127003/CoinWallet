@@ -20,7 +20,8 @@
 			android:roundIcon="@mipmap/ic_launcher_round"
 			android:supportsRtl="true"
 			android:theme="@style/Theme.CoinWallet">
-		<activity android:name=".ui.activities.SingleFragmentActivity">
+		<activity android:name=".ui.activities.SingleFragmentActivity"
+		          android:configChanges="locale|layoutDirection">
 		</activity>
 		<activity android:name=".ui.activities.TransferActivity">
 		</activity>

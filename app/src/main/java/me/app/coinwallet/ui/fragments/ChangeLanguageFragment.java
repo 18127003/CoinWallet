@@ -1,6 +1,9 @@
 package me.app.coinwallet.ui.fragments;
 
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.language.LanguageOption;
+import me.app.coinwallet.ui.activities.HomeActivity;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.LanguageOptionAdapter;
 import me.app.coinwallet.viewmodels.SettingViewModel;
@@ -54,6 +58,11 @@ public class ChangeLanguageFragment extends Fragment implements BaseAdapter.OnIt
 
     @Override
     public void onClick(LanguageOption item) {
-
+        viewModel.changeLanguage(item.getCode(),
+        () -> {
+            Intent intent = new Intent(getContext(), HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
     }
 }

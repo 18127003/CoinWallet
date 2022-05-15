@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
+import me.app.coinwallet.utils.LocaleUtil;
 import me.app.coinwallet.workers.BitcoinDownloadWorker;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.TestNet3Params;
@@ -76,5 +77,10 @@ public class WalletApplication extends MultiDexApplication {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleUtil.onAttach(base, "en"));
     }
 }

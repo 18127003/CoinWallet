@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Coin Wallet</string>
+	<string name="app_setup_completed">Cài đặt hoàn thành</string>
+	<string name="app_sync_completed">Đồng bộ hoàn thành</string>
+	<string name="available_balance_label">Số dư</string>
+	<string name="expected_balance_label">Số dư dự kiến</string>
+	<string name="send_button_label">Gửi</string>
+	<string name="add_address_book_button_label">Thêm danh bạ</string>
+	<string name="welcome_text">Chào mừng tới ví Coin Wallet</string>
+	<string name="positive_dialog_button">Đồng ý</string>
+	<string name="negative_dialog_button">Thoát</string>
+	<string name="cancel_option">Hủy</string>
+	<string name="restore_mnemonic_label">Danh sách mnemonic</string>
+	<string name="bottom_nav_label_home">Trang chủ</string>
+	<string name="bottom_nav_label_history">Lịch sử</string>
+	<string name="bottom_nav_label_transfer_rate">Chuyển khoản</string>
+	<string name="bottom_nav_label_setting">Cài đặt</string>
+	<string name="page_title">Ví điện tử</string>
+	<string name="qr_code_scanner">Quét mã QR</string>
+	<string name="qr_code">Mã QR</string>
+	<string name="manage_wallet_label">Quản lý ví</string>
+	<string name="last_transaction">Giao dịch gần nhất</string>
+	<string name="success">Hoàn thành</string>
+	<string name="fail">Thất bại</string>
+	<string name="pending">Đang xử lý</string>
+	<string name="income">Đầu vào</string>
+	<string name="outcome">Đầu ra</string>
+	<string name="address">Địa chỉ</string>
+	<string name="amount">Số tiền</string>
+	<string name="address_book">Danh bạ</string>
+	<string name="change_password">Đổi mật khẩu</string>
+	<string name="fingerprint">Vân tay</string>
+	<string name="language">Ngôn ngữ</string>
+	<string name="about">Về chúng tôi</string>
+	<string name="notification" translatable="false">Thông báo</string>
+	<string name="profile">Cá nhân</string>
+	<string name="save_contact">Lưu danh bạ</string>
+	<string name="contact">Liên hệ</string>
+	<string name="new_password">Mật khẩu mới</string>
+	<string name="confirm_password">Mật khẩu xác nhận</string>
+	<string name="create_btn_label">Tạo ví</string>
+	<string name="restore_btn_label">Phục hồi ví</string>
+</resources>

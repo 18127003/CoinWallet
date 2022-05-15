@@ -5,20 +5,20 @@
 	<string name="available_balance_label">Balance</string>
 	<string name="expected_balance_label">Expected Balance</string>
 	<string name="send_button_label">Send</string>
-	<string name="market_cap_button_label">Market Cap</string>
+	<string name="market_cap_button_label" translatable="false">Market Cap</string>
 	<string name="add_address_book_button_label">Add contact</string>
-	<string name="check_utxo_button_label">Check utxo</string>
-	<string name="extract_mnemonic_button_label">Extract mnemonic</string>
-	<string name="hint_send_amount">0.0001</string>
-	<string name="choose_wallet">Choose your wallet</string>
-	<string name="channel_name">Notification channel</string>
-	<string name="channel_description">Coin wallet notification channel</string>
+	<string name="check_utxo_button_label" translatable="false">Check utxo</string>
+	<string name="extract_mnemonic_button_label" translatable="false">Extract mnemonic</string>
+	<string name="hint_send_amount" translatable="false">0.0001</string>
+	<string name="welcome_text">Welcome to Coin Wallet</string>
+	<string name="channel_name" translatable="false">Notification channel</string>
+	<string name="channel_description" translatable="false">Coin wallet notification channel</string>
 	<string name="positive_dialog_button">Yes</string>
 	<string name="negative_dialog_button">No</string>
 	<string name="cancel_option">Cancel</string>
-	<string name="mnemonic_preference_file">mnemonic_preference</string>
+	<string name="mnemonic_preference_file" translatable="false">mnemonic_preference</string>
 	<string name="restore_mnemonic_label">Mnemonic available to restore</string>
-	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 	<string name="language_english" translatable="false">English</string>
 	<string name="language_vietnamese" translatable="false">Tiếng Việt</string>
 
@@ -58,13 +58,15 @@
 	<string name="language">Language</string>
 	<string name="about">About</string>
 	<string name="title_activity_language_option" translatable="false">LanguageOptionActivity</string>
-	<string name="english">English</string>
-	<string name="vietnam">Vietnamese</string>
-	<string name="invisible_placeholder">**********</string>
+	<string name="english" translatable="false">English</string>
+	<string name="vietnam" translatable="false">Vietnamese</string>
+	<string name="invisible_placeholder" translatable="false">**********</string>
 	<string name="notification">Notification</string>
 	<string name="profile">Person</string>
 	<string name="save_contact">Save contact</string>
 	<string name="contact">Contact</string>
 	<string name="new_password">New Password</string>
 	<string name="confirm_password">Confirm Password</string>
+	<string name="create_btn_label">Create</string>
+	<string name="restore_btn_label">Restore</string>
 </resources>

@@ -1,5 +1,6 @@
 package me.app.coinwallet.ui.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import me.app.coinwallet.Configuration;
 import me.app.coinwallet.R;
 import me.app.coinwallet.WalletApplication;
 import me.app.coinwallet.ui.fragments.HomeFragment;
+import me.app.coinwallet.utils.LocaleUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +27,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         configuration = ((WalletApplication) getApplication()).getConfiguration();
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleUtil.onAttach(base));
     }
 
     /***

@@ -4,10 +4,6 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.os.Bundle;
 import androidx.lifecycle.ViewModelProvider;
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import me.app.coinwallet.Configuration;
-import me.app.coinwallet.WalletApplication;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.dialogs.ConfirmDialog;
 import me.app.coinwallet.ui.dialogs.CustomDialog;
@@ -21,7 +17,7 @@ public class SetupActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_setup);
         Intent comingIntent = getIntent();
         String label = comingIntent.getStringExtra("label");
         String mnemonic = comingIntent.getStringExtra("mnemonic");
@@ -44,6 +40,7 @@ public class SetupActivity extends BaseActivity {
                 (password) -> {
                     if(walletViewModel.checkPassword(password)){
                         Intent intent = new Intent(this, HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     } else {
                         onPasswordDeny();

@@ -1,8 +1,6 @@
 package me.app.coinwallet.ui.activities;
 
 import android.content.Intent;
-import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -16,15 +14,13 @@ public class SingleFragmentActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_no_app_bar);
+        setContentView(R.layout.activity_single_fragment);
         Intent intent = getIntent();
         String appBarTitle = intent.getStringExtra(Constants.APP_BAR_TITLE_EXTRA_NAME);
         toolbar = findViewById(R.id.top_app_bar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(appBarTitle);
-        toolbar.setNavigationOnClickListener(v->{
-            finish();
-        });
+        toolbar.setNavigationOnClickListener(v-> finish());
         Class<? extends Fragment> fragment = (Class<? extends Fragment>) intent.getSerializableExtra(Constants.INIT_FRAGMENT_EXTRA_NAME);
         if(fragment!=null){
             loadFragment(fragment);
