@@ -17,7 +17,6 @@ import java.util.List;
 public class TransferPageViewModel extends AndroidViewModel {
     private final LocalWallet localWallet = LocalWallet.getInstance();
     private final WalletLiveData walletLiveData;
-    private final MutableLiveData<String> sendToAddress = new MutableLiveData<>();
     private final AddressBookDao addressBookDao;
 
     public TransferPageViewModel(@NonNull Application application) {
@@ -25,14 +24,6 @@ public class TransferPageViewModel extends AndroidViewModel {
         walletLiveData = new WalletLiveData(localWallet);
         addressBookDao = AddressBookDatabase.getDatabase(application.getApplicationContext()).addressBookDao();
         walletLiveData.refreshAvailableBalance();
-    }
-
-    public void setSendToAddress(String address){
-        sendToAddress.setValue(address);
-    }
-
-    public LiveData<String> getSendToAddress() {
-        return sendToAddress;
     }
 
     public void saveToAddressBook(String label, String address){

@@ -15,10 +15,12 @@ import org.bitcoinj.utils.Threading;
 
 public class BitcoinDownloadWorker extends Worker implements LocalWallet.EventListener {
 
+    private final LocalWallet localWallet;
     public BitcoinDownloadWorker(
             @NonNull Context context,
             @NonNull WorkerParameters parameters) {
         super(context, parameters);
+        localWallet = LocalWallet.getInstance();
     }
 
     @NonNull
@@ -32,9 +34,8 @@ public class BitcoinDownloadWorker extends Worker implements LocalWallet.EventLi
     }
 
     private void download() {
-        LocalWallet wallet = LocalWallet.getInstance();
-        wallet.subscribe(this);
-        wallet.initWallet();
+        localWallet.subscribe(this);
+        localWallet.initWallet();
     }
 
     @Override

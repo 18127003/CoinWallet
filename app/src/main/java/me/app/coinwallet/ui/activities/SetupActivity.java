@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.lifecycle.ViewModelProvider;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.dialogs.ConfirmDialog;
-import me.app.coinwallet.ui.dialogs.CustomDialog;
+import me.app.coinwallet.ui.dialogs.SingleTextFieldDialog;
 import me.app.coinwallet.viewmodels.SetupPageViewModel;
 
 public class SetupActivity extends BaseActivity {
@@ -36,20 +36,33 @@ public class SetupActivity extends BaseActivity {
     }
 
     private void accessPasswordDialog(){
-        ConfirmDialog dialog = CustomDialog.passwordDialog(getLayoutInflater(),
-                (password) -> {
-                    if(walletViewModel.checkPassword(password)){
-                        Intent intent = new Intent(this, HomeActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    } else {
-                        onPasswordDeny();
+        ConfirmDialog dialog = SingleTextFieldDialog.passwordDialog(getLayoutInflater(),
+                new SingleTextFieldDialog.DialogListener() {
+                    @Override
+                    public void onConfirm(String text) {
+                        if(walletViewModel.checkPassword(text)){
+                            onPasswordVerified();
+                        } else {
+                            onPasswordDenied();
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        onPasswordDenied();
                     }
                 });
         dialog.show(getSupportFragmentManager(), "password_access");
     }
 
-    private void onPasswordDeny(){
+    private void onPasswordVerified(){
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void onPasswordDenied(){
         finish();
+        walletViewModel.cancelSync();
     }
 }

@@ -5,29 +5,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.journeyapps.barcodescanner.*;
-import com.journeyapps.barcodescanner.camera.CameraSettings;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
-import me.app.coinwallet.ui.activities.BaseActivity;
-import me.app.coinwallet.ui.activities.TransferActivity;
-import me.app.coinwallet.utils.QRUtil;
-import me.app.coinwallet.utils.ToastUtil;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
+import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 
 public class ScanQrFragment extends Fragment {
 
@@ -63,8 +53,10 @@ public class ScanQrFragment extends Fragment {
         barcodeView = view.findViewById(R.id.barcode_view);
         barcodeView.setStatusText("");
         barcodeView.decodeSingle(result -> {
-            Intent intent = new Intent(getContext(), TransferActivity.class);
+            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
             intent.putExtra(Constants.SEND_TO_ADDRESS_EXTRA_NAME, result.getText());
+            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Transfer Money");
+            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, TransferFragment.class);
             startActivity(intent);
         });
     }

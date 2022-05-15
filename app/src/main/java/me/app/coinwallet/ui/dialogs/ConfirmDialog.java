@@ -15,19 +15,19 @@ import java.util.Objects;
 public class ConfirmDialog extends DialogFragment {
     private String message;
     private String title;
-    private final Runnable onConfirmCallback;
     private View view;
+    private final OnSubmitListener callback;
 
-    public ConfirmDialog(String message, String title, Runnable onConfirmCallback){
+    public ConfirmDialog(String message, String title, OnSubmitListener callback){
         super();
         this.message = message;
         this.title = title;
-        this.onConfirmCallback = onConfirmCallback;
+        this.callback = callback;
     }
 
-    public ConfirmDialog(View view, Runnable onConfirmCallback){
+    public ConfirmDialog(View view, OnSubmitListener callback){
         this.view = view;
-        this.onConfirmCallback = onConfirmCallback;
+        this.callback = callback;
     }
 
     @NonNull
@@ -42,9 +42,17 @@ public class ConfirmDialog extends DialogFragment {
         builder.setCancelable(false)
                 .setPositiveButton(R.string.positive_dialog_button, (dialog, id) -> {
                     dialog.dismiss();
-                    onConfirmCallback.run();
+                    callback.onConfirm();
                 })
-                .setNegativeButton(R.string.negative_dialog_button, ((dialog, id) -> dialog.dismiss()));
+                .setNegativeButton(R.string.negative_dialog_button, ((dialog, id) -> {
+                    dialog.dismiss();
+                    callback.onCancel();
+                }));
         return builder.create();
+    }
+
+    public interface OnSubmitListener{
+        void onConfirm();
+        void onCancel();
     }
 }

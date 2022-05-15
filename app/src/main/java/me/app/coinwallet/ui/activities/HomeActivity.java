@@ -2,6 +2,7 @@ package me.app.coinwallet.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -80,5 +81,13 @@ public class HomeActivity extends BaseActivity {
     private void moveTo(Class<?> dest){
         Intent intent = new Intent(this, dest);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() > 1){
+            super.onBackPressed();
+        }
     }
 }

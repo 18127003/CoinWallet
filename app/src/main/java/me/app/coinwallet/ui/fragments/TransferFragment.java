@@ -1,5 +1,7 @@
 package me.app.coinwallet.ui.fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -14,12 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
+import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.addressbook.AddressBookEntry;
 import me.app.coinwallet.ui.adapters.AddressBookAdapter;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.dialogs.ConfirmDialog;
-import me.app.coinwallet.ui.dialogs.CustomDialog;
+import me.app.coinwallet.ui.dialogs.SingleTextFieldDialog;
 import me.app.coinwallet.viewmodels.TransferPageViewModel;
 
 public class TransferFragment extends Fragment implements BaseAdapter.OnItemClickListener<AddressBookEntry>{
@@ -71,7 +74,11 @@ public class TransferFragment extends Fragment implements BaseAdapter.OnItemClic
         AddressBookAdapter adapter = new AddressBookAdapter(this);
         addressBook.setAdapter(adapter);
         addressBook.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        viewModel.getSendToAddress().observe(requireActivity(), s->addressText.setText(s));
+        Intent intent = requireActivity().getIntent();
+        String address = intent.getStringExtra(Constants.SEND_TO_ADDRESS_EXTRA_NAME);
+        if(address!=null){
+            addressText.setText(address);
+        }
         viewModel.getAddressBook().observe(requireActivity(), adapter::update);
         saveContactSwitch.setOnCheckedChangeListener((v, isChecked)->{
             if(isChecked) {
@@ -87,8 +94,18 @@ public class TransferFragment extends Fragment implements BaseAdapter.OnItemClic
         final String sendAmountText =  amountText.getText().toString();
         saveContact(sendAddressText);
         if(viewModel.isWalletEncrypted()){
-            ConfirmDialog dialog = CustomDialog.passwordDialog(getLayoutInflater(),
-                    (password) -> viewModel.send(sendAddressText, sendAmountText, password));
+            ConfirmDialog dialog = SingleTextFieldDialog.passwordDialog(getLayoutInflater(),
+                    new SingleTextFieldDialog.DialogListener() {
+                        @Override
+                        public void onConfirm(String text) {
+                            viewModel.send(sendAddressText, sendAmountText, text);
+                        }
+
+                        @Override
+                        public void onCancel() {
+
+                        }
+                    });
             dialog.show(requireActivity().getSupportFragmentManager(), "password_send");
         } else {
             viewModel.send(sendAddressText, sendAmountText, null);

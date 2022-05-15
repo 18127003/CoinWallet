@@ -191,7 +191,10 @@ public class LocalWallet {
         walletAppKit.startAsync();
         walletAppKit.awaitRunning();
         addListeners();
+    }
 
+    public void stopWallet(){
+        walletAppKit.stopAsync();
     }
 
     public void restoreWallet(String mnemonic){

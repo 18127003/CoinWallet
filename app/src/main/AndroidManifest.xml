@@ -23,8 +23,6 @@
 		<activity android:name=".ui.activities.SingleFragmentActivity"
 		          android:configChanges="locale|layoutDirection">
 		</activity>
-		<activity android:name=".ui.activities.TransferActivity">
-		</activity>
 		<activity android:name=".ui.activities.ScanQrActivity">
 		</activity>
 		<activity android:name=".ui.activities.InitActivity">

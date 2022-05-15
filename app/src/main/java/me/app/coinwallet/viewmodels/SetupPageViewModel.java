@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
@@ -20,10 +21,12 @@ public class SetupPageViewModel extends AndroidViewModel implements LocalWallet.
     LocalWallet localWallet = LocalWallet.getInstance();
     private final MutableLiveData<String> syncProgress = new MutableLiveData<>();
     private final MutableLiveData<Integer> status = new MutableLiveData<>();
+    private final WorkManager workManager;
 
     public SetupPageViewModel(@NonNull Application application) {
         super(application);
         localWallet.subscribe(this);
+        workManager =  WorkManager.getInstance(application.getApplicationContext());
     }
 
     public LiveData<String> getSyncProgress(){ return syncProgress; }
@@ -42,8 +45,12 @@ public class SetupPageViewModel extends AndroidViewModel implements LocalWallet.
     }
 
     public void startSync(){
-        WorkRequest workRequest = new OneTimeWorkRequest.Builder(BitcoinDownloadWorker.class).build();
-        WorkManager.getInstance(getApplication().getApplicationContext()).enqueue(workRequest);
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BitcoinDownloadWorker.class).build();
+        workManager.enqueueUniqueWork("blockchain_sync", ExistingWorkPolicy.REPLACE, workRequest);
+    }
+
+    public void cancelSync(){
+        localWallet.stopWallet();
     }
 
     public boolean checkPassword(String password){
