@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.biometric.BiometricPrompt;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -28,7 +29,6 @@ import java.util.List;
 public class HomePageViewModel extends AndroidViewModel implements LocalWallet.EventListener {
     private final LocalWallet localWallet = LocalWallet.getInstance();
     private final Application application;
-    private final BiometricUtil biometricUtil;
     private final WalletLiveData walletLiveData;
 
     public LiveData<String> getBalance(){ return walletLiveData.getAvailableBalance(); }
@@ -39,23 +39,15 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
 
     public LiveData<String> getAddress(){return walletLiveData.getCurrentReceivingAddress();}
 
-    public void extractMnemonic() throws MnemonicInaccessibleException{
+    public String extractMnemonic() throws MnemonicInaccessibleException{
         String mnemonicCode = localWallet.wallet().getKeyChainSeed().getMnemonicString();
         if (mnemonicCode == null){
             throw new MnemonicInaccessibleException();
         }
-        biometricUtil.setAuthenticationCallback(new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                encryptMnemonic(mnemonicCode);
-            }
-        });
-        biometricUtil.authenticate();
+        return mnemonicCode;
     }
 
-    private void encryptMnemonic(String mnemonicCode){
-
+    public void encryptMnemonic(String mnemonicCode){
         CryptoEngine cryptoEngine = CryptoEngine.getInstance();
         String walletLabel = localWallet.getLabel();
         String encrypted = cryptoEngine.cipher(walletLabel, mnemonicCode);
@@ -71,10 +63,9 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
         localWallet.check();
     }
 
-    public HomePageViewModel(Application application, BiometricUtil biometricUtil){
+    public HomePageViewModel(Application application){
         super(application);
         this.application = application;
-        this.biometricUtil = biometricUtil;
         localWallet.subscribe(this);
         walletLiveData = new WalletLiveData(localWallet);
         walletLiveData.refreshAll();

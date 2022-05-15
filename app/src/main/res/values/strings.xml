@@ -2,7 +2,7 @@
 	<string name="app_name">Coin Wallet</string>
 	<string name="app_setup_completed">Setup Completed</string>
 	<string name="app_sync_completed">Sync Completed</string>
-	<string name="available_balance_label">Balance</string>
+	<string name="available_balance_label">Available Balance</string>
 	<string name="expected_balance_label">Expected Balance</string>
 	<string name="send_button_label">Send</string>
 	<string name="market_cap_button_label" translatable="false">Market Cap</string>
@@ -18,7 +18,6 @@
 	<string name="cancel_option">Cancel</string>
 	<string name="mnemonic_preference_file" translatable="false">mnemonic_preference</string>
 	<string name="restore_mnemonic_label">Mnemonic available to restore</string>
-	<string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 	<string name="language_english" translatable="false">English</string>
 	<string name="language_vietnamese" translatable="false">Tiếng Việt</string>
 
@@ -69,4 +68,8 @@
 	<string name="confirm_password">Confirm Password</string>
 	<string name="create_btn_label">Create</string>
 	<string name="restore_btn_label">Restore</string>
+	<string name="balance_label">Balance</string>
+	<string name="from">From</string>
+	<string name="to">To</string>
+	<string name="type_coin">Type coin</string>
 </resources>

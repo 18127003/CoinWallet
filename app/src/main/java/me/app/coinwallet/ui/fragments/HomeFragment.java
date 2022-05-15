@@ -12,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
+import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
+import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 
 public class HomeFragment extends Fragment {
@@ -56,6 +58,12 @@ public class HomeFragment extends Fragment {
         visible.setBackgroundResource(R.drawable.ic_visibility_off);
         visible.setOnClickListener(v-> hideOrShow());
         viewModel.getBalance().observe(this, s -> balance.setText(s));
+        sendBtn.setOnClickListener(v->{
+            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
+            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, ExchangeRateFragment.class);
+            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Exchange rate");
+            startActivity(intent);
+        });
     }
 
     private void hideOrShow() {

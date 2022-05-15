@@ -41,4 +41,8 @@
 	<string name="confirm_password">Mật khẩu xác nhận</string>
 	<string name="create_btn_label">Tạo ví</string>
 	<string name="restore_btn_label">Phục hồi ví</string>
+	<string name="balance_label">Số dư</string>
+	<string name="from">From</string>
+	<string name="to">To</string>
+	<string name="type_coin">Type coin</string>
 </resources>

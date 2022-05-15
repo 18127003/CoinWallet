@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.fragments.HistoryFragment;
 import me.app.coinwallet.ui.fragments.HomeFragment;
 import me.app.coinwallet.ui.fragments.SettingFragment;
@@ -15,12 +14,9 @@ import me.app.coinwallet.ui.fragments.TransferFragment;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 import me.app.coinwallet.R;
-import me.app.coinwallet.viewmodels.factory.BiometricViewModelFactory;
-import org.bitcoinj.core.Transaction;
 
 public class HomeActivity extends BaseActivity {
 
-    private HomePageViewModel viewModel;
     private FloatingActionButton scanBtn;
     private MaterialToolbar materialToolbar;
     private BottomNavigationView bottomAppBar;
@@ -29,9 +25,6 @@ public class HomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        BiometricUtil biometricUtil = new BiometricUtil(this);
-        viewModel = new ViewModelProvider(this, new BiometricViewModelFactory(getApplication(), biometricUtil))
-                .get(HomePageViewModel.class);
         scanBtn = findViewById(R.id.scan_fab);
         scanBtn.setOnClickListener(v -> moveTo(ScanQrActivity.class));
 
@@ -70,12 +63,12 @@ public class HomeActivity extends BaseActivity {
             }
             return true;
         });
+        loadFragment(HomeFragment.class);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        loadFragment(HomeFragment.class);
     }
 
     private void moveTo(Class<?> dest){

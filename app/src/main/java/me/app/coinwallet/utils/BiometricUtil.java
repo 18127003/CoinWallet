@@ -1,5 +1,6 @@
 package me.app.coinwallet.utils;
 
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -7,48 +8,49 @@ import androidx.annotation.NonNull;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 public class BiometricUtil {
-    private final FragmentActivity activity;
+//    private final FragmentActivity activity;
+    private final Context context;
     private final BiometricManager biometricManager;
     private final ToastUtil toastUtil;
-    private BiometricPrompt.AuthenticationCallback authenticationCallback;
+//    private BiometricPrompt.AuthenticationCallback authenticationCallback;
 
-    public BiometricUtil(FragmentActivity activity){
-        this.activity = activity;
-        biometricManager = BiometricManager.from(this.activity);
-        toastUtil = new ToastUtil(activity);
+    public BiometricUtil(Context context){
+//        this.activity = activity;
+        this.context = context;
+        biometricManager = BiometricManager.from(context);
+        toastUtil = new ToastUtil(context);
     }
 
     private static final int OPTION = (Build.VERSION.SDK_INT>=Build.VERSION_CODES.R)?
             (BiometricManager.Authenticators.BIOMETRIC_STRONG | BiometricManager.Authenticators.DEVICE_CREDENTIAL):
             (BiometricManager.Authenticators.BIOMETRIC_WEAK | BiometricManager.Authenticators.DEVICE_CREDENTIAL);
 
-    public void setAuthenticationCallback(BiometricPrompt.AuthenticationCallback authenticationCallback) {
-        this.authenticationCallback = authenticationCallback;
+    public BiometricPrompt getBiometricPrompt(Fragment fragment,
+                                              @NonNull BiometricPrompt.AuthenticationCallback authenticationCallback){
+        return new BiometricPrompt(fragment, ContextCompat.getMainExecutor(context), authenticationCallback);
     }
 
-    public BiometricPrompt getBiometricPrompt(){
-        if(authenticationCallback==null){
-            authenticationCallback = new BiometricPrompt.AuthenticationCallback() {
-                @Override
-                public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
-                    super.onAuthenticationError(errorCode, errString);
-                }
+    public BiometricPrompt getBiometricPrompt(Fragment fragment){
+        return new BiometricPrompt(fragment, ContextCompat.getMainExecutor(context), new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+            }
 
-                @Override
-                public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                    super.onAuthenticationSucceeded(result);
-                }
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+            }
 
-                @Override
-                public void onAuthenticationFailed() {
-                    super.onAuthenticationFailed();
-                }
-            };
-        }
-        return new BiometricPrompt(activity, ContextCompat.getMainExecutor(activity), authenticationCallback);
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+            }
+        });
     }
 
     public BiometricPrompt.PromptInfo getPromptInfo(@NonNull String title, String subtitle, String description){
@@ -83,11 +85,11 @@ public class BiometricUtil {
         }
     }
 
-    public void authenticate(){
+    public void authenticate(Fragment fragment, BiometricPrompt.AuthenticationCallback authenticationCallback){
         if(canAuthenticate()){
             BiometricPrompt.PromptInfo promptInfo = getPromptInfo("Biometric login for my app",
                     "Log in using your biometric credential", null);
-            BiometricPrompt prompt = getBiometricPrompt();
+            BiometricPrompt prompt = getBiometricPrompt(fragment, authenticationCallback);
             prompt.authenticate(promptInfo);
         }
     }

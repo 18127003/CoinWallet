@@ -9,10 +9,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
+import me.app.coinwallet.ui.dialogs.ConfirmDialog;
+import me.app.coinwallet.ui.dialogs.SingleTextFieldDialog;
+import me.app.coinwallet.viewmodels.SettingViewModel;
 
 /***
  * Do not pass data through fragment constructor, use View Model to share data instead.
@@ -24,6 +28,7 @@ public class SettingFragment extends Fragment {
     private SwitchMaterial fingerprintEnable;
     private ImageButton changeLanguage;
     private ImageButton about;
+    private SettingViewModel viewModel;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -48,13 +53,13 @@ public class SettingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        viewModel = new ViewModelProvider(requireActivity()).get(SettingViewModel.class);
         walletManage = view.findViewById(R.id.manage_wallet);
         changePassword = view.findViewById(R.id.change_password);
         fingerprintEnable = view.findViewById(R.id.fingerprint);
         changeLanguage = view.findViewById(R.id.change_language);
         about = view.findViewById(R.id.about);
-        changePassword.setOnClickListener(v-> moveToSettingSection(ChangePasswordFragment.class, "Change Password"));
+        changePassword.setOnClickListener(v-> accessPasswordDialog());
         changeLanguage.setOnClickListener(v-> moveToSettingSection(ChangeLanguageFragment.class, "Change Language"));
     }
 
@@ -63,5 +68,21 @@ public class SettingFragment extends Fragment {
         intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, fragment);
         intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, title);
         startActivity(intent);
+    }
+
+    private void accessPasswordDialog(){
+        ConfirmDialog dialog = SingleTextFieldDialog.passwordDialog(getLayoutInflater(),
+                new SingleTextFieldDialog.DialogListener() {
+                    @Override
+                    public void onConfirm(String text) {
+                        if(viewModel.checkPassword(text)){
+                            moveToSettingSection(ChangePasswordFragment.class, "Change Password");
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() { }
+                });
+        dialog.show(requireActivity().getSupportFragmentManager(), "password_access");
     }
 }

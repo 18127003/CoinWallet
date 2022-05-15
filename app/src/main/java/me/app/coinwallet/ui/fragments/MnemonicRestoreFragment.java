@@ -1,5 +1,6 @@
 package me.app.coinwallet.ui.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,11 +23,6 @@ import me.app.coinwallet.ui.adapters.RestoreMnemonicAdapter;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MnemonicRestoreFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MnemonicRestoreFragment extends Fragment implements BaseAdapter.OnItemClickListener<String> {
     private InitPageViewModel viewModel;
     private Button cancelBtn;
@@ -47,7 +43,12 @@ public class MnemonicRestoreFragment extends Fragment implements BaseAdapter.OnI
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        biometricUtil = new BiometricUtil(requireActivity());
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        biometricUtil = ((BaseActivity) requireActivity()).configuration.biometricUtil;
     }
 
     @Override
@@ -72,22 +73,22 @@ public class MnemonicRestoreFragment extends Fragment implements BaseAdapter.OnI
 
     @Override
     public void onClick(String item) {
-        biometricUtil.setAuthenticationCallback(new BiometricPrompt.AuthenticationCallback() {
+        biometricUtil.authenticate(this, new BiometricPrompt.AuthenticationCallback() {
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 String mnemonic = viewModel.decryptMnemonic(item);
                 Log.e("HD","Decrypted value: "+mnemonic);
-                restoreAndSync(item, mnemonic);
+                Intent intent = new Intent(requireActivity(), SetupActivity.class);
+                intent.putExtra("label", item);
+                intent.putExtra("mnemonic", mnemonic);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
             }
         });
-        biometricUtil.authenticate();
-    }
-
-    public void restoreAndSync(String label, String mnemonic){
-        Intent intent = new Intent(requireActivity(), SetupActivity.class);
-        intent.putExtra("label", label);
-        intent.putExtra("mnemonic", mnemonic);
-        startActivity(intent);
     }
 }

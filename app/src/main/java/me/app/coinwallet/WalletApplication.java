@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
+import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.utils.LocaleUtil;
 import me.app.coinwallet.workers.BitcoinDownloadWorker;
 import org.bitcoinj.core.NetworkParameters;
@@ -46,8 +47,10 @@ public class WalletApplication extends MultiDexApplication {
     }
 
     public synchronized Configuration getConfiguration() {
-        if (config == null)
-            config = new Configuration(PreferenceManager.getDefaultSharedPreferences(this), getResources(), getFilesDir());
+        if (config == null){
+            BiometricUtil biometricUtil = new BiometricUtil(this);
+            config = new Configuration(PreferenceManager.getDefaultSharedPreferences(this), getFilesDir(), biometricUtil);
+        }
         return config;
     }
 
