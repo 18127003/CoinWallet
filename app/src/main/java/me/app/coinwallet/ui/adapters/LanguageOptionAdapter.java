@@ -1,0 +1,44 @@
+package me.app.coinwallet.ui.adapters;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.card.MaterialCardView;
+import me.app.coinwallet.R;
+import me.app.coinwallet.data.language.LanguageOption;
+
+public class LanguageOptionAdapter extends BaseAdapter<LanguageOption, LanguageOptionAdapter.ViewHolder> {
+
+    public LanguageOptionAdapter(OnItemClickListener<LanguageOption> listener) {
+        super(listener);
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.language_option_item,parent,false);
+        return new ViewHolder(rootView);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        LanguageOption language = data.get(position);
+        holder.label.setText(language.getLabel());
+        holder.card.setOnClickListener(v -> listener.onClick(language));
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        final TextView label;
+        final MaterialCardView card;
+
+        public ViewHolder(View view) {
+            super(view);
+            // Define click listener for the ViewHolder's View
+            label = view.findViewById(R.id.language_option_label);
+            card = view.findViewById(R.id.language_option_card);
+        }
+    }
+}

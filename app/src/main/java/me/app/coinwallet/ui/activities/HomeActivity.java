@@ -9,6 +9,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.fragments.HistoryFragment;
 import me.app.coinwallet.ui.fragments.HomeFragment;
+import me.app.coinwallet.ui.fragments.SettingFragment;
 import me.app.coinwallet.ui.fragments.TransferFragment;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
@@ -47,7 +48,7 @@ public class HomeActivity extends BaseActivity {
             }
             return true;
         });
-
+        setSupportActionBar(materialToolbar);
         bottomAppBar = findViewById(R.id.bottom_navigation);
         bottomAppBar.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
@@ -61,7 +62,7 @@ public class HomeActivity extends BaseActivity {
                     loadFragment(TransferFragment.class);
                     break;
                 case R.id.page_setting:
-//                    loadFragment(fragment);
+                    loadFragment(SettingFragment.class);
                     break;
                 default:
                     return false;

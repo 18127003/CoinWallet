@@ -13,6 +13,10 @@ public final class Constants {
 
     public static final String SEND_TO_ADDRESS_EXTRA_NAME = "send_to_address";
 
+    public static final String INIT_FRAGMENT_EXTRA_NAME = "init_fragment";
+
+    public static final String APP_BAR_TITLE_EXTRA_NAME = "app_bar_title";
+
     public static final int QR_BITMAP_SCALE_HEIGHT = 500;
 
     public static final int QR_BITMAP_SCALE_WIDTH = 500;
