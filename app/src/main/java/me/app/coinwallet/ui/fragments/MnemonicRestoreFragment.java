@@ -1,7 +1,6 @@
 package me.app.coinwallet.ui.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.BaseActivity;
-import me.app.coinwallet.ui.activities.SetupActivity;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.RestoreMnemonicAdapter;
 import me.app.coinwallet.utils.BiometricUtil;
@@ -79,10 +77,9 @@ public class MnemonicRestoreFragment extends Fragment implements BaseAdapter.OnI
                 super.onAuthenticationSucceeded(result);
                 String mnemonic = viewModel.decryptMnemonic(item);
                 Log.e("HD","Decrypted value: "+mnemonic);
-                Intent intent = new Intent(requireActivity(), SetupActivity.class);
-                intent.putExtra("label", item);
-                intent.putExtra("mnemonic", mnemonic);
-                startActivity(intent);
+                viewModel.setSelectedWalletLabel(item);
+                viewModel.setSelectedMnemonic(mnemonic);
+                ((BaseActivity) requireActivity()).loadFragment(SyncFragment.class);
             }
 
             @Override

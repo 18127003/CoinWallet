@@ -42,7 +42,11 @@
 	<string name="create_btn_label">Tạo ví</string>
 	<string name="restore_btn_label">Phục hồi ví</string>
 	<string name="balance_label">Số dư</string>
-	<string name="from">From</string>
-	<string name="to">To</string>
-	<string name="type_coin">Type coin</string>
+	<string name="from">Từ</string>
+	<string name="to">Chuyển sang</string>
+	<string name="type_coin">Nhập tên coin</string>
+	<string name="more_info">Thông tin thêm</string>
+	<string name="confirmation">Xác nhận</string>
+	<string name="fee">Phí giao dịch</string>
+	<string name="tx_update_time">Thời gian cập nhật</string>
 </resources>

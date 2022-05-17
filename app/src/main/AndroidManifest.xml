@@ -36,8 +36,6 @@
 		</activity>
 		<activity android:name=".ui.activities.HomeActivity">
 		</activity>
-		<activity android:name=".ui.activities.SetupActivity">
-		</activity>
 	</application>
 
 </manifest>

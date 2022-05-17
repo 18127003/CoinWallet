@@ -25,7 +25,7 @@ import me.app.coinwallet.ui.dialogs.ConfirmDialog;
 import me.app.coinwallet.ui.dialogs.SingleTextFieldDialog;
 import me.app.coinwallet.viewmodels.TransferPageViewModel;
 
-public class TransferFragment extends Fragment implements BaseAdapter.OnItemClickListener<AddressBookEntry>{
+public class TransferFragment extends AuthenticateFragment implements BaseAdapter.OnItemClickListener<AddressBookEntry>{
 
     private TextInputEditText addressText;
     private TextInputEditText amountText;
@@ -41,10 +41,7 @@ public class TransferFragment extends Fragment implements BaseAdapter.OnItemClic
     }
 
     public static TransferFragment newInstance() {
-        TransferFragment fragment = new TransferFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new TransferFragment();
     }
 
     @Override
@@ -69,7 +66,7 @@ public class TransferFragment extends Fragment implements BaseAdapter.OnItemClic
         saveContactSwitch = view.findViewById(R.id.save_contact_switch);
         sendBtn = view.findViewById(R.id.send_button);
         saveContactLayout = view.findViewById(R.id.save_contact_layout);
-        sendBtn.setOnClickListener(v -> sendPasswordDialog());
+        sendBtn.setOnClickListener(v -> accessPasswordDialog());
         saveContactView = LayoutInflater.from(getContext()).inflate(R.layout.save_contact_view, saveContactLayout, false);
         AddressBookAdapter adapter = new AddressBookAdapter(this);
         addressBook.setAdapter(adapter);
@@ -89,28 +86,16 @@ public class TransferFragment extends Fragment implements BaseAdapter.OnItemClic
         });
     }
 
-   private void sendPasswordDialog(){
+    @Override
+    protected void onPasswordVerified(String password) {
         final String sendAddressText = addressText.getText().toString();
         final String sendAmountText =  amountText.getText().toString();
+        viewModel.send(sendAddressText, sendAmountText, password);
         saveContact(sendAddressText);
-        if(viewModel.isWalletEncrypted()){
-            ConfirmDialog dialog = SingleTextFieldDialog.passwordDialog(getLayoutInflater(),
-                    new SingleTextFieldDialog.DialogListener() {
-                        @Override
-                        public void onConfirm(String text) {
-                            viewModel.send(sendAddressText, sendAmountText, text);
-                        }
+    }
 
-                        @Override
-                        public void onCancel() {
-
-                        }
-                    });
-            dialog.show(requireActivity().getSupportFragmentManager(), "password_send");
-        } else {
-            viewModel.send(sendAddressText, sendAmountText, null);
-        }
-   }
+    @Override
+    protected void onPasswordDenied() {}
 
    private void saveContact(String address){
         if(saveContactSwitch.isChecked()){

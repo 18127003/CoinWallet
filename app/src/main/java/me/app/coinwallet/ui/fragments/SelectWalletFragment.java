@@ -1,6 +1,5 @@
 package me.app.coinwallet.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.annotation.NonNull;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.wallets.WalletInfoEntry;
 import me.app.coinwallet.ui.activities.BaseActivity;
-import me.app.coinwallet.ui.activities.SetupActivity;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.WalletInfoAdapter;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
@@ -64,7 +62,6 @@ public class SelectWalletFragment extends Fragment implements BaseAdapter.OnItem
         walletInfoList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         walletInfoList.setAdapter(adapter);
         viewModel.getWalletInfos().observe(this, adapter::update);
-
         restoreBtn.setOnClickListener((v)->
                 ((BaseActivity) requireActivity()).loadFragment(MnemonicRestoreFragment.class));
         createBtn.setOnClickListener((v)-> {
@@ -75,9 +72,8 @@ public class SelectWalletFragment extends Fragment implements BaseAdapter.OnItem
     }
 
     private void createAndSync(String label){
-        Intent intent = new Intent(requireActivity(), SetupActivity.class);
-        intent.putExtra("label", label);
-        startActivity(intent);
+        viewModel.setSelectedWalletLabel(label);
+        ((BaseActivity) requireActivity()).loadFragment(SyncFragment.class);
     }
 
     @Override

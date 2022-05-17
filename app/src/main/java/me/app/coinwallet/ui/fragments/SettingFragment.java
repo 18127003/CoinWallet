@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
+import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.dialogs.ConfirmDialog;
 import me.app.coinwallet.ui.dialogs.SingleTextFieldDialog;
@@ -21,7 +22,7 @@ import me.app.coinwallet.viewmodels.SettingViewModel;
 /***
  * Do not pass data through fragment constructor, use View Model to share data instead.
  */
-public class SettingFragment extends Fragment {
+public class SettingFragment extends AuthenticateFragment {
 
     private ImageButton walletManage;
     private ImageButton changePassword;
@@ -61,6 +62,9 @@ public class SettingFragment extends Fragment {
         about = view.findViewById(R.id.about);
         changePassword.setOnClickListener(v-> accessPasswordDialog());
         changeLanguage.setOnClickListener(v-> moveToSettingSection(ChangeLanguageFragment.class, "Change Language"));
+        fingerprintEnable.setChecked(((BaseActivity)requireActivity()).configuration.isFingerprintEnabled());
+        fingerprintEnable.setOnCheckedChangeListener((v, isChecked)->
+                ((BaseActivity) requireActivity()).configuration.setFingerprintEnabled(isChecked));
     }
 
     private void moveToSettingSection(Class<? extends Fragment> fragment, String title){
@@ -70,19 +74,11 @@ public class SettingFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void accessPasswordDialog(){
-        ConfirmDialog dialog = SingleTextFieldDialog.passwordDialog(getLayoutInflater(),
-                new SingleTextFieldDialog.DialogListener() {
-                    @Override
-                    public void onConfirm(String text) {
-                        if(viewModel.checkPassword(text)){
-                            moveToSettingSection(ChangePasswordFragment.class, "Change Password");
-                        }
-                    }
-
-                    @Override
-                    public void onCancel() { }
-                });
-        dialog.show(requireActivity().getSupportFragmentManager(), "password_access");
+    @Override
+    protected void onPasswordVerified(String password) {
+        moveToSettingSection(ChangePasswordFragment.class, "Change Password");
     }
+
+    @Override
+    protected void onPasswordDenied() {}
 }

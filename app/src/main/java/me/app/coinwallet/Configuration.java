@@ -2,6 +2,7 @@ package me.app.coinwallet;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import androidx.preference.PreferenceManager;
 import me.app.coinwallet.utils.BiometricUtil;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.TestNet3Params;
@@ -18,10 +19,12 @@ public class Configuration {
     public final NetworkParameters parameters;
     public final ExecutorService executorService;
     public final BiometricUtil biometricUtil;
+    public boolean isFingerprintEnabled;
 
     private final SharedPreferences prefs;
     private static final String PREFS_KEY_LAST_VERSION = "last_version";
     private static final int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+    private final static String FINGERPRINT_ENABLED = "fingerprint_enabled";
 
     private static final Logger log = LoggerFactory.getLogger(Configuration.class);
 
@@ -32,6 +35,16 @@ public class Configuration {
         this.parameters = TestNet3Params.get();
         this.executorService = Executors.newFixedThreadPool(NUMBER_OF_CORES);
         this.biometricUtil = biometricUtil;
+        this.isFingerprintEnabled = isFingerprintEnabled();
+    }
+
+    public boolean isFingerprintEnabled(){
+        return prefs.getBoolean(FINGERPRINT_ENABLED, false);
+    }
+
+    public void setFingerprintEnabled(boolean enabled){
+        prefs.edit().putBoolean(FINGERPRINT_ENABLED, enabled).apply();
+        isFingerprintEnabled = isFingerprintEnabled();
     }
 
     public void updateLastVersionCode(final int currentVersionCode) {
