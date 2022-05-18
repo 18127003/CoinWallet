@@ -7,14 +7,12 @@ import org.bitcoinj.core.*;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.crypto.KeyCrypterException;
 import org.bitcoinj.kits.WalletAppKit;
-import org.bitcoinj.script.Script;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
-import org.bouncycastle.crypto.params.KeyParameter;
-
 import java.io.File;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -161,7 +159,7 @@ public class LocalWallet {
         return chainFile.exists();
     }
 
-    public void configWallet(String label){
+    public void configWallet(String label, InputStream checkPoint){
         this.label = label;
         walletAppKit = new WalletAppKit(parameters, directory, label) {
             @Override
@@ -185,6 +183,7 @@ public class LocalWallet {
         };
         walletAppKit.setDownloadListener(BTCListener);
         walletAppKit.setBlockingStartup(false);
+        walletAppKit.setCheckpoints(checkPoint);
     }
 
     public void initWallet(){

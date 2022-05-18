@@ -72,4 +72,9 @@
 	<string name="from">From</string>
 	<string name="to">To</string>
 	<string name="type_coin">Type coin</string>
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="more_info">More Info</string>
+	<string name="confirmation">Confirmation</string>
+	<string name="fee">Fee</string>
+	<string name="tx_update_time">Update time</string>
 </resources>

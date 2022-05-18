@@ -1,5 +1,6 @@
 package me.app.coinwallet.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,8 +11,10 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
+import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.TxHistoryAdapter;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
@@ -54,11 +57,11 @@ public class HistoryFragment extends Fragment implements BaseAdapter.OnItemClick
         viewModel.getMonthlyReports().observe(this, adapter::update);
     }
 
-    /***
-     * on click method for each transaction card
-     */
     @Override
     public void onClick(TransactionWrapper item) {
-        // TODO: Move to transaction detail page
+        Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
+        intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, TransactionDetailFragment.class);
+        intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Transaction Detail");
+        startActivity(intent);
     }
 }
