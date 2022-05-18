@@ -25,6 +25,7 @@ import me.app.coinwallet.workers.BitcoinDownloadWorker;
 import org.bitcoinj.core.NetworkParameters;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -90,10 +91,10 @@ public class InitPageViewModel extends AndroidViewModel implements LocalWallet.E
         return status;
     }
 
-    public void initWallet(File directory, NetworkParameters parameters){
+    public void initWallet(File directory, NetworkParameters parameters, InputStream checkpoints){
         localWallet.setDirectory(directory);
         localWallet.setParameters(parameters);
-        localWallet.configWallet(selectedWalletLabel.getValue());
+        localWallet.configWallet(selectedWalletLabel.getValue(), checkpoints);
         if (selectedMnemonic.getValue()!=null){
             localWallet.restoreWallet(selectedMnemonic.getValue());
         }

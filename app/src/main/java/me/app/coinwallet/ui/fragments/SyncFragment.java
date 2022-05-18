@@ -14,6 +14,8 @@ import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.activities.HomeActivity;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
 
+import java.io.InputStream;
+
 public class SyncFragment extends AuthenticateFragment {
 
     private TextView sync;
@@ -46,7 +48,8 @@ public class SyncFragment extends AuthenticateFragment {
         sync = view.findViewById(R.id.sync);
         status = view.findViewById(R.id.status);
         viewModel = new ViewModelProvider(requireActivity()).get(InitPageViewModel.class);
-        viewModel.initWallet(configuration.directory, configuration.parameters);
+        InputStream checkpoints = ((BaseActivity) requireActivity()).configuration.getBlockchainCheckpointFile();
+        viewModel.initWallet(configuration.directory, configuration.parameters, checkpoints);
         viewModel.getSyncProgress().observe(this, s -> sync.setText(s));
         viewModel.getStatus().observe(this, (i)->{
             status.setText(i);
