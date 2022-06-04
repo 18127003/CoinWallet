@@ -1,16 +1,16 @@
 package me.app.coinwallet;
 
 import android.util.Log;
+import androidx.annotation.Nullable;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import org.bitcoinj.core.*;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.crypto.KeyCrypterException;
 import org.bitcoinj.kits.WalletAppKit;
-import org.bitcoinj.wallet.DeterministicSeed;
-import org.bitcoinj.wallet.SendRequest;
-import org.bitcoinj.wallet.UnreadableWalletException;
-import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.uri.BitcoinURI;
+import org.bitcoinj.wallet.*;
+
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -26,7 +26,7 @@ public class LocalWallet {
         observers.add(listener);
     }
 
-    private void  notifyObservers(WalletNotificationType type, Object content){
+    private void  notifyObservers(WalletNotificationType type, EventMessage<?> content){
         for(EventListener l : observers){
             l.update(type, content);
         }
@@ -100,6 +100,12 @@ public class LocalWallet {
         return walletAppKit.wallet().checkPassword(password);
     }
 
+    public String generatePaymentRequest(double amount, String label, String message){
+        Address address = getAddress();
+        Coin amountToSend = Coin.ofBtc(BigDecimal.valueOf(amount));
+        return BitcoinURI.convertToBitcoinURI(address, amountToSend, label, message);
+    }
+
     public void send(String sendAddress, double value, String password){
         final Coin amountToSend = Coin.ofBtc(BigDecimal.valueOf(value));
         Log.e("HD","Amount to send: "+amountToSend.toPlainString());
@@ -115,7 +121,7 @@ public class LocalWallet {
             Log.e("HD","Sending "+amountToSend.toPlainString()+" BTC");
             sendResult.broadcastComplete.addListener(() -> {
                 Log.e("HD", "Tx broadcast completed");
-                notifyObservers(WalletNotificationType.TX_BROADCAST_COMPLETED, "");
+                notifyObservers(WalletNotificationType.TX_BROADCAST_COMPLETED, null);
             }, Runnable::run);
         } catch (InsufficientMoneyException e){
             Log.e("HD","Insufficient money");
@@ -138,12 +144,12 @@ public class LocalWallet {
         walletAppKit.wallet().addCoinsReceivedEventListener((wallet, tx, prevBalance, newBalance) -> {
             Coin value = tx.getValueSentToMe(wallet);
             Log.e("HD","Received tx for " + value.toFriendlyString() + ": " + tx);
-            notifyObservers(WalletNotificationType.TX_RECEIVED, tx);
+            notifyObservers(WalletNotificationType.TX_RECEIVED, new EventMessage<>(tx));
             Futures.addCallback(tx.getConfidence().getDepthFuture(1), new FutureCallback<TransactionConfidence>() {
                 @Override
                 public void onSuccess(TransactionConfidence result) {
                     Log.e("HD","Receipt of "+result.getTransactionHash().toString()+" reached 1 confirmation");
-                    notifyObservers(WalletNotificationType.TX_ACCEPTED, tx);
+                    notifyObservers(WalletNotificationType.TX_ACCEPTED, new EventMessage<>(tx));
                 }
 
                 @Override
@@ -165,7 +171,7 @@ public class LocalWallet {
             @Override
             protected void onSetupCompleted() {
                 Log.e("HD", "Set up complete");
-                notifyObservers(WalletNotificationType.SETUP_COMPLETED, "");
+                notifyObservers(WalletNotificationType.SETUP_COMPLETED, null);
             }
 
         };
@@ -173,17 +179,18 @@ public class LocalWallet {
             @Override
             public void progress(double pct, int blocksSoFar, Date date) {
                 Log.e("HD","Syncing..."+pct+"%");
-                notifyObservers(WalletNotificationType.SYNC_PROGRESS, String.valueOf(pct));
+                notifyObservers(WalletNotificationType.SYNC_PROGRESS, new EventMessage<>(pct));
             }
             @Override
             public void doneDownload() {
                 Log.e("HD","Sync Done.");
-                notifyObservers(WalletNotificationType.SYNC_COMPLETED,"");
+                notifyObservers(WalletNotificationType.SYNC_COMPLETED,null);
             }
         };
         walletAppKit.setDownloadListener(BTCListener);
         walletAppKit.setBlockingStartup(false);
         walletAppKit.setCheckpoints(checkPoint);
+
     }
 
     public void initWallet(){
@@ -220,7 +227,19 @@ public class LocalWallet {
         }
     }
 
+    public static class EventMessage<T> {
+        T content;
+
+        public EventMessage(T content) {
+            this.content = content;
+        }
+
+        public T getContent() {
+            return content;
+        }
+    }
+
     public interface EventListener {
-        void update(WalletNotificationType type, Object content);
+        void update(WalletNotificationType type,@Nullable EventMessage<?> content);
     }
 }

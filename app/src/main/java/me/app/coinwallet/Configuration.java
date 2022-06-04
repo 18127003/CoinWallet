@@ -2,8 +2,6 @@ package me.app.coinwallet;
 
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
-import android.content.res.Resources;
-import androidx.preference.PreferenceManager;
 import me.app.coinwallet.utils.BiometricUtil;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.TestNet3Params;
@@ -22,6 +20,7 @@ public class Configuration {
     public final NetworkParameters parameters;
     public final ExecutorService executorService;
     public final BiometricUtil biometricUtil;
+    public final NotificationHandler notificationHandler;
     public final AssetManager assetManager;
 
     private final SharedPreferences prefs;
@@ -33,10 +32,11 @@ public class Configuration {
     private static final Logger log = LoggerFactory.getLogger(Configuration.class);
 
     public Configuration(final SharedPreferences prefs, final File directory, final BiometricUtil biometricUtil,
-                         AssetManager assetManager) {
+                         NotificationHandler notificationHandler, AssetManager assetManager) {
         this.prefs = prefs;
         this.directory = directory;
         this.lastVersionCode = prefs.getInt(PREFS_KEY_LAST_VERSION, 0);
+        this.notificationHandler = notificationHandler;
         this.parameters = TestNet3Params.get();
         this.executorService = Executors.newFixedThreadPool(NUMBER_OF_CORES);
         this.biometricUtil = biometricUtil;

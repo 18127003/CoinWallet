@@ -39,10 +39,10 @@ public class BitcoinDownloadWorker extends Worker implements LocalWallet.EventLi
     }
 
     @Override
-    public void update(WalletNotificationType type, Object content) {
+    public void update(WalletNotificationType type, LocalWallet.EventMessage<?> content) {
         switch (type){
             case TX_RECEIVED:
-                NotificationHandler.sendNotification(getApplicationContext(), "Transaction received","Body");
+//                NotificationHandler.sendNotification(getApplicationContext(), "Transaction received","Body");
                 break;
         }
     }

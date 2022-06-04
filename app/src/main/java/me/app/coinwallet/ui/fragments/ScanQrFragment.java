@@ -54,7 +54,7 @@ public class ScanQrFragment extends Fragment {
         barcodeView.setStatusText("");
         barcodeView.decodeSingle(result -> {
             Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
-            intent.putExtra(Constants.SEND_TO_ADDRESS_EXTRA_NAME, result.getText());
+            intent.putExtra(Constants.QR_CONTENT, result.getText());
             intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Transfer Money");
             intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, TransferFragment.class);
             startActivity(intent);

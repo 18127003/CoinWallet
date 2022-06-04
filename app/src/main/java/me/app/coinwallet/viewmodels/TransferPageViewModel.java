@@ -11,6 +11,8 @@ import me.app.coinwallet.data.addressbook.AddressBookDao;
 import me.app.coinwallet.data.addressbook.AddressBookDatabase;
 import me.app.coinwallet.data.addressbook.AddressBookEntry;
 import me.app.coinwallet.data.livedata.WalletLiveData;
+import org.bitcoinj.uri.BitcoinURI;
+import org.bitcoinj.uri.BitcoinURIParseException;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class TransferPageViewModel extends AndroidViewModel {
     private final LocalWallet localWallet = LocalWallet.getInstance();
     private final WalletLiveData walletLiveData;
     private final AddressBookDao addressBookDao;
+    private BitcoinURI bitcoinURI;
 
     public TransferPageViewModel(@NonNull Application application) {
         super(application);
@@ -39,11 +42,19 @@ public class TransferPageViewModel extends AndroidViewModel {
         }
     }
 
-    public LiveData<List<AddressBookEntry>> getAddressBook() {
-        return addressBookDao.getAll();
+    public void extractUri(String uri) throws BitcoinURIParseException {
+        bitcoinURI = new BitcoinURI(uri);
     }
 
-    public boolean isWalletEncrypted(){
-        return localWallet.isEncrypted();
+    public double getAmountFromUri(){
+        return bitcoinURI.getAmount().toBtc().doubleValue();
+    }
+
+    public String getSendToFromUri(){
+        return bitcoinURI.getAddress().toString();
+    }
+
+    public LiveData<List<AddressBookEntry>> getAddressBook() {
+        return addressBookDao.getAll();
     }
 }

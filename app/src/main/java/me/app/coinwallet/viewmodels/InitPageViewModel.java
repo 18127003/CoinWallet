@@ -2,6 +2,7 @@ package me.app.coinwallet.viewmodels;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import me.app.coinwallet.data.wallets.WalletInfoEntry;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.utils.CryptoEngine;
 import me.app.coinwallet.workers.BitcoinDownloadWorker;
+import me.app.coinwallet.workers.BlockchainSyncService;
 import org.bitcoinj.core.NetworkParameters;
 
 import java.io.File;
@@ -101,8 +103,9 @@ public class InitPageViewModel extends AndroidViewModel implements LocalWallet.E
     }
 
     public void startSync(){
-        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BitcoinDownloadWorker.class).build();
-        workManager.enqueueUniqueWork("blockchain_sync", ExistingWorkPolicy.REPLACE, workRequest);
+//        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BitcoinDownloadWorker.class).build();
+//        workManager.enqueueUniqueWork("blockchain_sync", ExistingWorkPolicy.REPLACE, workRequest);
+        BlockchainSyncService.startBackground(application);
     }
 
     public void cancelSync(){
@@ -114,10 +117,11 @@ public class InitPageViewModel extends AndroidViewModel implements LocalWallet.E
     }
 
     @Override
-    public void update(WalletNotificationType type, Object content) {
+    public void update(WalletNotificationType type, LocalWallet.EventMessage<?> content) {
         switch (type){
             case SYNC_PROGRESS:
-                syncProgress.postValue((String) content);
+                String progress = String.valueOf((double) content.getContent());
+                syncProgress.postValue(progress);
                 break;
             case SYNC_COMPLETED:
                 status.postValue(R.string.app_sync_completed);
