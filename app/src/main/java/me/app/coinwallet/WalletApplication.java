@@ -46,7 +46,8 @@ public class WalletApplication extends MultiDexApplication {
             BiometricUtil biometricUtil = new BiometricUtil(this);
             AssetManager assetManager = getAssets();
             SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(this);
-            config = new Configuration(preferenceManager, getFilesDir(), biometricUtil, assetManager);
+            NotificationHandler notificationHandler = new NotificationHandler(this);
+            config = new Configuration(preferenceManager, getFilesDir(), biometricUtil, notificationHandler, assetManager);
         }
         return config;
     }
@@ -69,7 +70,7 @@ public class WalletApplication extends MultiDexApplication {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, name, importance);
+            NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID_RECEIVE, name, importance);
             channel.setDescription(description);
             channel.enableLights(true);
             channel.setLightColor(Color.CYAN);

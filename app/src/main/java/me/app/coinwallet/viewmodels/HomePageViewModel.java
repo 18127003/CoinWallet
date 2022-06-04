@@ -72,17 +72,17 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
     }
 
     @Override
-    public void update(WalletNotificationType type, Object content) {
+    public void update(WalletNotificationType type, LocalWallet.EventMessage<?> content) {
         switch (type){
             case TX_ACCEPTED:
                 walletLiveData.refreshAvailableBalance();
-                walletLiveData.refreshTxHistory((Transaction) content);
+                walletLiveData.refreshTxHistory((Transaction) content.getContent());
                 walletLiveData.refreshAvailableBalance();
                 break;
             case TX_RECEIVED:
                 walletLiveData.refreshCurrentReceivingAddress();
                 walletLiveData.refreshExpectedBalance();
-                walletLiveData.refreshTxHistory((Transaction) content);
+                walletLiveData.refreshTxHistory((Transaction) content.getContent());
                 break;
         }
     }
