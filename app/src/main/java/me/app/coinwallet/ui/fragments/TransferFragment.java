@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +19,12 @@ import com.google.android.material.textfield.TextInputEditText;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.addressbook.AddressBookEntry;
+import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.adapters.AddressBookAdapter;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
-import me.app.coinwallet.ui.dialogs.ConfirmDialog;
-import me.app.coinwallet.ui.dialogs.SingleTextFieldDialog;
+import me.app.coinwallet.utils.ToastUtil;
 import me.app.coinwallet.viewmodels.TransferPageViewModel;
+import org.bitcoinj.uri.BitcoinURIParseException;
 
 public class TransferFragment extends AuthenticateFragment implements BaseAdapter.OnItemClickListener<AddressBookEntry>{
 
@@ -35,6 +36,7 @@ public class TransferFragment extends AuthenticateFragment implements BaseAdapte
     private RecyclerView addressBook;
     private Button sendBtn;
     private TransferPageViewModel viewModel;
+    private ToastUtil toastUtil;
 
     public TransferFragment() {
         // Required empty public constructor
@@ -72,10 +74,8 @@ public class TransferFragment extends AuthenticateFragment implements BaseAdapte
         addressBook.setAdapter(adapter);
         addressBook.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         Intent intent = requireActivity().getIntent();
-        String address = intent.getStringExtra(Constants.SEND_TO_ADDRESS_EXTRA_NAME);
-        if(address!=null){
-            addressText.setText(address);
-        }
+        String qrContent = intent.getStringExtra(Constants.QR_CONTENT);
+        handleQrIntent(qrContent);
         viewModel.getAddressBook().observe(requireActivity(), adapter::update);
         saveContactSwitch.setOnCheckedChangeListener((v, isChecked)->{
             if(isChecked) {
@@ -97,15 +97,35 @@ public class TransferFragment extends AuthenticateFragment implements BaseAdapte
     @Override
     protected void onPasswordDenied() {}
 
-   private void saveContact(String address){
+    private void saveContact(String address){
         if(saveContactSwitch.isChecked()){
             TextInputEditText addressLabel = saveContactView.findViewById(R.id.address_label_text_field);
             viewModel.saveToAddressBook(addressLabel.getText().toString(), address);
         }
-   }
+    }
 
-   @Override
-   public void onClick(AddressBookEntry addressBookEntry) {
+    private void handleQrIntent(String content){
+        if (content.startsWith("bitcoin")){
+            try {
+                viewModel.extractUri(content);
+                addressText.setText(viewModel.getSendToFromUri());
+                amountText.setText(String.valueOf(viewModel.getAmountFromUri()));
+            } catch (BitcoinURIParseException e) {
+                toastUtil.postToast("Wrong Bitcoin URI format", Toast.LENGTH_SHORT);
+            }
+        } else {
+            addressText.setText(content);
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        toastUtil = new ToastUtil(requireContext());
+    }
+
+    @Override
+    public void onClick(AddressBookEntry addressBookEntry) {
         addressText.setText(addressBookEntry.getAddress());
     }
 }

@@ -24,7 +24,7 @@ public class WalletLiveData {
         this.wallet = wallet;
     }
 
-    public void refreshAvailableBalance(){ availableBalance.postValue(wallet.getPlainBalance()); }
+    public void refreshAvailableBalance(){ availableBalance.postValue(wallet.getPlainBalance()); wallet.check();}
 
     public void refreshExpectedBalance(){ expectedBalance.postValue(wallet.getExpectedBalance()); }
 

@@ -9,9 +9,15 @@ import org.bitcoinj.script.Script;
 import java.util.concurrent.TimeUnit;
 
 public final class Constants {
-    public static final String NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL_ID";
+    public static final String NOTIFICATION_CHANNEL_ID_RECEIVE = "NOTIFICATION_CHANNEL_ID_RECEIVE";
 
-    public static final String SEND_TO_ADDRESS_EXTRA_NAME = "send_to_address";
+    public static final String NOTIFICATION_CHANNEL_ID_SERVICE = "NOTIFICATION_CHANNEL_ID_SERVICE";
+
+    public static final int NOTIFICATION_SYNC_ID = 1;
+
+    public static final int NOTIFICATION_TX_RECEIVE_ID = 2;
+
+    public static final String QR_CONTENT = "qr_content";
 
     public static final String INIT_FRAGMENT_EXTRA_NAME = "init_fragment";
 
