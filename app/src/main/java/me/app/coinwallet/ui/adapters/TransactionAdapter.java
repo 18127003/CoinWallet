@@ -1,5 +1,6 @@
 package me.app.coinwallet.ui.adapters;
 
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.card.MaterialCardView;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
+import me.app.coinwallet.utils.Utils;
+import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.TransactionConfidence;
 
 public class TransactionAdapter extends BaseAdapter<TransactionWrapper, TransactionAdapter.ViewHolder> {
-
+    private Resources res;
     public TransactionAdapter(OnItemClickListener<TransactionWrapper> listener) {
         super(listener);
     }
@@ -22,6 +25,7 @@ public class TransactionAdapter extends BaseAdapter<TransactionWrapper, Transact
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_item_card,parent,false);
+        res=parent.getResources();
         return new TransactionAdapter.ViewHolder(rootView);
     }
 
@@ -29,19 +33,22 @@ public class TransactionAdapter extends BaseAdapter<TransactionWrapper, Transact
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TransactionWrapper tx = data.get(position);
         holder.receiver.setText(tx.getReceiver().toString());
-        holder.time.setText(tx.getTime().toString());
-        holder.confirmNum.setText(String.valueOf(tx.getConfirmNum()));
-        holder.amount.setText(tx.getAmountString());
+        holder.time.setText(Utils.formatDate(tx.getTime()));
+        holder.confirmNum.setText(res.getText(R.string.confirmation)+": "+tx.getConfirmNum().toString());
+        holder.amount.setText((tx.isSend()?"-":"+")+tx.getAmount().toFriendlyString());
         TransactionConfidence.ConfidenceType type = tx.getStatus();
         switch (type){
             case DEAD:
                 holder.status.setBackgroundResource(R.drawable.ic_baseline_cancel_24);
+                holder.amount.setTextColor(res.getColor(R.color.red));
                 break;
             case PENDING:
                 holder.status.setBackgroundResource(R.drawable.ic_pending);
+                holder.amount.setTextColor(res.getColor(R.color.grey));
                 break;
             case BUILDING:
                 holder.status.setBackgroundResource(R.drawable.ic_done);
+                holder.amount.setTextColor(res.getColor(R.color.light_green));
         }
         holder.txCard.setOnClickListener(v->listener.onClick(tx));
     }

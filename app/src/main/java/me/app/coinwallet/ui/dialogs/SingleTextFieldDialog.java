@@ -34,18 +34,20 @@ public class SingleTextFieldDialog extends ConfirmDialog {
         String message = "Input your label";
         String label = "Label";
         int inputType = EditorInfo.TYPE_CLASS_TEXT;
-        return singleTextDialog(inflater, callback, message, label, inputType);
+        int iconMode = TextInputLayout.END_ICON_NONE;
+        return singleTextDialog(inflater, callback, message, label, inputType,iconMode);
     }
 
     public static ConfirmDialog passwordDialog(LayoutInflater inflater, DialogListener callback){
         String message = "Input your password";
         String label = "Password";
+        int iconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE;
         int inputType = EditorInfo.TYPE_TEXT_VARIATION_PASSWORD;
-        return singleTextDialog(inflater, callback, message, label, inputType);
+        return singleTextDialog(inflater, callback, message, label, inputType, iconMode);
     }
 
     private static ConfirmDialog singleTextDialog(LayoutInflater inflater, DialogListener callback,
-                                                  String message, String label, int inputType){
+                                                  String message, String label, int inputType, int endIconMode){
         View view = inflater.inflate(SINGLE_EDIT_TEXT_LAYOUT, null);
         TextInputEditText text = view.findViewById(R.id.dialog_edit_text);
         text.setInputType(inputType);
@@ -53,6 +55,8 @@ public class SingleTextFieldDialog extends ConfirmDialog {
         messageView.setText(message);
         TextInputLayout textLayout = view.findViewById(R.id.dialog_edit_text_layout);
         textLayout.setHint(label);
+        textLayout.setEndIconMode(endIconMode);
+
         return new SingleTextFieldDialog(view, callback, text);
     }
 

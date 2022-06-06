@@ -62,6 +62,7 @@ public class HistoryFragment extends Fragment implements BaseAdapter.OnItemClick
         Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
         intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, TransactionDetailFragment.class);
         intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Transaction Detail");
+        intent.putExtra("transaction",item);
         startActivity(intent);
     }
 }

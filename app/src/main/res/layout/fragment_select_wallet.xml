@@ -17,11 +17,13 @@
 				app:layout_constraintLeft_toLeftOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
 				android:text="@string/welcome_text"
-				android:layout_marginTop="12dp"
-				style="@style/h6.white"/>
+				android:layout_marginTop="30dp"
+				style="@style/h5"/>
 		<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/wallet_info_list"
 				android:layout_marginTop="64dp"
+				android:layout_marginHorizontal="20dp"
+
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toTopOf="@id/choose_wallet_text"/>
@@ -30,18 +32,22 @@
 				android:layout_height="wrap_content"
 				android:id="@+id/create_wallet_btn"
 				android:text="@string/create_btn_label"
+				android:layout_marginVertical="20dp"
 				app:layout_constraintTop_toBottomOf="@id/wallet_info_list"
 				app:layout_constraintLeft_toLeftOf="parent"
-				app:layout_constraintRight_toRightOf="parent"
+				app:layout_constraintRight_toLeftOf="@id/restore_wallet_btn"
+				style="@style/ButtonStyle"
 				/>
 		<Button
+				android:layout_marginVertical="20dp"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/restore_wallet_btn"
 				android:text="@string/restore_btn_label"
-				app:layout_constraintTop_toBottomOf="@+id/create_wallet_btn"
-				app:layout_constraintLeft_toLeftOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/wallet_info_list"
+				app:layout_constraintLeft_toRightOf="@id/create_wallet_btn"
 				app:layout_constraintRight_toRightOf="parent"
+				style="@style/ButtonStyle"
 				/>
 	</androidx.constraintlayout.widget.ConstraintLayout>
 

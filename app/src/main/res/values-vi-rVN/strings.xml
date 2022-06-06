@@ -49,4 +49,6 @@
 	<string name="confirmation">Xác nhận</string>
 	<string name="fee">Phí giao dịch</string>
 	<string name="tx_update_time">Thời gian cập nhật</string>
+    <string name="receive">Receive</string>
+    <string name="transaction_id">Mã giao dịch</string>
 </resources>

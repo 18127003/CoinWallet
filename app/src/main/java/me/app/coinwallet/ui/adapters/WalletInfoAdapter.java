@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.button.MaterialButton;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.wallets.WalletInfoEntry;
 
@@ -25,12 +26,12 @@ public class WalletInfoAdapter extends BaseAdapter<WalletInfoEntry, WalletInfoAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         WalletInfoEntry entry = data.get(position);
-        holder.getLabel().setText(entry.getLabel());
-        holder.getLabel().setOnClickListener(v -> listener.onClick(entry));
+        holder.label.setText(entry.getLabel());
+        holder.label.setOnClickListener(v -> listener.onClick(entry));
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView label;
+        private final MaterialButton label;
 
         public ViewHolder(View view) {
             super(view);
@@ -39,8 +40,5 @@ public class WalletInfoAdapter extends BaseAdapter<WalletInfoEntry, WalletInfoAd
             label = view.findViewById(R.id.wallet_info_label);
         }
 
-        public TextView getLabel() {
-            return label;
-        }
     }
 }

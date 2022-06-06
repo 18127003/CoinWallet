@@ -6,4 +6,5 @@
 	<string name="more_info">More Info</string>
 	<string name="confirmation">Confirmation</string>
 	<string name="fee">Fee</string>
+    <string name="receive">Receive</string>
 </resources>

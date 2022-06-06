@@ -1,5 +1,6 @@
 package me.app.coinwallet.data.marketcap;
 
+import android.util.Log;
 import com.squareup.moshi.*;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -11,15 +12,20 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MarketCapHost {
-    private final static String HOST_PREFIX = "https://api.coingecko.com/api/v3/";
-    private final static HttpUrl MARKET_CAP_URL = HttpUrl.parse(HOST_PREFIX + "coins/markets");
+    private final static String HOST_PREFIX = "http://localhost:8080/api/";
+    private final static HttpUrl MARKET_CAP_URL = HttpUrl.parse(HOST_PREFIX + "marketCap/all");
+    private final static HttpUrl COINS_URL=HttpUrl.parse(HOST_PREFIX+"coins/");
+    private final static HttpUrl TREND_ULR=HttpUrl.parse(HOST_PREFIX+"search/trending");
     private final static HttpUrl EXCHANGE_RATE_URL = HttpUrl.parse(HOST_PREFIX + "exchange_rates");
     private final static String CURRENCY_QUERY_PARAM = "vs_currency";
     private final static String ORDER_QUERY_PARAM = "order";
     private final static String PAGE_CAP_QUERY_PARAM = "per_page";
     private final static String PAGE_NUM_QUERY_PARAM = "page";
+    private final static String DAYS_QUERY_PARAM="days";
+    private final static String MONTH="30";
     private final static String SPARKLINE_QUERY_PARAM = "sparkline";
     private static final MediaType MEDIA_TYPE = MediaType.get("application/json");
     private static final String SOURCE = "CoinGecko.com";
@@ -36,13 +42,22 @@ public class MarketCapHost {
         return MEDIA_TYPE;
     }
 
-    public HttpUrl url(final String currency) {
+    public HttpUrl url() {
         HttpUrl.Builder builder = MARKET_CAP_URL.newBuilder();
+        return builder.build();
+    }
+
+    public HttpUrl trendingUrl() {
+        HttpUrl.Builder builder = TREND_ULR.newBuilder();
+        return builder.build();
+    }
+
+    public HttpUrl chartUrl(final String currency, final String id ) {
+        HttpUrl.Builder builder = COINS_URL.newBuilder();
+        builder.addPathSegment(id);
+        builder.addPathSegment("market_chart");
         builder.addQueryParameter(CURRENCY_QUERY_PARAM, currency);
-        builder.addQueryParameter(ORDER_QUERY_PARAM, "market_cap_desc");
-        builder.addQueryParameter(PAGE_CAP_QUERY_PARAM, "100");
-        builder.addQueryParameter(PAGE_NUM_QUERY_PARAM, "1");
-        builder.addQueryParameter(SPARKLINE_QUERY_PARAM, "false");
+        builder.addQueryParameter(DAYS_QUERY_PARAM,MONTH);
         return builder.build();
     }
 

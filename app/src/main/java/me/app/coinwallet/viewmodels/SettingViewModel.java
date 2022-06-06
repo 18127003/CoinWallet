@@ -1,6 +1,7 @@
 package me.app.coinwallet.viewmodels;
 
 import android.app.Application;
+import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import me.app.coinwallet.LocalWallet;
@@ -31,6 +32,10 @@ public class SettingViewModel extends AndroidViewModel {
     public void changeLanguage(String languageCode, OnConfigurationChange callback){
         LocaleUtil.setLocale(getApplication().getApplicationContext(), languageCode);
         callback.onLocaleChange();
+    }
+
+    public String getSelectedLanguage(Context context){
+        return LocaleUtil.getLanguage(context);
     }
 
     public interface OnConfigurationChange{

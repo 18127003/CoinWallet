@@ -12,18 +12,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
+import me.app.coinwallet.data.marketcap.ChartEntry;
+import me.app.coinwallet.ui.activities.MarketCapActivity;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
+import me.app.coinwallet.ui.adapters.BaseAdapter;
+import me.app.coinwallet.ui.adapters.MarketCapTrendAdapter;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements BaseAdapter.OnItemClickListener<ChartEntry> {
 
     TextView balance;
     TextView invisibleText;
     ImageButton visible;
     HomePageViewModel viewModel;
     Button sendBtn;
+    RecyclerView marketCaps;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -64,6 +71,15 @@ public class HomeFragment extends Fragment {
             intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Exchange rate");
             startActivity(intent);
         });
+
+        ImageButton coinMarketBtn=view.findViewById(R.id.coin_market_btn);
+        coinMarketBtn.setOnClickListener(v -> startActivity(new Intent(this.getContext(), MarketCapActivity.class)));
+//        marketCaps=view.findViewById(R.id.coin_market_cap).findViewById(R.id.market_list);
+//        MarketCapTrendAdapter adapter = new MarketCapTrendAdapter(this);
+//        marketCaps.setAdapter(adapter);
+//        marketCaps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+//        viewModel.getChartLiveData().observe(this, adapter::update);
+//        viewModel.fetchChart();
     }
 
     private void hideOrShow() {
@@ -77,5 +93,10 @@ public class HomeFragment extends Fragment {
             invisibleText.setVisibility(View.VISIBLE);
             visible.setBackgroundResource(R.drawable.ic_visibility_off);
         }
+    }
+
+    @Override
+    public void onClick(ChartEntry item) {
+
     }
 }

@@ -60,7 +60,7 @@
 	<string name="english" translatable="false">English</string>
 	<string name="vietnam" translatable="false">Vietnamese</string>
 	<string name="invisible_placeholder" translatable="false">**********</string>
-	<string name="notification">Notification</string>
+	<string name="notification" translatable="false">Notification</string>
 	<string name="profile">Person</string>
 	<string name="save_contact">Save contact</string>
 	<string name="contact">Contact</string>
@@ -77,4 +77,6 @@
 	<string name="confirmation">Confirmation</string>
 	<string name="fee">Fee</string>
 	<string name="tx_update_time">Update time</string>
+    <string name="receive">Receive</string>
+	<string name="transaction_id" >Transaction ID</string>
 </resources>
