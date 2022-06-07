@@ -52,15 +52,6 @@ public class MarketCapHost {
         return builder.build();
     }
 
-    public HttpUrl chartUrl(final String currency, final String id ) {
-        HttpUrl.Builder builder = COINS_URL.newBuilder();
-        builder.addPathSegment(id);
-        builder.addPathSegment("market_chart");
-        builder.addQueryParameter(CURRENCY_QUERY_PARAM, currency);
-        builder.addQueryParameter(DAYS_QUERY_PARAM,MONTH);
-        return builder.build();
-    }
-
     public List<MarketCapEntry> parse(final BufferedSource jsonSource) throws IOException, JsonDataException {
         Type responseType = Types.newParameterizedType(List.class, MarketCapJson.class);
         final JsonAdapter<List<MarketCapJson>> jsonAdapter = moshi.adapter(responseType);

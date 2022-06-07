@@ -11,16 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import me.app.coinwallet.R;
-import me.app.coinwallet.data.marketcap.ChartEntry;
 import me.app.coinwallet.data.marketcap.MarketCapEntry;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MarketCapAdapter extends BaseAdapter<MarketCapEntry, MarketCapAdapter.ViewHolder> {
 
