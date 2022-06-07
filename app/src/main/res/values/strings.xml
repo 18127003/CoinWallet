@@ -72,9 +72,11 @@
 	<string name="from">From</string>
 	<string name="to">To</string>
 	<string name="type_coin">Type coin</string>
-	<!-- TODO: Remove or change this placeholder text -->
 	<string name="more_info">More Info</string>
 	<string name="confirmation">Confirmation</string>
 	<string name="fee">Fee</string>
 	<string name="tx_update_time">Update time</string>
+	<string name="service_notification_title">Background activity</string>
+	<string name="log_out">Log out</string>
+	<string name="bluetooth">Bluetooth</string>
 </resources>

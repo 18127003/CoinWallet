@@ -2,6 +2,7 @@ package me.app.coinwallet;
 
 import android.text.format.DateUtils;
 import okhttp3.OkHttpClient;
+import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
@@ -28,6 +29,8 @@ public final class Constants {
     public static final int QR_BITMAP_SCALE_WIDTH = 500;
 
     public static final NetworkParameters NETWORK_PARAMETERS = TestNet3Params.get();
+
+    public static final Context BITCOIN_CONTEXT = new Context(NETWORK_PARAMETERS);
 
     public static final Script.ScriptType DEFAULT_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2WPKH;
 

@@ -6,4 +6,7 @@
 	<string name="more_info">More Info</string>
 	<string name="confirmation">Confirmation</string>
 	<string name="fee">Fee</string>
+	<string name="service_notification_title">Background activity</string>
+	<string name="log_out">Log out</string>
+	<string name="bluetooth">Bluetooth</string>
 </resources>

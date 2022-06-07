@@ -16,6 +16,7 @@ import me.app.coinwallet.WalletNotificationType;
 import me.app.coinwallet.data.addressbook.AddressBookDao;
 import me.app.coinwallet.data.addressbook.AddressBookDatabase;
 import me.app.coinwallet.data.addressbook.AddressBookEntry;
+import me.app.coinwallet.data.livedata.BlockchainLiveData;
 import me.app.coinwallet.data.livedata.WalletLiveData;
 import me.app.coinwallet.data.transaction.MonthlyReport;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
@@ -26,7 +27,7 @@ import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.Transaction;
 import java.util.List;
 
-public class HomePageViewModel extends AndroidViewModel implements LocalWallet.EventListener {
+public class HomePageViewModel extends AndroidViewModel {
     private final LocalWallet localWallet = LocalWallet.getInstance();
     private final Application application;
     private final WalletLiveData walletLiveData;
@@ -66,24 +67,6 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
     public HomePageViewModel(Application application){
         super(application);
         this.application = application;
-        localWallet.subscribe(this);
-        walletLiveData = new WalletLiveData(localWallet);
-        walletLiveData.refreshAll();
-    }
-
-    @Override
-    public void update(WalletNotificationType type, LocalWallet.EventMessage<?> content) {
-        switch (type){
-            case TX_ACCEPTED:
-                walletLiveData.refreshAvailableBalance();
-                walletLiveData.refreshTxHistory((Transaction) content.getContent());
-                walletLiveData.refreshAvailableBalance();
-                break;
-            case TX_RECEIVED:
-                walletLiveData.refreshCurrentReceivingAddress();
-                walletLiveData.refreshExpectedBalance();
-                walletLiveData.refreshTxHistory((Transaction) content.getContent());
-                break;
-        }
+        walletLiveData = WalletLiveData.get();
     }
 }

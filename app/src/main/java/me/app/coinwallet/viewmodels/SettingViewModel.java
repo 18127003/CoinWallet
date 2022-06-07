@@ -1,6 +1,7 @@
 package me.app.coinwallet.viewmodels;
 
 import android.app.Application;
+import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import me.app.coinwallet.LocalWallet;
@@ -35,6 +36,10 @@ public class SettingViewModel extends AndroidViewModel {
 
     public interface OnConfigurationChange{
         void onLocaleChange();
+    }
+
+    public void logout(){
+        AsyncTask.execute(localWallet::stopWallet);
     }
 
     public boolean checkPassword(String password){

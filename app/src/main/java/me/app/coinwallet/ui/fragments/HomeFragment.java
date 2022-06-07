@@ -24,6 +24,7 @@ public class HomeFragment extends Fragment {
     ImageButton visible;
     HomePageViewModel viewModel;
     Button sendBtn;
+    Button bluetoothBtn;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -62,6 +63,13 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
             intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, ExchangeRateFragment.class);
             intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Exchange rate");
+            startActivity(intent);
+        });
+        bluetoothBtn = view.findViewById(R.id.bt_text_button);
+        bluetoothBtn.setOnClickListener(v->{
+            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
+            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, BluetoothPaymentFragment.class);
+            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Receive bluetooth payment");
             startActivity(intent);
         });
     }

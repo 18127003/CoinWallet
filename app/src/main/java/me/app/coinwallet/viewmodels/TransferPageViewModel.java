@@ -18,15 +18,12 @@ import java.util.List;
 
 public class TransferPageViewModel extends AndroidViewModel {
     private final LocalWallet localWallet = LocalWallet.getInstance();
-    private final WalletLiveData walletLiveData;
     private final AddressBookDao addressBookDao;
     private BitcoinURI bitcoinURI;
 
     public TransferPageViewModel(@NonNull Application application) {
         super(application);
-        walletLiveData = new WalletLiveData(localWallet);
         addressBookDao = AddressBookDatabase.getDatabase(application.getApplicationContext()).addressBookDao();
-        walletLiveData.refreshAvailableBalance();
     }
 
     public void saveToAddressBook(String label, String address){
