@@ -60,7 +60,7 @@
 	<string name="english" translatable="false">English</string>
 	<string name="vietnam" translatable="false">Vietnamese</string>
 	<string name="invisible_placeholder" translatable="false">**********</string>
-	<string name="notification">Notification</string>
+	<string name="notification" translatable="false">Notification</string>
 	<string name="profile">Person</string>
 	<string name="save_contact">Save contact</string>
 	<string name="contact">Contact</string>
@@ -79,4 +79,6 @@
 	<string name="service_notification_title">Background activity</string>
 	<string name="log_out">Log out</string>
 	<string name="bluetooth">Bluetooth</string>
+  <string name="receive">Receive</string>
+	<string name="transaction_id" >Transaction ID</string>
 </resources>

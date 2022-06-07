@@ -52,4 +52,6 @@
 	<string name="service_notification_title">Background activity</string>
 	<string name="log_out">Log out</string>
 	<string name="bluetooth">Bluetooth</string>
+  <string name="receive">Receive</string>
+  <string name="transaction_id">Mã giao dịch</string>
 </resources>

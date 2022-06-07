@@ -57,8 +57,7 @@
 			        android:clickable="false"
 			        app:layout_constraintTop_toBottomOf="@id/report_income_label"
 			        app:layout_constraintBottom_toBottomOf="parent"
-			        app:layout_constraintRight_toRightOf="parent"
-			        app:layout_constraintLeft_toRightOf="@id/report_time"
+					app:layout_constraintLeft_toLeftOf="@id/report_income_label"
 
 					/>
 

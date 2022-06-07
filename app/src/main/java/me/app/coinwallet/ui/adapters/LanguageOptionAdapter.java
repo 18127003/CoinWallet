@@ -1,5 +1,6 @@
 package me.app.coinwallet.ui.adapters;
 
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +12,18 @@ import me.app.coinwallet.R;
 import me.app.coinwallet.data.language.LanguageOption;
 
 public class LanguageOptionAdapter extends BaseAdapter<LanguageOption, LanguageOptionAdapter.ViewHolder> {
-
-    public LanguageOptionAdapter(OnItemClickListener<LanguageOption> listener) {
+    private Resources res;
+    public LanguageOptionAdapter(OnItemClickListener<LanguageOption> listener, String selected) {
         super(listener);
+        this.selected = selected;
     }
+    private final String selected;
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.language_option_item,parent,false);
+        res=parent.getResources();
         return new ViewHolder(rootView);
     }
 
@@ -27,7 +31,15 @@ public class LanguageOptionAdapter extends BaseAdapter<LanguageOption, LanguageO
     public void onBindViewHolder(ViewHolder holder, int position) {
         LanguageOption language = data.get(position);
         holder.label.setText(language.getLabel());
-        holder.card.setOnClickListener(v -> listener.onClick(language));
+        if(language.getCode().equals(selected)){
+            holder.label.setTextColor(res.getColor(R.color.yellow));
+        }
+        holder.card.setOnClickListener(
+                v -> {
+                    listener.onClick(language);
+                    holder.label.setTextColor(res.getColor(R.color.yellow));
+                }
+        );
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

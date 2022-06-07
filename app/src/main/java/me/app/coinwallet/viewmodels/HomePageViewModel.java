@@ -9,15 +9,18 @@ import androidx.biometric.BiometricPrompt;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import me.app.coinwallet.LocalWallet;
 import me.app.coinwallet.R;
+import me.app.coinwallet.WalletApplication;
 import me.app.coinwallet.WalletNotificationType;
 import me.app.coinwallet.data.addressbook.AddressBookDao;
 import me.app.coinwallet.data.addressbook.AddressBookDatabase;
 import me.app.coinwallet.data.addressbook.AddressBookEntry;
 import me.app.coinwallet.data.livedata.BlockchainLiveData;
 import me.app.coinwallet.data.livedata.WalletLiveData;
+import me.app.coinwallet.data.marketcap.*;
 import me.app.coinwallet.data.transaction.MonthlyReport;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
 import me.app.coinwallet.exceptions.MnemonicInaccessibleException;
@@ -26,10 +29,10 @@ import me.app.coinwallet.utils.CryptoEngine;
 import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.Transaction;
 import java.util.List;
+import java.util.Locale;
 
 public class HomePageViewModel extends AndroidViewModel {
     private final LocalWallet localWallet = LocalWallet.getInstance();
-    private final Application application;
     private final WalletLiveData walletLiveData;
 
     public LiveData<String> getBalance(){ return walletLiveData.getAvailableBalance(); }
@@ -66,7 +69,8 @@ public class HomePageViewModel extends AndroidViewModel {
 
     public HomePageViewModel(Application application){
         super(application);
-        this.application = application;
         walletLiveData = WalletLiveData.get();
+        localWallet.subscribe(this);
     }
+
 }

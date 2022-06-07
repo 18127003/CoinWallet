@@ -17,8 +17,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tx_status"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tx_time"
                 app:layout_constraintLeft_toLeftOf="parent"
+
         />
         <TextView
                 android:layout_width="wrap_content"
@@ -33,20 +34,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="@id/tx_receiver"
-                app:layout_constraintTop_toBottomOf="@id/tx_receiver"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tx_amount"
                 android:id="@+id/tx_time"
         />
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  app:layout_constraintTop_toTopOf="parent"
-                  app:layout_constraintBottom_toBottomOf="parent"
-                  app:layout_constraintRight_toRightOf="parent"
+                  app:layout_constraintTop_toBottomOf="@id/tx_receiver"
+                  app:layout_constraintBottom_toTopOf="@id/tx_time"
+                 app:layout_constraintRight_toRightOf="@id/tx_receiver"
                   android:id="@+id/tx_amount"
                   style="@style/h6.black"/>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   app:layout_constraintBottom_toBottomOf="parent"
-                  app:layout_constraintLeft_toRightOf="@id/tx_time"
-                  app:layout_constraintRight_toLeftOf="@id/tx_amount"
+                  app:layout_constraintRight_toRightOf="parent"
+                  app:layout_constraintTop_toBottomOf="@id/tx_amount"
                   android:id="@+id/tx_confirmation_number"
 
         />

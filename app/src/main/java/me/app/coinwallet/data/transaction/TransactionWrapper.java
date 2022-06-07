@@ -1,31 +1,32 @@
 package me.app.coinwallet.data.transaction;
 
 import androidx.annotation.Nullable;
-import me.app.coinwallet.R;
 import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.*;
 import org.bitcoinj.wallet.Wallet;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Objects;
 
-public class TransactionWrapper {
+public class TransactionWrapper implements Serializable {
     private final Sha256Hash txId;
     private final Date time;
     private final Address receiver;
     private TransactionConfidence.ConfidenceType status;
     private Integer confirmNum;
+    private final Coin fee;
     private final Coin amount;
     private final boolean isSend;
 
-    public TransactionWrapper(Sha256Hash txId, Date time,@Nullable Address receiver, TransactionConfidence.ConfidenceType status,
-                              Integer confirmNum, Coin amount, boolean isSend) {
+    public TransactionWrapper(Sha256Hash txId, Date time, @Nullable Address receiver, TransactionConfidence.ConfidenceType status,
+                              Integer confirmNum, Coin fee, Coin amount, boolean isSend) {
         this.txId = txId;
         this.time = time;
         this.receiver = receiver;
         this.status = status;
         this.confirmNum = confirmNum;
+        this.fee = fee;
         this.amount = amount;
         this.isSend = isSend;
     }
@@ -38,13 +39,21 @@ public class TransactionWrapper {
         Integer confirmNum = confidence.getDepthInBlocks();
         TransactionConfidence.ConfidenceType status = confidence.getConfidenceType();
         boolean isSend = true;
+        Coin fee=tx.getFee();
+        if(fee==null){
+            fee=Coin.ZERO;
+        }
         Coin amount = tx.getValueSentFromMe(wallet);
         if(amount.isZero()){
             amount = tx.getValueSentToMe(wallet);
             isSend = false;
         }
 //        double amountStr = amount.toBtc().doubleValue();
-        return new TransactionWrapper(txId, time, receiver, status, confirmNum, amount, isSend);
+        return new TransactionWrapper(txId, time, receiver, status, confirmNum, fee, amount, isSend);
+    }
+
+    public Coin getFee() {
+        return fee;
     }
 
     public Date getTime() {

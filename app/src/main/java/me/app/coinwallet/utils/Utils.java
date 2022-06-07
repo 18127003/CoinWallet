@@ -9,10 +9,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class Utils {
+    private static final SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
     public static String convertStreamToString(InputStream is) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
@@ -33,6 +37,7 @@ public class Utils {
         return (month+1)+"/"+year;
     }
 
+
     public static boolean hasInternetAccess(Context ctx){
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -49,5 +54,14 @@ public class Utils {
 
     public static boolean startsWithIgnoreCase(final String string, final String prefix) {
         return string.regionMatches(true, 0, prefix, 0, prefix.length());
+
+    public static String formatDate(Date date){
+        try {
+            return format.format(date);
+        }
+        catch (Exception e){
+            return null;
+        }
+
     }
 }

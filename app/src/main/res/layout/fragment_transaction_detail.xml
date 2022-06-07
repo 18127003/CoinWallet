@@ -56,7 +56,7 @@
 						app:layout_constraintBottom_toTopOf="@id/tx_status_text"
 						android:id="@+id/tx_id"
 						android:text="fdgdfd"/>
-				<Button
+				<androidx.appcompat.widget.AppCompatButton
 						android:layout_width="match_parent"
 				        android:layout_height="wrap_content"
 				        app:layout_constraintTop_toBottomOf="@id/tx_id"
@@ -66,16 +66,21 @@
 				        android:clickable="false"
 				        android:text="transaction successfully"
 				        android:drawableStart="@drawable/ic_done"
-				        style="@style/TextButton"
-				        android:backgroundTint="@color/light_green"
-				        android:gravity="start|center_vertical"/>
+						android:drawablePadding="5dp"
+				        android:gravity="left|center_vertical"
+						android:paddingHorizontal="10dp"
+						android:paddingVertical="0dp"
+						android:layout_marginVertical="10dp"
+				/>
 				<RelativeLayout
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintRight_toRightOf="parent"
 						app:layout_constraintTop_toBottomOf="@id/tx_status_text"
-						android:id="@+id/tx_time_layout">
+						android:id="@+id/tx_time_layout"
+						android:paddingTop="10dp"
+				>
 					<TextView
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"

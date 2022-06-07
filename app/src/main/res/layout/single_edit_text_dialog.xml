@@ -21,11 +21,13 @@
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			style="@style/TextInputOutlined"
-			android:layout_margin="10dp">
+			android:layout_margin="10dp"
+	>
 		<com.google.android.material.textfield.TextInputEditText
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:id="@+id/dialog_edit_text"
+				android:focusable="true"
 				style="@style/normal.black"/>
 	</com.google.android.material.textfield.TextInputLayout>
 
