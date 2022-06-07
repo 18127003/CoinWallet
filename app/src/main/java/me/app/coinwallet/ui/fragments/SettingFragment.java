@@ -14,6 +14,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.BaseActivity;
+import me.app.coinwallet.ui.activities.InitActivity;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.dialogs.ConfirmDialog;
 import me.app.coinwallet.ui.dialogs.SingleTextFieldDialog;
@@ -29,6 +30,7 @@ public class SettingFragment extends AuthenticateFragment {
     private SwitchMaterial fingerprintEnable;
     private ImageButton changeLanguage;
     private ImageButton about;
+    private ImageButton logout;
     private SettingViewModel viewModel;
 
     public SettingFragment() {
@@ -65,6 +67,15 @@ public class SettingFragment extends AuthenticateFragment {
         fingerprintEnable.setChecked(((BaseActivity)requireActivity()).configuration.isFingerprintEnabled());
         fingerprintEnable.setOnCheckedChangeListener((v, isChecked)->
                 ((BaseActivity) requireActivity()).configuration.setFingerprintEnabled(isChecked));
+        logout = view.findViewById(R.id.logout);
+        logout.setOnClickListener(v -> logout());
+    }
+
+    private void logout(){
+        viewModel.logout();
+        Intent intent = new Intent(getContext(), InitActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void moveToSettingSection(Class<? extends Fragment> fragment, String title){

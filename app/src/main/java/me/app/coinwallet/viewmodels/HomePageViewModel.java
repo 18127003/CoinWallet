@@ -18,6 +18,7 @@ import me.app.coinwallet.WalletNotificationType;
 import me.app.coinwallet.data.addressbook.AddressBookDao;
 import me.app.coinwallet.data.addressbook.AddressBookDatabase;
 import me.app.coinwallet.data.addressbook.AddressBookEntry;
+import me.app.coinwallet.data.livedata.BlockchainLiveData;
 import me.app.coinwallet.data.livedata.WalletLiveData;
 import me.app.coinwallet.data.marketcap.*;
 import me.app.coinwallet.data.transaction.MonthlyReport;
@@ -30,13 +31,9 @@ import org.bitcoinj.core.Transaction;
 import java.util.List;
 import java.util.Locale;
 
-public class HomePageViewModel extends AndroidViewModel implements LocalWallet.EventListener {
+public class HomePageViewModel extends AndroidViewModel {
     private final LocalWallet localWallet = LocalWallet.getInstance();
-    private final WalletApplication application;
     private final WalletLiveData walletLiveData;
-    final MarketChartDao chartDao;
-    private final MediatorLiveData<List<ChartEntry>> chartLiveData = new MediatorLiveData<>();
-    private LiveData<List<ChartEntry>> underlyingChartLiveData;
 
     public LiveData<String> getBalance(){ return walletLiveData.getAvailableBalance(); }
 
@@ -45,17 +42,6 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
     }
 
     public LiveData<String> getAddress(){return walletLiveData.getCurrentReceivingAddress();}
-
-    public MediatorLiveData<List<ChartEntry>> getChartLiveData() {
-        return chartLiveData;
-    }
-
-    public void fetchChart() {
-        if (underlyingChartLiveData != null)
-            chartLiveData.removeSource(underlyingChartLiveData);
-        underlyingChartLiveData = chartDao.findAll();
-        chartLiveData.addSource(underlyingChartLiveData, chartLiveData::setValue);
-    }
 
     public String extractMnemonic() throws MnemonicInaccessibleException{
         String mnemonicCode = localWallet.wallet().getKeyChainSeed().getMnemonicString();
@@ -83,27 +69,8 @@ public class HomePageViewModel extends AndroidViewModel implements LocalWallet.E
 
     public HomePageViewModel(Application application){
         super(application);
-        this.application = (WalletApplication) application;
+        walletLiveData = WalletLiveData.get();
         localWallet.subscribe(this);
-        chartDao = MarketChartRepository.get(this.application).marketChartDao();
-//        MarketCapRepository.get(this.application).maybeRequestTrend();
-        walletLiveData = new WalletLiveData(localWallet);
-        walletLiveData.refreshAll();
     }
 
-    @Override
-    public void update(WalletNotificationType type, LocalWallet.EventMessage<?> content) {
-        switch (type){
-            case TX_ACCEPTED:
-                walletLiveData.refreshAvailableBalance();
-                walletLiveData.refreshTxHistory((Transaction) content.getContent());
-                walletLiveData.refreshAvailableBalance();
-                break;
-            case TX_RECEIVED:
-                walletLiveData.refreshCurrentReceivingAddress();
-                walletLiveData.refreshExpectedBalance();
-                walletLiveData.refreshTxHistory((Transaction) content.getContent());
-                break;
-        }
-    }
 }

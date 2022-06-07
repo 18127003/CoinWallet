@@ -105,6 +105,8 @@ public class TransferFragment extends AuthenticateFragment implements BaseAdapte
     }
 
     private void handleQrIntent(String content){
+        if (content==null)
+            return;
         if (content.startsWith("bitcoin")){
             try {
                 viewModel.extractUri(content);

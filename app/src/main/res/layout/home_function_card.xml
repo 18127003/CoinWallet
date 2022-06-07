@@ -39,14 +39,14 @@
         <Space
                 android:layout_height="wrap_content"
                 android:layout_width="2dp"
-                android:layout_toStartOf="@+id/scan_text_button"
+                android:layout_toStartOf="@+id/bt_text_button"
         />
         <Button
-                android:id="@+id/scan_text_button"
+                android:id="@+id/bt_text_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:text="@string/qr_code_scanner"
+                android:text="@string/bluetooth"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
         />
     </RelativeLayout>

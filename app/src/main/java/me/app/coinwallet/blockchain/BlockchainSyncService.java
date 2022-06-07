@@ -1,4 +1,4 @@
-package me.app.coinwallet.workers;
+package me.app.coinwallet.blockchain;
 
 import android.app.Notification;
 import android.content.*;
@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleService;
 import com.google.common.base.Stopwatch;
 import me.app.coinwallet.*;
-import me.app.coinwallet.utils.WalletUtil;
+import me.app.coinwallet.data.livedata.BlockchainLiveData;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.utils.Threading;
@@ -23,26 +23,19 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
 
     private Configuration config;
     private LocalWallet wallet;
+    private final BlockchainLiveData blockchainLiveData = new BlockchainLiveData();
 
     private Stopwatch serviceUpTime;
     private boolean resetBlockchainOnShutdown = false;
     private final AtomicBoolean isBound = new AtomicBoolean(false);
 
-    private static final String ACTION_SYNC = BlockchainSyncService.class.getPackage().getName()
+    private static final String ACTION_START_SYNC = BlockchainSyncService.class.getPackage().getName()
             + ".sync_blockchain";
     private static final String ACTION_RESET_BLOCKCHAIN = BlockchainSyncService.class.getPackage().getName()
             + ".reset_blockchain";
 
-    public static void start(final Context context, final boolean cancelCoinsReceived) {
-        if (cancelCoinsReceived)
-            ContextCompat.startForegroundService(context,
-                    new Intent(ACTION_SYNC, null, context, BlockchainSyncService.class));
-        else
-            ContextCompat.startForegroundService(context, new Intent(context, BlockchainSyncService.class));
-    }
-
-    public static void startBackground(final Context context){
-        Intent intent = new Intent(ACTION_SYNC, null, context, BlockchainSyncService.class);
+    public static void start(final Context context){
+        Intent intent = new Intent(ACTION_START_SYNC, null, context, BlockchainSyncService.class);
         ContextCompat.startForegroundService(context, intent);
     }
 
@@ -59,9 +52,31 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 Transaction tx = (Transaction) content.getContent();
                 Notification notification = NotificationHandler.buildNotification(getApplicationContext(),
                         "Transaction received", tx.getTxId().toString());
-                config.notificationHandler.sendNotification(notification);
+                config.notificationHandler.sendNotification(Constants.NOTIFICATION_TX_RECEIVE_ID, notification);
+                break;
+            case SYNC_STARTED:
+                Log.e("HD","Sync started");
+                updateForegroundNotification("Started downloading blockchain");
+                blockchainLiveData.setSyncStatus(false);
+                break;
+            case SYNC_PROGRESS:
+                Log.e("HD","Sync progress");
+                double progress = (double) content.getContent();
+                updateForegroundNotification(String.valueOf(progress));
+                blockchainLiveData.updateProgress(progress);
+                break;
+            case SYNC_COMPLETED:
+                Log.e("HD","Sync complete");
+                updateForegroundNotification("Blockchain up to date");
+                blockchainLiveData.setSyncStatus(true);
                 break;
         }
+    }
+
+    private void updateForegroundNotification(String body){
+        Notification notification = NotificationHandler.buildServiceNotification(getApplicationContext(),
+                getResources().getString(R.string.service_notification_title), body);
+        config.notificationHandler.sendNotification(Constants.NOTIFICATION_SYNC_ID, notification);
     }
 
     private final BroadcastReceiver deviceIdleModeReceiver = new BroadcastReceiver() {
@@ -106,7 +121,8 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
 
         registerReceiver(deviceIdleModeReceiver, new IntentFilter(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED));
         startForeground(Constants.NOTIFICATION_SYNC_ID,
-                NotificationHandler.buildServiceNotification(getApplication(), "Background activity","Coin wallet is syncing"));
+                NotificationHandler.buildServiceNotification(getApplication(),
+                        getResources().getString(R.string.service_notification_title),"Coin wallet is syncing"));
     }
 
 
@@ -118,10 +134,10 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
             final String action = intent.getAction();
             Log.i("HD","service start command: "+ action);
 
-            if (ACTION_SYNC.equals(action)) {
+            if (ACTION_START_SYNC.equals(action)) {
                 BriefLogFormatter.init();
-                Handler handler = new Handler(Looper.getMainLooper());
-                Threading.USER_THREAD = handler::post;
+//                Handler handler = new Handler(Looper.getMainLooper());
+                Threading.USER_THREAD = config.executorService;
                 wallet.subscribe(this);
                 wallet.initWallet();
             } else if (ACTION_RESET_BLOCKCHAIN.equals(action)) {

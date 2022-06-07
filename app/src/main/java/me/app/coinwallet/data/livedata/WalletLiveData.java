@@ -1,9 +1,11 @@
 package me.app.coinwallet.data.livedata;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import me.app.coinwallet.LocalWallet;
+import me.app.coinwallet.WalletNotificationType;
 import me.app.coinwallet.data.transaction.MonthlyReport;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
 import me.app.coinwallet.utils.Utils;
@@ -12,16 +14,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WalletLiveData {
+public class WalletLiveData implements LocalWallet.EventListener {
     private final MutableLiveData<String> availableBalance = new MutableLiveData<>();
     private final MutableLiveData<String> expectedBalance = new MutableLiveData<>();
     private final MutableLiveData<String> currentReceivingAddress = new MutableLiveData<>();
     private final MutableLiveData<List<MonthlyReport>> monthlyReports = new MutableLiveData<>();
     private final LocalWallet wallet;
     private Multimap<String, TransactionWrapper> monthlyReportMap;
+    private final MutableLiveData<Boolean> isActive = new MutableLiveData<>();
 
-    public WalletLiveData(LocalWallet wallet){
-        this.wallet = wallet;
+    private static WalletLiveData _instance;
+
+    private WalletLiveData(){
+        wallet = LocalWallet.getInstance();
+        wallet.subscribe(this);
+    }
+
+    public static WalletLiveData get(){
+        if(_instance == null){
+            _instance = new WalletLiveData();
+        }
+        return _instance;
     }
 
     public void refreshAvailableBalance(){ availableBalance.postValue(wallet.getPlainBalance()); wallet.check();}
@@ -29,6 +42,8 @@ public class WalletLiveData {
     public void refreshExpectedBalance(){ expectedBalance.postValue(wallet.getExpectedBalance()); }
 
     public void refreshCurrentReceivingAddress(){ currentReceivingAddress.postValue(wallet.getAddress().toString()); }
+
+    public void refreshIsActive(){ isActive.setValue(wallet.wallet()!=null); }
 
     public void refreshTxHistory(){
         List<TransactionWrapper> txs = wrapTransaction(wallet.history());
@@ -49,22 +64,11 @@ public class WalletLiveData {
         monthlyReports.postValue(getMonthlyReportList(monthlyReportMap));
     }
 
-    public void refreshAll(){
-        refreshAvailableBalance();
-        refreshExpectedBalance();
-        refreshCurrentReceivingAddress();
-        refreshTxHistory();
-    }
-
-    public void refreshAllExceptHistory(){
-        refreshAvailableBalance();
-        refreshExpectedBalance();
-        refreshCurrentReceivingAddress();
-    }
-
     public MutableLiveData<List<MonthlyReport>> getMonthlyReports() {
         return monthlyReports;
     }
+
+    public MutableLiveData<Boolean> getIsActive() { return isActive; }
 
     public MutableLiveData<String> getExpectedBalance() {
         return expectedBalance;
@@ -95,5 +99,24 @@ public class WalletLiveData {
         List<MonthlyReport> result = new ArrayList<>(monthlyReports.keySet().size());
         monthlyReports.asMap().forEach((key, value) -> result.add(new MonthlyReport(key, value)));
         return result;
+    }
+
+    @Override
+    public void update(WalletNotificationType type, @Nullable LocalWallet.EventMessage<?> content) {
+        switch (type){
+            case TX_RECEIVED:
+                refreshCurrentReceivingAddress();
+                refreshExpectedBalance();
+                refreshTxHistory((Transaction) content.getContent());
+                break;
+            case TX_ACCEPTED:
+                refreshAvailableBalance();
+                refreshTxHistory((Transaction) content.getContent());
+                refreshAvailableBalance();
+                break;
+            case SETUP_COMPLETED:
+                refreshIsActive();
+                break;
+        }
     }
 }

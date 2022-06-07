@@ -1,5 +1,8 @@
 package me.app.coinwallet;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import me.app.coinwallet.utils.BiometricUtil;

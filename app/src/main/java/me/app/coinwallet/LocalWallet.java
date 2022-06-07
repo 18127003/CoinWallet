@@ -2,6 +2,7 @@ package me.app.coinwallet;
 
 import android.util.Log;
 import androidx.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import org.bitcoinj.core.*;
@@ -12,6 +13,8 @@ import org.bitcoinj.uri.BitcoinURI;
 import org.bitcoinj.wallet.*;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
@@ -41,46 +44,36 @@ public class LocalWallet {
 
     private File directory;
     private WalletAppKit walletAppKit;
+    private Wallet wallet;
     private NetworkParameters parameters;
     private String label;
 
-    public void setParameters(NetworkParameters parameters) {
-        this.parameters = parameters;
-    }
-
-    public void setDirectory(File directory) { this.directory = directory; }
-
     public Address getAddress(){
-        Log.e("HD","CRA: "+walletAppKit.wallet().currentReceiveAddress().toString());
-        Log.e("HD","CCA: "+walletAppKit.wallet().currentChangeAddress().toString());
-        return walletAppKit.wallet().currentReceiveAddress();
+        Log.e("HD","CRA: "+wallet.currentReceiveAddress().toString());
+        Log.e("HD","CCA: "+wallet.currentChangeAddress().toString());
+        return wallet.currentReceiveAddress();
     }
 
-    public boolean isEncrypted(){ return walletAppKit.wallet().isEncrypted(); }
+    public boolean isEncrypted(){ return wallet.isEncrypted(); }
 
     public String getPlainBalance(){
-        return walletAppKit.wallet().getBalance().toFriendlyString();
+        return wallet.getBalance().toFriendlyString();
     }
 
     public String getExpectedBalance(){
-        return walletAppKit.wallet().getBalance(Wallet.BalanceType.ESTIMATED).toFriendlyString();
+        return wallet.getBalance(Wallet.BalanceType.ESTIMATED).toFriendlyString();
     }
 
     public String getLabel() {
         return label;
     }
 
-    public void addKey(){
-        String mnemonic = walletAppKit.wallet().getKeyChainSeed().getMnemonicString();
-        Log.e("HD", mnemonic);
-    }
-
     public Wallet wallet(){
-        return walletAppKit.wallet();
+        return wallet;
     }
 
     public List<Transaction> history(){
-        return walletAppKit.wallet().getTransactions(true)
+        return wallet.getTransactions(true)
                 .stream().sorted(Transaction.SORT_TX_BY_UPDATE_TIME).collect(Collectors.toList());
     }
 
@@ -89,7 +82,7 @@ public class LocalWallet {
     }
 
     public void check(){
-        final List<TransactionOutput> to = walletAppKit.wallet().getUnspents();
+        final List<TransactionOutput> to = wallet.getUnspents();
         Log.e("HD","UTXO num: "+to.size());
         for(TransactionOutput txo : to){
             Log.e("HD","Transaction value "+txo.getValue().toPlainString()+", min non dust "+txo.getMinNonDustValue());
@@ -97,7 +90,7 @@ public class LocalWallet {
     }
 
     public boolean checkPassword(String password) throws IllegalStateException{
-        return walletAppKit.wallet().checkPassword(password);
+        return wallet.checkPassword(password);
     }
 
     public String generatePaymentRequest(double amount, String label, String message){
@@ -115,9 +108,9 @@ public class LocalWallet {
             SendRequest request = SendRequest.to(sendTo, amountToSend);
             request.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
             if (password != null){
-                request.aesKey = Objects.requireNonNull(walletAppKit.wallet().getKeyCrypter()).deriveKey(password);
+                request.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
             }
-            final Wallet.SendResult sendResult = walletAppKit.wallet().sendCoins(walletAppKit.peerGroup(), request);
+            final Wallet.SendResult sendResult = wallet.sendCoins(walletAppKit.peerGroup(), request);
             Log.e("HD","Sending "+amountToSend.toPlainString()+" BTC");
             sendResult.broadcastComplete.addListener(() -> {
                 Log.e("HD", "Tx broadcast completed");
@@ -141,7 +134,7 @@ public class LocalWallet {
     }
 
     private void onReceive(){
-        walletAppKit.wallet().addCoinsReceivedEventListener((wallet, tx, prevBalance, newBalance) -> {
+        wallet.addCoinsReceivedEventListener((wallet, tx, prevBalance, newBalance) -> {
             Coin value = tx.getValueSentToMe(wallet);
             Log.e("HD","Received tx for " + value.toFriendlyString() + ": " + tx);
             notifyObservers(WalletNotificationType.TX_RECEIVED, new EventMessage<>(tx));
@@ -165,9 +158,11 @@ public class LocalWallet {
         return chainFile.exists();
     }
 
-    public void configWallet(String label, InputStream checkPoint){
+    public void configWallet(NetworkParameters parameters, File directory, String label, InputStream checkPoint){
         this.label = label;
-        walletAppKit = new WalletAppKit(parameters, directory, label) {
+        this.parameters = parameters;
+        this.directory = directory;
+        walletAppKit = new WalletAppKit(this.parameters, this.directory, this.label) {
             @Override
             protected void onSetupCompleted() {
                 Log.e("HD", "Set up complete");
@@ -176,6 +171,12 @@ public class LocalWallet {
 
         };
         DownloadProgressTracker BTCListener = new DownloadProgressTracker() {
+            @Override
+            protected void startDownload(int blocks) {
+                Log.e("HD","Start download blocks");
+                notifyObservers(WalletNotificationType.SYNC_STARTED, null);
+            }
+
             @Override
             public void progress(double pct, int blocksSoFar, Date date) {
                 Log.e("HD","Syncing..."+pct+"%");
@@ -190,13 +191,29 @@ public class LocalWallet {
         walletAppKit.setDownloadListener(BTCListener);
         walletAppKit.setBlockingStartup(false);
         walletAppKit.setCheckpoints(checkPoint);
-
     }
 
     public void initWallet(){
         walletAppKit.startAsync();
         walletAppKit.awaitRunning();
+        wallet = walletAppKit.wallet();
         addListeners();
+    }
+
+    public void initWalletOffline(){
+        File walletFile = new File(directory, label + ".wallet");
+        if(walletFile.exists()){
+            try (FileInputStream walletStream = new FileInputStream(walletFile)) {
+                List<WalletExtension> extensions = ImmutableList.of();
+                WalletExtension[] extArray = extensions.toArray(new WalletExtension[extensions.size()]);
+                Protos.Wallet proto = WalletProtobufSerializer.parseToProto(walletStream);
+                final WalletProtobufSerializer serializer = new WalletProtobufSerializer();
+                wallet = serializer.readWallet(parameters, extArray, proto);
+                notifyObservers(WalletNotificationType.SETUP_COMPLETED, null);
+            } catch (IOException | UnreadableWalletException ioException) {
+                ioException.printStackTrace();
+            }
+        }
     }
 
     public void stopWallet(){
@@ -219,12 +236,35 @@ public class LocalWallet {
 
     public void decryptWallet(String passphrase){
         try{
-            walletAppKit.wallet().decrypt(passphrase);
+            wallet.decrypt(passphrase);
         } catch (Wallet.BadWalletEncryptionKeyException e){
             Log.e("HD","Wrong password");
         } catch (KeyCrypterException ke){
             Log.e("HD","Key crypter fail");
         }
+    }
+
+    /***
+     * Require synced blockchain to process
+     */
+    public boolean handleBluetoothReceivedTx(final Transaction tx) {
+        Log.i("HD",tx.getTxId() + " arrived via bluetooth");
+
+        try {
+            if (wallet.isTransactionRelevant(tx)) {
+                wallet.receivePending(tx, null);
+
+                walletAppKit.peerGroup().broadcastTransaction(tx);
+            } else {
+                Log.e("HD", tx.getTxId() + " tx is irrelevant");
+            }
+
+            return true;
+        } catch (final VerificationException x) {
+            Log.e("HD","cannot verify tx " + tx.getTxId() + " received via bluetooth");
+        }
+
+        return false;
     }
 
     public static class EventMessage<T> {

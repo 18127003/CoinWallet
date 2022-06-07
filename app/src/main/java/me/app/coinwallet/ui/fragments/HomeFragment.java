@@ -29,8 +29,11 @@ public class HomeFragment extends Fragment implements BaseAdapter.OnItemClickLis
     TextView invisibleText;
     ImageButton visible;
     HomePageViewModel viewModel;
-    Button sendBtn;
+
+    Button bluetoothBtn;
+
     RecyclerView marketCaps;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -72,6 +75,14 @@ public class HomeFragment extends Fragment implements BaseAdapter.OnItemClickLis
             startActivity(intent);
         });
 
+        bluetoothBtn = view.findViewById(R.id.bt_text_button);
+        bluetoothBtn.setOnClickListener(v->{
+            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
+            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, BluetoothPaymentFragment.class);
+            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Receive bluetooth payment");
+            startActivity(intent);
+        });
+
         ImageButton coinMarketBtn=view.findViewById(R.id.coin_market_btn);
         coinMarketBtn.setOnClickListener(v -> startActivity(new Intent(this.getContext(), MarketCapActivity.class)));
 //        marketCaps=view.findViewById(R.id.coin_market_cap).findViewById(R.id.market_list);
@@ -80,6 +91,7 @@ public class HomeFragment extends Fragment implements BaseAdapter.OnItemClickLis
 //        marketCaps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 //        viewModel.getChartLiveData().observe(this, adapter::update);
 //        viewModel.fetchChart();
+
     }
 
     private void hideOrShow() {

@@ -1,5 +1,10 @@
 package me.app.coinwallet.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +37,24 @@ public class Utils {
         return (month+1)+"/"+year;
     }
 
+
+    public static boolean hasInternetAccess(Context ctx){
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network activeNetwork = connectivityManager.getActiveNetwork();
+        if (activeNetwork == null){
+            return false;
+        }
+        NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
+        final boolean wifi = capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+        final boolean cellular = capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+        final boolean ethernet = capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET);
+        return wifi || cellular || ethernet;
+    }
+
+    public static boolean startsWithIgnoreCase(final String string, final String prefix) {
+        return string.regionMatches(true, 0, prefix, 0, prefix.length());
+
     public static String formatDate(Date date){
         try {
             return format.format(date);
@@ -39,5 +62,6 @@ public class Utils {
         catch (Exception e){
             return null;
         }
+
     }
 }
