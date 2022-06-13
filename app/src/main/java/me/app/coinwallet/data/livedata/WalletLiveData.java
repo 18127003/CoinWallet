@@ -1,5 +1,6 @@
 package me.app.coinwallet.data.livedata;
 
+import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import com.google.common.collect.HashMultimap;
@@ -43,7 +44,7 @@ public class WalletLiveData implements LocalWallet.EventListener {
 
     public void refreshCurrentReceivingAddress(){ currentReceivingAddress.postValue(wallet.getAddress().toString()); }
 
-    public void refreshIsActive(){ isActive.setValue(wallet.wallet()!=null); }
+    public void refreshIsActive(){ isActive.postValue(wallet.wallet()!=null); }
 
     public void refreshTxHistory(){
         List<TransactionWrapper> txs = wrapTransaction(wallet.history());
@@ -115,7 +116,12 @@ public class WalletLiveData implements LocalWallet.EventListener {
                 refreshAvailableBalance();
                 break;
             case SETUP_COMPLETED:
+                Log.e("HD","refresh wallet");
                 refreshIsActive();
+                refreshAvailableBalance();
+                refreshTxHistory();
+                refreshExpectedBalance();
+                refreshCurrentReceivingAddress();
                 break;
         }
     }

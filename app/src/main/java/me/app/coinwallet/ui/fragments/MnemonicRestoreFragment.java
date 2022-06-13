@@ -21,7 +21,7 @@ import me.app.coinwallet.ui.adapters.RestoreMnemonicAdapter;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
 
-public class MnemonicRestoreFragment extends Fragment implements BaseAdapter.OnItemClickListener<String> {
+public class MnemonicRestoreFragment extends Fragment {
     private InitPageViewModel viewModel;
     private Button cancelBtn;
     private RecyclerView mnemonicLabels;
@@ -63,29 +63,29 @@ public class MnemonicRestoreFragment extends Fragment implements BaseAdapter.OnI
         mnemonicLabels = view.findViewById(R.id.restore_mnemonic_list);
         viewModel = new ViewModelProvider(requireActivity()).get(InitPageViewModel.class);
         cancelBtn.setOnClickListener(v->((BaseActivity) requireActivity()).loadFragment(SelectWalletFragment.class));
-        RestoreMnemonicAdapter adapter = new RestoreMnemonicAdapter(this);
+        RestoreMnemonicAdapter adapter = new RestoreMnemonicAdapter(new BaseAdapter.OnItemClickListener<String>() {
+            @Override
+            public void onClick(String item) {
+                biometricUtil.authenticate(MnemonicRestoreFragment.this, new BiometricPrompt.AuthenticationCallback() {
+                    @Override
+                    public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                        super.onAuthenticationSucceeded(result);
+                        String mnemonic = viewModel.decryptMnemonic(item);
+                        Log.e("HD","Decrypted value: "+mnemonic);
+                        viewModel.setSelectedWalletLabel(item);
+                        viewModel.setSelectedMnemonic(mnemonic);
+                        ((BaseActivity) requireActivity()).loadFragment(SyncFragment.class);
+                    }
+
+                    @Override
+                    public void onAuthenticationFailed() {
+                        super.onAuthenticationFailed();
+                    }
+                });
+            }
+        });
         mnemonicLabels.setAdapter(adapter);
         mnemonicLabels.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         viewModel.getMnemonicLabels().observe(this, adapter::update);
-    }
-
-    @Override
-    public void onClick(String item) {
-        biometricUtil.authenticate(this, new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                String mnemonic = viewModel.decryptMnemonic(item);
-                Log.e("HD","Decrypted value: "+mnemonic);
-                viewModel.setSelectedWalletLabel(item);
-                viewModel.setSelectedMnemonic(mnemonic);
-                ((BaseActivity) requireActivity()).loadFragment(SyncFragment.class);
-            }
-
-            @Override
-            public void onAuthenticationFailed() {
-                super.onAuthenticationFailed();
-            }
-        });
     }
 }

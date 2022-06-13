@@ -6,8 +6,10 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import androidx.multidex.MultiDexApplication;
 import androidx.preference.PreferenceManager;
+import me.app.coinwallet.data.livedata.WalletLiveData;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.utils.LocaleUtil;
+import me.app.coinwallet.utils.ToastUtil;
 import org.bitcoinj.utils.Threading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,8 @@ public class WalletApplication extends MultiDexApplication {
 
         final Configuration config = getConfiguration();
         config.updateLastVersionCode(packageInfo.versionCode);
+
+        WalletLiveData.get();
     }
 
     public synchronized Configuration getConfiguration() {
@@ -37,7 +41,9 @@ public class WalletApplication extends MultiDexApplication {
             AssetManager assetManager = getAssets();
             SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(this);
             NotificationHandler notificationHandler = new NotificationHandler(this);
-            config = new Configuration(preferenceManager, getFilesDir(), biometricUtil, notificationHandler, assetManager);
+            ToastUtil toastUtil = new ToastUtil(this);
+            config = new Configuration(preferenceManager, getFilesDir(), biometricUtil, notificationHandler, assetManager,
+                    toastUtil);
         }
         return config;
     }

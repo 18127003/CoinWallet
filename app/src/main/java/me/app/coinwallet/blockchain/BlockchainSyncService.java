@@ -39,6 +39,10 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
         ContextCompat.startForegroundService(context, intent);
     }
 
+    public static void stop(final Context context){
+        context.stopService(new Intent(context, BlockchainSyncService.class));
+    }
+
     public static void resetBlockchain(final Context context) {
         // implicitly stops blockchain service
         ContextCompat.startForegroundService(context,
@@ -151,7 +155,7 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
             Log.e("HD","service restart, although it was started as non-sticky");
         }
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -162,7 +166,7 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
             // TODO: delete blockchain file
         }
         unregisterReceiver(deviceIdleModeReceiver);
-        StartBlockchainSyncService.schedule(getApplication());
+//        StartBlockchainSyncService.schedule(getApplication());
         super.onDestroy();
         Log.i("HD","service was up for "+ serviceUpTime.stop());
     }

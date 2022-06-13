@@ -1,6 +1,7 @@
 package me.app.coinwallet;
 
 import android.text.format.DateUtils;
+import com.google.common.io.BaseEncoding;
 import okhttp3.OkHttpClient;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
@@ -24,6 +25,8 @@ public final class Constants {
 
     public static final String APP_BAR_TITLE_EXTRA_NAME = "app_bar_title";
 
+    public static final String SEND_METHOD_EXTRA_NAME = "selected_send_method";
+
     public static final int QR_BITMAP_SCALE_HEIGHT = 500;
 
     public static final int QR_BITMAP_SCALE_WIDTH = 500;
@@ -33,6 +36,8 @@ public final class Constants {
     public static final Context BITCOIN_CONTEXT = new Context(NETWORK_PARAMETERS);
 
     public static final Script.ScriptType DEFAULT_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2WPKH;
+
+    public static final BaseEncoding HEX = BaseEncoding.base16().lowerCase();
 
     /** Number of confirmations until a transaction is fully confirmed. */
     public static final int MAX_NUM_CONFIRMATIONS = 7;

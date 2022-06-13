@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
+import me.app.coinwallet.data.livedata.WalletLiveData;
 import org.bitcoinj.core.*;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.crypto.KeyCrypterException;
@@ -99,38 +100,27 @@ public class LocalWallet {
         return BitcoinURI.convertToBitcoinURI(address, amountToSend, label, message);
     }
 
-    public void send(String sendAddress, double value, String password){
-        final Coin amountToSend = Coin.ofBtc(BigDecimal.valueOf(value));
-        Log.e("HD","Amount to send: "+amountToSend.toPlainString());
-
-        try {
-            final Address sendTo = Address.fromString(parameters, sendAddress);
-            SendRequest request = SendRequest.to(sendTo, amountToSend);
-            request.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
-            if (password != null){
-                request.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
-            }
-            final Wallet.SendResult sendResult = wallet.sendCoins(walletAppKit.peerGroup(), request);
-            Log.e("HD","Sending "+amountToSend.toPlainString()+" BTC");
-            sendResult.broadcastComplete.addListener(() -> {
-                Log.e("HD", "Tx broadcast completed");
-                notifyObservers(WalletNotificationType.TX_BROADCAST_COMPLETED, null);
-            }, Runnable::run);
-        } catch (InsufficientMoneyException e){
-            Log.e("HD","Insufficient money");
-        } catch (Wallet.DustySendRequested d){
-            Log.e("HD","Dusty send request");
-        } catch (Wallet.ExceededMaxTransactionSize m){
-            Log.e("HD","Exceed max transaction size");
-        } catch (AddressFormatException.WrongNetwork n) {
-            Log.e("HD","Wrong network for this address");
-        } catch(AddressFormatException a){
-            Log.e("HD","Wrong address format");
-        } catch (IllegalArgumentException i){
-            Log.e("HD","Double spending");
-        } catch (Wallet.BadWalletEncryptionKeyException ke){
-            Log.e("HD","Wrong password");
+    public void send(SendRequest sendRequest, String password) throws InsufficientMoneyException, Wallet.DustySendRequested,
+            Wallet.ExceededMaxTransactionSize, Wallet.CouldNotAdjustDownwards, Wallet.BadWalletEncryptionKeyException {
+        sendRequest.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
+        if (password != null){
+            sendRequest.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
         }
+        final Wallet.SendResult sendResult = wallet.sendCoins(walletAppKit.peerGroup(), sendRequest);
+        Log.e("HD","Sending");
+        sendResult.broadcastComplete.addListener(() -> {
+            Log.e("HD", "Tx broadcast completed");
+            notifyObservers(WalletNotificationType.TX_BROADCAST_COMPLETED, null);
+        }, Runnable::run);
+    }
+
+    public Transaction sendOffline(SendRequest sendRequest, String password) throws InsufficientMoneyException, Wallet.DustySendRequested,
+            Wallet.ExceededMaxTransactionSize, Wallet.CouldNotAdjustDownwards, Wallet.BadWalletEncryptionKeyException {
+        sendRequest.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
+        if (password != null){
+            sendRequest.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
+        }
+        return wallet.sendCoinsOffline(sendRequest);
     }
 
     private void onReceive(){
@@ -166,6 +156,7 @@ public class LocalWallet {
             @Override
             protected void onSetupCompleted() {
                 Log.e("HD", "Set up complete");
+                wallet = LocalWallet.this.walletAppKit.wallet();
                 notifyObservers(WalletNotificationType.SETUP_COMPLETED, null);
             }
 
@@ -196,7 +187,6 @@ public class LocalWallet {
     public void initWallet(){
         walletAppKit.startAsync();
         walletAppKit.awaitRunning();
-        wallet = walletAppKit.wallet();
         addListeners();
     }
 
@@ -218,6 +208,7 @@ public class LocalWallet {
 
     public void stopWallet(){
         walletAppKit.stopAsync();
+        walletAppKit.awaitTerminated();
     }
 
     public void restoreWallet(String mnemonic){

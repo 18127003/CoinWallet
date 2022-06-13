@@ -26,14 +26,14 @@
         <Space
                 android:layout_height="wrap_content"
                 android:layout_width="1dp"
-                android:layout_toStartOf="@+id/qr_code"
+                android:layout_toStartOf="@+id/request_button"
         />
         <Button
-                android:id="@+id/qr_code"
+                android:id="@+id/request_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="@string/qr_code"
+                android:text="@string/request"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
         />
         <Space

@@ -1,5 +1,6 @@
 package me.app.coinwallet.ui.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -8,19 +9,24 @@ import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import me.app.coinwallet.Configuration;
 import me.app.coinwallet.R;
+import me.app.coinwallet.blockchain.BlockchainSyncService;
 import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.activities.HomeActivity;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
 
 import java.io.InputStream;
 
-public class SyncFragment extends AuthenticateFragment {
+public class SyncFragment extends Fragment {
 
     private TextView sync;
     private TextView status;
+    private Configuration configuration;
     private InitPageViewModel viewModel;
+    private AuthenticateHandler authenticateHandler;
 
     public SyncFragment() {
         // Required empty public constructor
@@ -33,6 +39,29 @@ public class SyncFragment extends AuthenticateFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.configuration = ((BaseActivity) requireActivity()).configuration;
+        authenticateHandler = new AuthenticateHandler(this, new AuthenticateHandler.AuthenticateResultCallback() {
+            @Override
+            public void onPasswordVerified(String password) {
+                toHomePage();
+            }
+
+            @Override
+            public void onPasswordDenied() {
+                ((BaseActivity) requireActivity()).loadFragment(SelectWalletFragment.class);
+                BlockchainSyncService.stop(context);
+            }
+
+            @Override
+            public void onBiometricVerified() {
+                toHomePage();
+            }
+        });
     }
 
     @Override
@@ -55,29 +84,13 @@ public class SyncFragment extends AuthenticateFragment {
             status.setText(i);
             if(i.equals(R.string.app_setup_completed)){
                 if(viewModel.isEncrypted()){
-                    authenticateAccess();
+                    authenticateHandler.authenticateAccess();
                 } else {
-                    accessPasswordDialog();
+                    authenticateHandler.accessPasswordDialog();
                 }
             }
         });
         viewModel.startSync();
-    }
-
-    @Override
-    protected void onBiometricVerified() {
-        toHomePage();
-    }
-
-    @Override
-    protected void onPasswordVerified(String password){
-        toHomePage();
-    }
-
-    @Override
-    protected void onPasswordDenied(){
-        ((BaseActivity) requireActivity()).loadFragment(SelectWalletFragment.class);
-        viewModel.cancelSync();
     }
 
     private void toHomePage(){

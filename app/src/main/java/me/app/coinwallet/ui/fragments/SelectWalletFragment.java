@@ -23,7 +23,7 @@ import me.app.coinwallet.viewmodels.InitPageViewModel;
  * Use the {@link SelectWalletFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SelectWalletFragment extends Fragment implements BaseAdapter.OnItemClickListener<WalletInfoEntry>{
+public class SelectWalletFragment extends Fragment{
     private InitPageViewModel viewModel;
     private Button createBtn;
     private Button restoreBtn;
@@ -58,7 +58,7 @@ public class SelectWalletFragment extends Fragment implements BaseAdapter.OnItem
         createBtn = view.findViewById(R.id.create_wallet_btn);
         restoreBtn = view.findViewById(R.id.restore_wallet_btn);
         RecyclerView walletInfoList = view.findViewById(R.id.wallet_info_list);
-        WalletInfoAdapter adapter = new WalletInfoAdapter(this);
+        WalletInfoAdapter adapter = new WalletInfoAdapter(item -> createAndSync(item.getLabel()));
         walletInfoList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         walletInfoList.setAdapter(adapter);
         viewModel.getWalletInfos().observe(this, adapter::update);
@@ -74,10 +74,5 @@ public class SelectWalletFragment extends Fragment implements BaseAdapter.OnItem
     private void createAndSync(String label){
         viewModel.setSelectedWalletLabel(label);
         ((BaseActivity) requireActivity()).loadFragment(SyncFragment.class);
-    }
-
-    @Override
-    public void onClick(WalletInfoEntry walletInfoEntry) {
-        createAndSync(walletInfoEntry.getLabel());
     }
 }
