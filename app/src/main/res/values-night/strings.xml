@@ -10,4 +10,12 @@
 	<string name="log_out">Log out</string>
 	<string name="bluetooth">Bluetooth</string>
   <string name="receive">Receive</string>
+	<string name="generate_qr">Generate qr</string>
+	<string name="request">Request</string>
+	<string name="select_paired_device">Select a device</string>
+	<string name="send_default">Default</string>
+	<string name="send_offline">Send offline</string>
+	<string name="send_bluetooth">Send bluetooth</string>
+	<string name="send_method">Send method</string>
+	<string name="select">Select</string>
 </resources>

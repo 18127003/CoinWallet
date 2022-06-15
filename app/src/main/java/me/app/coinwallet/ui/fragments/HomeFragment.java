@@ -31,6 +31,7 @@ public class HomeFragment extends Fragment {
     HomePageViewModel viewModel;
     Button sendBtn;
     Button bluetoothBtn;
+    Button requestBtn;
 
     RecyclerView marketCaps;
 
@@ -77,10 +78,15 @@ public class HomeFragment extends Fragment {
 
         bluetoothBtn = view.findViewById(R.id.bt_text_button);
         bluetoothBtn.setOnClickListener(v->{
-//            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
-//            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, BluetoothPaymentFragment.class);
-//            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Receive bluetooth payment");
-//            startActivity(intent);
+
+        });
+
+        requestBtn = view.findViewById(R.id.request_button);
+        requestBtn.setOnClickListener(v->{
+            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
+            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, PaymentRequestFragment.class);
+            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Payment Request");
+            startActivity(intent);
         });
 
         ImageButton coinMarketBtn=view.findViewById(R.id.coin_market_btn);

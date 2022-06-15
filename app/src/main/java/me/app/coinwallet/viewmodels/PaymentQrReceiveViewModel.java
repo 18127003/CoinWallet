@@ -9,7 +9,7 @@ import org.bitcoinj.core.Transaction;
 
 import java.io.IOException;
 
-public class BluetoothPaymentViewModel extends ViewModel {
+public class PaymentQrReceiveViewModel extends ViewModel {
     private AcceptBluetoothThread bluetoothThread;
     private final LocalWallet localWallet = LocalWallet.getInstance();
 

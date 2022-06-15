@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import me.app.coinwallet.utils.BiometricUtil;
+import me.app.coinwallet.utils.ToastUtil;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.TestNet3Params;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ public class Configuration {
     public final BiometricUtil biometricUtil;
     public final NotificationHandler notificationHandler;
     public final AssetManager assetManager;
+    public final ToastUtil toastUtil;
 
     private final SharedPreferences prefs;
     private static final String PREFS_KEY_LAST_VERSION = "last_version";
@@ -35,7 +37,7 @@ public class Configuration {
     private static final Logger log = LoggerFactory.getLogger(Configuration.class);
 
     public Configuration(final SharedPreferences prefs, final File directory, final BiometricUtil biometricUtil,
-                         NotificationHandler notificationHandler, AssetManager assetManager) {
+                         NotificationHandler notificationHandler, AssetManager assetManager, ToastUtil toastUtil) {
         this.prefs = prefs;
         this.directory = directory;
         this.lastVersionCode = prefs.getInt(PREFS_KEY_LAST_VERSION, 0);
@@ -44,6 +46,7 @@ public class Configuration {
         this.executorService = Executors.newFixedThreadPool(NUMBER_OF_CORES);
         this.biometricUtil = biometricUtil;
         this.assetManager = assetManager;
+        this.toastUtil = toastUtil;
     }
 
     public boolean isFingerprintEnabled(){

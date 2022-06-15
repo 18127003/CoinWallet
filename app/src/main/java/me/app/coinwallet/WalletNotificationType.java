@@ -8,5 +8,6 @@ public enum WalletNotificationType {
     BALANCE_CHANGED,
     TX_RECEIVED,
     TX_ACCEPTED,
-    TX_BROADCAST_COMPLETED
+    TX_BROADCAST_COMPLETED,
+    SYNC_STOPPED
 }

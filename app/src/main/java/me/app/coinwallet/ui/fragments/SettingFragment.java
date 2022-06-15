@@ -1,5 +1,6 @@
 package me.app.coinwallet.ui.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
@@ -23,7 +24,7 @@ import me.app.coinwallet.viewmodels.SettingViewModel;
 /***
  * Do not pass data through fragment constructor, use View Model to share data instead.
  */
-public class SettingFragment extends AuthenticateFragment {
+public class SettingFragment extends Fragment {
 
     private ImageButton walletManage;
     private ImageButton changePassword;
@@ -32,6 +33,7 @@ public class SettingFragment extends AuthenticateFragment {
     private ImageButton about;
     private ImageButton logout;
     private SettingViewModel viewModel;
+    private AuthenticateHandler authenticateHandler;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -54,6 +56,20 @@ public class SettingFragment extends AuthenticateFragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        authenticateHandler = new AuthenticateHandler(this, new AuthenticateHandler.AuthenticateResultCallback() {
+            @Override
+            public void onPasswordVerified(String password) {
+                moveToSettingSection(ChangePasswordFragment.class, "Change Password");
+            }
+
+            @Override
+            public void onPasswordDenied() { }
+        });
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(SettingViewModel.class);
@@ -62,7 +78,7 @@ public class SettingFragment extends AuthenticateFragment {
         fingerprintEnable = view.findViewById(R.id.fingerprint);
         changeLanguage = view.findViewById(R.id.change_language);
         about = view.findViewById(R.id.about);
-        changePassword.setOnClickListener(v-> accessPasswordDialog());
+        changePassword.setOnClickListener(v-> authenticateHandler.accessPasswordDialog());
         changeLanguage.setOnClickListener(v-> moveToSettingSection(ChangeLanguageFragment.class, "Change Language"));
         fingerprintEnable.setChecked(((BaseActivity)requireActivity()).configuration.isFingerprintEnabled());
         fingerprintEnable.setOnCheckedChangeListener((v, isChecked)->
@@ -84,12 +100,4 @@ public class SettingFragment extends AuthenticateFragment {
         intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, title);
         startActivity(intent);
     }
-
-    @Override
-    protected void onPasswordVerified(String password) {
-        moveToSettingSection(ChangePasswordFragment.class, "Change Password");
-    }
-
-    @Override
-    protected void onPasswordDenied() {}
 }

@@ -19,7 +19,7 @@ import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.TxHistoryAdapter;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 
-public class HistoryFragment extends Fragment implements BaseAdapter.OnItemClickListener<TransactionWrapper> {
+public class HistoryFragment extends Fragment {
 
     private HomePageViewModel viewModel;
     private RecyclerView history;
@@ -51,18 +51,16 @@ public class HistoryFragment extends Fragment implements BaseAdapter.OnItemClick
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageViewModel.class);
         history = view.findViewById(R.id.history_list);
-        TxHistoryAdapter adapter = new TxHistoryAdapter(this);
+        TxHistoryAdapter adapter = new TxHistoryAdapter(item -> {
+            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
+            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, TransactionDetailFragment.class);
+            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Transaction Detail");
+            intent.putExtra("transaction",item);
+            startActivity(intent);
+        });
         history.setAdapter(adapter);
         history.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         viewModel.getMonthlyReports().observe(this, adapter::update);
     }
 
-    @Override
-    public void onClick(TransactionWrapper item) {
-        Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
-        intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, TransactionDetailFragment.class);
-        intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Transaction Detail");
-        intent.putExtra("transaction",item);
-        startActivity(intent);
-    }
 }

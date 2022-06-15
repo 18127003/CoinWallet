@@ -49,9 +49,17 @@
 	<string name="confirmation">Xác nhận</string>
 	<string name="fee">Phí giao dịch</string>
 	<string name="tx_update_time">Thời gian cập nhật</string>
-	<string name="service_notification_title">Background activity</string>
-	<string name="log_out">Log out</string>
+	<string name="service_notification_title">Hoạt động ẩn</string>
+	<string name="log_out">Đăng xuất</string>
 	<string name="bluetooth">Bluetooth</string>
-  <string name="receive">Receive</string>
+  <string name="receive">Nhận</string>
   <string name="transaction_id">Mã giao dịch</string>
+	<string name="generate_qr">Tạo mã QR</string>
+	<string name="request">Request</string>
+	<string name="select_paired_device">Chọn 1 thiết bị</string>
+	<string name="send_default">Mặc định</string>
+	<string name="send_offline">Gửi offline</string>
+	<string name="send_bluetooth">Gửi bluetooth</string>
+	<string name="send_method">Phương thức gửi</string>
+	<string name="select">Chọn</string>
 </resources>
