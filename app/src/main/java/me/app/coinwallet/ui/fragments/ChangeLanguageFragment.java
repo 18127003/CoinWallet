@@ -18,7 +18,7 @@ import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.LanguageOptionAdapter;
 import me.app.coinwallet.viewmodels.SettingViewModel;
 
-public class ChangeLanguageFragment extends Fragment implements BaseAdapter.OnItemClickListener<LanguageOption> {
+public class ChangeLanguageFragment extends Fragment {
 
     private RecyclerView languageOptions;
     private SettingViewModel viewModel;
@@ -49,20 +49,16 @@ public class ChangeLanguageFragment extends Fragment implements BaseAdapter.OnIt
         viewModel = new ViewModelProvider(requireActivity()).get(SettingViewModel.class);
         languageOptions = view.findViewById(R.id.language_option_list);
         String selected = viewModel.getSelectedLanguage(requireActivity().getApplicationContext());
-        LanguageOptionAdapter adapter = new LanguageOptionAdapter(this, selected);
+        LanguageOptionAdapter adapter = new LanguageOptionAdapter(item -> viewModel.changeLanguage(item.getCode(),
+            () -> {
+                Intent intent = new Intent(getContext(), HomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        ), selected);
         adapter.update(viewModel.getLanguages());
         languageOptions.setAdapter(adapter);
         languageOptions.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
-    @Override
-    public void onClick(LanguageOption item) {
-        viewModel.changeLanguage(item.getCode(),
-        () -> {
-
-            Intent intent = new Intent(getContext(), HomeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        });
-    }
 }

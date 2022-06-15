@@ -83,23 +83,23 @@ public class InitPageViewModel extends AndroidViewModel implements LocalWallet.E
     }
 
     public void initWallet(File directory, NetworkParameters parameters, InputStream checkpoints){
-        localWallet.configWallet(parameters, directory, selectedWalletLabel.getValue(), checkpoints);
+        LocalWallet.WalletInfo walletInfo = new LocalWallet.WalletInfo();
+        walletInfo.directory = directory;
+        walletInfo.checkPoint = checkpoints;
+        walletInfo.label = selectedWalletLabel.getValue();
         if (selectedMnemonic.getValue()!=null){
-            localWallet.restoreWallet(selectedMnemonic.getValue());
+            walletInfo.mnemonicRestore = selectedMnemonic.getValue();
         }
+        localWallet.registerWallet(parameters, walletInfo);
+
     }
 
     public void startSync(){
-//        BlockchainSyncService.startBackground(application);
         StartBlockchainSyncService.schedule(application);
         // Start if offline
         if (!Utils.hasInternetAccess(application)){
             localWallet.initWalletOffline();
         }
-    }
-
-    public void cancelSync(){
-        localWallet.stopWallet();
     }
 
     public boolean isEncrypted(){

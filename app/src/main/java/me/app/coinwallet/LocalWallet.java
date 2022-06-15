@@ -1,10 +1,13 @@
 package me.app.coinwallet;
 
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.Service;
+import me.app.coinwallet.data.livedata.WalletLiveData;
 import org.bitcoinj.core.*;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.crypto.KeyCrypterException;
@@ -42,11 +45,10 @@ public class LocalWallet {
         return _instance;
     }
 
-    private File directory;
+    private NetworkParameters parameters;
+    private WalletInfo walletInfo;
     private WalletAppKit walletAppKit;
     private Wallet wallet;
-    private NetworkParameters parameters;
-    private String label;
 
     public Address getAddress(){
         Log.e("HD","CRA: "+wallet.currentReceiveAddress().toString());
@@ -65,7 +67,7 @@ public class LocalWallet {
     }
 
     public String getLabel() {
-        return label;
+        return walletInfo.label;
     }
 
     public Wallet wallet(){
@@ -99,38 +101,27 @@ public class LocalWallet {
         return BitcoinURI.convertToBitcoinURI(address, amountToSend, label, message);
     }
 
-    public void send(String sendAddress, double value, String password){
-        final Coin amountToSend = Coin.ofBtc(BigDecimal.valueOf(value));
-        Log.e("HD","Amount to send: "+amountToSend.toPlainString());
-
-        try {
-            final Address sendTo = Address.fromString(parameters, sendAddress);
-            SendRequest request = SendRequest.to(sendTo, amountToSend);
-            request.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
-            if (password != null){
-                request.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
-            }
-            final Wallet.SendResult sendResult = wallet.sendCoins(walletAppKit.peerGroup(), request);
-            Log.e("HD","Sending "+amountToSend.toPlainString()+" BTC");
-            sendResult.broadcastComplete.addListener(() -> {
-                Log.e("HD", "Tx broadcast completed");
-                notifyObservers(WalletNotificationType.TX_BROADCAST_COMPLETED, null);
-            }, Runnable::run);
-        } catch (InsufficientMoneyException e){
-            Log.e("HD","Insufficient money");
-        } catch (Wallet.DustySendRequested d){
-            Log.e("HD","Dusty send request");
-        } catch (Wallet.ExceededMaxTransactionSize m){
-            Log.e("HD","Exceed max transaction size");
-        } catch (AddressFormatException.WrongNetwork n) {
-            Log.e("HD","Wrong network for this address");
-        } catch(AddressFormatException a){
-            Log.e("HD","Wrong address format");
-        } catch (IllegalArgumentException i){
-            Log.e("HD","Double spending");
-        } catch (Wallet.BadWalletEncryptionKeyException ke){
-            Log.e("HD","Wrong password");
+    public void send(SendRequest sendRequest, String password) throws InsufficientMoneyException, Wallet.DustySendRequested,
+            Wallet.ExceededMaxTransactionSize, Wallet.CouldNotAdjustDownwards, Wallet.BadWalletEncryptionKeyException {
+        sendRequest.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
+        if (password != null){
+            sendRequest.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
         }
+        final Wallet.SendResult sendResult = wallet.sendCoins(walletAppKit.peerGroup(), sendRequest);
+        Log.e("HD","Sending");
+        sendResult.broadcastComplete.addListener(() -> {
+            Log.e("HD", "Tx broadcast completed");
+            notifyObservers(WalletNotificationType.TX_BROADCAST_COMPLETED, null);
+        }, Runnable::run);
+    }
+
+    public Transaction sendOffline(SendRequest sendRequest, String password) throws InsufficientMoneyException, Wallet.DustySendRequested,
+            Wallet.ExceededMaxTransactionSize, Wallet.CouldNotAdjustDownwards, Wallet.BadWalletEncryptionKeyException {
+        sendRequest.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
+        if (password != null){
+            sendRequest.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
+        }
+        return wallet.sendCoinsOffline(sendRequest);
     }
 
     private void onReceive(){
@@ -154,18 +145,21 @@ public class LocalWallet {
     }
 
     public boolean hasChainFileDownloaded(String prefix){
-        File chainFile = new File(directory, prefix + ".spvchain");
+        File chainFile = new File(walletInfo.directory, prefix + ".spvchain");
         return chainFile.exists();
     }
 
-    public void configWallet(NetworkParameters parameters, File directory, String label, InputStream checkPoint){
-        this.label = label;
+    public void registerWallet(NetworkParameters parameters, WalletInfo walletInfo){
         this.parameters = parameters;
-        this.directory = directory;
-        walletAppKit = new WalletAppKit(this.parameters, this.directory, this.label) {
+        this.walletInfo = walletInfo;
+    }
+
+    public void configWalletAppKit(){
+        walletAppKit = new WalletAppKit(parameters, walletInfo.directory, walletInfo.label) {
             @Override
             protected void onSetupCompleted() {
                 Log.e("HD", "Set up complete");
+                wallet = LocalWallet.this.walletAppKit.wallet();
                 notifyObservers(WalletNotificationType.SETUP_COMPLETED, null);
             }
 
@@ -188,20 +182,29 @@ public class LocalWallet {
                 notifyObservers(WalletNotificationType.SYNC_COMPLETED,null);
             }
         };
+        walletAppKit.addListener(new Service.Listener() {
+            @Override
+            public void terminated(@NonNull Service.State from) {
+                super.terminated(from);
+                notifyObservers(WalletNotificationType.SYNC_STOPPED, null);
+            }
+        }, Runnable::run);
         walletAppKit.setDownloadListener(BTCListener);
         walletAppKit.setBlockingStartup(false);
-        walletAppKit.setCheckpoints(checkPoint);
+        walletAppKit.setCheckpoints(walletInfo.checkPoint);
+        if(walletInfo.mnemonicRestore!=null){
+            restoreWallet();
+        }
     }
 
     public void initWallet(){
         walletAppKit.startAsync();
         walletAppKit.awaitRunning();
-        wallet = walletAppKit.wallet();
         addListeners();
     }
 
     public void initWalletOffline(){
-        File walletFile = new File(directory, label + ".wallet");
+        File walletFile = new File(walletInfo.directory, walletInfo.label + ".wallet");
         if(walletFile.exists()){
             try (FileInputStream walletStream = new FileInputStream(walletFile)) {
                 List<WalletExtension> extensions = ImmutableList.of();
@@ -218,13 +221,14 @@ public class LocalWallet {
 
     public void stopWallet(){
         walletAppKit.stopAsync();
+        walletAppKit.awaitTerminated();
     }
 
-    public void restoreWallet(String mnemonic){
+    private void restoreWallet(){
         try{
             String passphrase = "";
             long creationTime = 1409478661L;
-            walletAppKit.restoreWalletFromSeed(new DeterministicSeed(mnemonic, null, passphrase, creationTime));
+            walletAppKit.restoreWalletFromSeed(new DeterministicSeed(walletInfo.mnemonicRestore, null, passphrase, creationTime));
         } catch (UnreadableWalletException ex){
             Log.e("HD","Unreadable wallet");
         }
@@ -265,6 +269,13 @@ public class LocalWallet {
         }
 
         return false;
+    }
+
+    public static class WalletInfo{
+        public File directory;
+        public String mnemonicRestore;
+        public String label;
+        public InputStream checkPoint;
     }
 
     public static class EventMessage<T> {

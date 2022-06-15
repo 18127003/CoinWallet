@@ -8,11 +8,11 @@ public class BlockchainLiveData {
     private final MutableLiveData<String> syncProgress = new MutableLiveData<>();
 
     public void updateProgress(double progress){
-        syncProgress.setValue(String.valueOf(progress));
+        syncProgress.postValue(String.valueOf(progress));
     }
 
     public void setSyncStatus(boolean status){
-        blockchainSynced.setValue(status);
+        blockchainSynced.postValue(status);
     }
 
     public LiveData<Boolean> getBlockchainSynced() {

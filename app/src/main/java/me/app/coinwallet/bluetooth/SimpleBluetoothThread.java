@@ -12,6 +12,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+/***
+ * Bluetooth server thread
+ */
 public abstract class SimpleBluetoothThread extends AcceptBluetoothThread{
     public SimpleBluetoothThread(final BluetoothAdapter adapter) throws IOException {
         super(adapter.listenUsingInsecureRfcommWithServiceRecord(BluetoothUtil.CLASSIC_PAYMENT_PROTOCOL_NAME,

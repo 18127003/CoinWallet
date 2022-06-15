@@ -18,6 +18,8 @@ import com.journeyapps.barcodescanner.*;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
+import me.app.coinwallet.transfer.PaymentRequest;
+import org.bitcoinj.uri.BitcoinURIParseException;
 
 public class ScanQrFragment extends Fragment {
 
@@ -52,12 +54,17 @@ public class ScanQrFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         barcodeView = view.findViewById(R.id.barcode_view);
         barcodeView.setStatusText("");
-        barcodeView.decodeSingle(result -> {
+        barcodeView.decodeContinuous(result -> {
             Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
-            intent.putExtra(Constants.QR_CONTENT, result.getText());
-            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Transfer Money");
-            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, TransferFragment.class);
-            startActivity(intent);
+            try {
+                PaymentRequest paymentRequest = PaymentRequest.from(result.getText());
+                intent.putExtra(Constants.QR_CONTENT, paymentRequest);
+                intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Transfer Money");
+                intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, TransferFragment.class);
+                startActivity(intent);
+            } catch (BitcoinURIParseException e) {
+                // swallow
+            }
         });
     }
 

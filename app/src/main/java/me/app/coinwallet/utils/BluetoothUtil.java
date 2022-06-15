@@ -45,6 +45,7 @@ public class BluetoothUtil {
             return (String) mService.getClass().getMethod("getAddress").invoke(mService);
         } catch (final InvocationTargetException x) {
             Log.e("HD","Problem determining Bluetooth MAC via reflection");
+            x.printStackTrace();
             return null;
         } catch (final Exception x) {
             throw new RuntimeException(x);
