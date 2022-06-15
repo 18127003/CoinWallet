@@ -8,13 +8,11 @@ import me.app.coinwallet.LocalWallet;
 import me.app.coinwallet.data.livedata.WalletLiveData;
 
 public class ScanQrPageViewModel extends AndroidViewModel {
-    private final LocalWallet localWallet = LocalWallet.getInstance();
     private final WalletLiveData walletLiveData;
 
     public ScanQrPageViewModel(@NonNull Application application) {
         super(application);
-        walletLiveData = new WalletLiveData(localWallet);
-        walletLiveData.refreshAllExceptHistory();
+        walletLiveData = WalletLiveData.get();
     }
 
     public LiveData<String> getAddress() {

@@ -20,11 +20,8 @@ import me.app.coinwallet.R;
 import me.app.coinwallet.data.marketcap.MarketCapEntry;
 import me.app.coinwallet.ui.activities.MarketCapActivity;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
-import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.MarketCapTrendAdapter;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
-
-import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -33,7 +30,10 @@ public class HomeFragment extends Fragment {
     ImageButton visible;
     HomePageViewModel viewModel;
     Button sendBtn;
+    Button bluetoothBtn;
+
     RecyclerView marketCaps;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -75,6 +75,14 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
+        bluetoothBtn = view.findViewById(R.id.bt_text_button);
+        bluetoothBtn.setOnClickListener(v->{
+//            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
+//            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, BluetoothPaymentFragment.class);
+//            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Receive bluetooth payment");
+//            startActivity(intent);
+        });
+
         ImageButton coinMarketBtn=view.findViewById(R.id.coin_market_btn);
         coinMarketBtn.setOnClickListener(v ->{
             Intent intent = new Intent(requireActivity(), SingleFragmentActivity.class);
@@ -107,6 +115,4 @@ public class HomeFragment extends Fragment {
             visible.setBackgroundResource(R.drawable.ic_visibility_off);
         }
     }
-
-
 }

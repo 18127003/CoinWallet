@@ -149,6 +149,35 @@
 						android:id="@+id/about"/>
 			</RelativeLayout>
 		</com.google.android.material.card.MaterialCardView>
+		<View
+				android:layout_marginHorizontal="5dp"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:background="@android:color/darker_gray" />
+		<com.google.android.material.card.MaterialCardView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				style="@style/TransparentCardView"
+				android:id="@+id/logout_card">
+			<RelativeLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						style="@style/h6.white"
+						android:text="@string/log_out"
+						android:padding="10dp"/>
+				<ImageButton
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:background="@drawable/ic_navigate_next_white"
+						android:layout_alignParentEnd="true"
+						android:layout_centerVertical="true"
+						android:id="@+id/logout"/>
+			</RelativeLayout>
+		</com.google.android.material.card.MaterialCardView>
 	</LinearLayout>
 
 </FrameLayout>

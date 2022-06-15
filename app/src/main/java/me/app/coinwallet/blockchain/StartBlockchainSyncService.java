@@ -1,4 +1,4 @@
-package me.app.coinwallet.workers;
+package me.app.coinwallet.blockchain;
 
 import android.app.Application;
 import android.app.job.JobInfo;
@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
-import me.app.coinwallet.WalletApplication;
 
 public class StartBlockchainSyncService extends JobService {
     private PowerManager pm;
@@ -22,7 +21,7 @@ public class StartBlockchainSyncService extends JobService {
         final JobInfo.Builder jobInfo = new JobInfo.Builder(0, new ComponentName(application,
                 StartBlockchainSyncService.class));
         jobInfo.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
-        jobInfo.setRequiresDeviceIdle(true);
+        jobInfo.setRequiresDeviceIdle(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             jobInfo.setRequiresBatteryNotLow(true);
             jobInfo.setRequiresStorageNotLow(true);
@@ -49,7 +48,7 @@ public class StartBlockchainSyncService extends JobService {
         if (powerSaveMode)
             Log.e("HD","power save mode, not starting block chain sync");
         if (!storageLow && !batteryLow && !powerSaveMode)
-            BlockchainSyncService.startBackground(this);
+            BlockchainSyncService.start(this);
         return false;
     }
 

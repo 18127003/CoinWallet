@@ -19,11 +19,8 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.squareup.picasso.Picasso;
 import me.app.coinwallet.R;
-
 import me.app.coinwallet.data.marketcap.MarketCapEntry;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MarketCapAdapter extends BaseAdapter<MarketCapEntry, MarketCapAdapter.ViewHolder> {
 

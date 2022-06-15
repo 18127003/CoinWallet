@@ -70,11 +70,6 @@ public class SyncFragment extends AuthenticateFragment {
     }
 
     @Override
-    protected void onBiometricDenied() {
-        this.onPasswordDenied();
-    }
-
-    @Override
     protected void onPasswordVerified(String password){
         toHomePage();
     }

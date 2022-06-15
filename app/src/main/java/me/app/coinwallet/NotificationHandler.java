@@ -29,8 +29,8 @@ public class NotificationHandler {
         managerCompat.createNotificationChannelsCompat(Arrays.asList(syncChannel, receiveChannel));
     }
 
-    public void sendNotification(Notification notification){
-        managerCompat.notify(Constants.NOTIFICATION_TX_RECEIVE_ID, notification);
+    public void sendNotification(int id, Notification notification){
+        managerCompat.notify(id, notification);
     }
 
     public static Notification buildNotification(Context ctx, String title, String body){

@@ -1,5 +1,6 @@
 package me.app.coinwallet.data.marketcap;
 
+import android.app.Application;
 import android.text.format.DateUtils;
 import android.util.Log;
 import androidx.lifecycle.LiveData;
@@ -25,8 +26,6 @@ public class MarketCapRepository {
     private static final long UPDATE_FREQ_MS = 10 * DateUtils.MINUTE_IN_MILLIS;
     private static final Logger log = LoggerFactory.getLogger(MarketCapRepository.class);
     private final MarketCapDatabase db;
-
-//    private final MarketChartRepository chartRepository;
     private final MarketCapDao dao;
     private final MutableLiveData<List<MarketCapEntry>> trends = new MutableLiveData<>();
 
@@ -34,14 +33,13 @@ public class MarketCapRepository {
     private final AtomicLong lastUpdatedTrend = new AtomicLong(0);
     final MarketCapHost marketCapHost = new MarketCapHost(new Moshi.Builder().build());
 
-    public synchronized static MarketCapRepository get(final WalletApplication application) {
+    public synchronized static MarketCapRepository get(final Application application) {
         if (INSTANCE == null)
             INSTANCE = new MarketCapRepository(application);
         return INSTANCE;
     }
 
-    public MarketCapRepository(final WalletApplication application) {
-
+    public MarketCapRepository(final Application application) {
         this.db = MarketCapDatabase.getDatabase(application);
         this.dao = db.marketCapDao();
     }

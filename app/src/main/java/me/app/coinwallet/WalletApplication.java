@@ -1,15 +1,9 @@
 package me.app.coinwallet;
 
-import android.app.ActivityManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.graphics.Color;
-import android.os.Build;
 import androidx.multidex.MultiDexApplication;
 import androidx.preference.PreferenceManager;
 import me.app.coinwallet.utils.BiometricUtil;
@@ -19,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WalletApplication extends MultiDexApplication {
-    private ActivityManager activityManager;
+
     private Configuration config;
 
     private static final Logger log = LoggerFactory.getLogger(WalletApplication.class);
@@ -33,12 +27,8 @@ public class WalletApplication extends MultiDexApplication {
 
         Threading.uncaughtExceptionHandler = (thread, throwable) -> log.info("bitcoinj uncaught exception", throwable);
 
-        activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
         final Configuration config = getConfiguration();
         config.updateLastVersionCode(packageInfo.versionCode);
-
-        createNotificationChannel();
     }
 
     public synchronized Configuration getConfiguration() {
@@ -65,19 +55,10 @@ public class WalletApplication extends MultiDexApplication {
         return packageInfo;
     }
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID_RECEIVE, name, importance);
-            channel.setDescription(description);
-            channel.enableLights(true);
-            channel.setLightColor(Color.CYAN);
-            channel.enableVibration(true);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
     }
 
     @Override

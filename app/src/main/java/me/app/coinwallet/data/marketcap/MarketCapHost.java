@@ -45,7 +45,6 @@ public class MarketCapHost {
         return builder.build();
     }
 
-
     public List<MarketCapEntry> parse(final BufferedSource jsonSource) throws IOException, JsonDataException {
         Type responseType = Types.newParameterizedType(List.class, MarketCapJson.class);
         final JsonAdapter<List<MarketCapJson>> jsonAdapter = moshi.adapter(responseType);
