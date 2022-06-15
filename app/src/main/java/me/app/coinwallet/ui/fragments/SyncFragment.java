@@ -53,7 +53,7 @@ public class SyncFragment extends AuthenticateFragment {
         viewModel.getSyncProgress().observe(this, s -> sync.setText(s));
         viewModel.getStatus().observe(this, (i)->{
             status.setText(i);
-            if(i.equals(R.string.app_sync_completed)){
+            if(i.equals(R.string.app_setup_completed)){
                 if(viewModel.isEncrypted()){
                     authenticateAccess();
                 } else {

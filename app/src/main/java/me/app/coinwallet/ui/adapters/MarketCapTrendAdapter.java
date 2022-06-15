@@ -8,15 +8,19 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import me.app.coinwallet.R;
-import me.app.coinwallet.data.marketcap.ChartEntry;
+
+import me.app.coinwallet.data.marketcap.MarketCapEntry;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 
-public class MarketCapTrendAdapter extends BaseAdapter<ChartEntry, MarketCapTrendAdapter.ViewHolder>{
-    HomePageViewModel viewModel;
-    public MarketCapTrendAdapter(OnItemClickListener<ChartEntry> listener) {
+import java.util.List;
+
+public class MarketCapTrendAdapter extends BaseAdapter<MarketCapEntry, MarketCapTrendAdapter.ViewHolder>{
+
+    public MarketCapTrendAdapter(OnItemClickListener<MarketCapEntry> listener) {
         super(listener);
     }
 
@@ -29,24 +33,34 @@ public class MarketCapTrendAdapter extends BaseAdapter<ChartEntry, MarketCapTren
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ChartEntry chartEntry = data.get(position);
+        MarketCapEntry chartEntry = data.get(position);
+
+        holder.itemView.findViewById(R.id.trend_card).setOnClickListener(view -> {
+            listener.onClick(chartEntry);
+        });
         holder.chart.setBackgroundColor(holder.itemView.getResources().getColor(R.color.zxing_transparent));
         Description description=new Description();
-        description.setText(chartEntry.getId());
+        description.setText(chartEntry.getName());
         holder.chart.setDescription(description);
         holder.chart.getAxisRight().setDrawAxisLine(false);
         holder.chart.getAxisRight().setDrawLabels(false);
+        holder.chart.getXAxis().setDrawLabels(false);
+        holder.chart.getXAxis().setDrawAxisLine(false);
         holder.chart.getLegend().setEnabled(false);
-        LineDataSet lineDataSet=new LineDataSet(chartEntry.getPointList(),chartEntry.getId());
+        LineDataSet lineDataSet=new LineDataSet(chartEntry.getChart(), chartEntry.getName());
         lineDataSet.setValueTextColor(holder.itemView.getResources().getColor(R.color.blue_black));
-        if(chartEntry.getPointList().get(chartEntry.getPointList().size()-1).getY()-chartEntry.getPointList().get(0).getY()>=0){
-            lineDataSet.setColor(holder.itemView.getResources().getColor(R.color.purple_200));
+        lineDataSet.setDrawCircles(false);
+        lineDataSet.setDrawValues(false);
+        if(chartEntry.getFluctuation()>=0){
+            lineDataSet.setColor(holder.itemView.getResources().getColor(R.color.light_green));
         }
         else {
             lineDataSet.setColor(holder.itemView.getResources().getColor(R.color.red));
         }
         holder.chart.setData(new LineData(lineDataSet));
-
+        holder.chart.setDragEnabled(false);
+        holder.chart.setTouchEnabled(false);
+        holder.chart.setClickable(false);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

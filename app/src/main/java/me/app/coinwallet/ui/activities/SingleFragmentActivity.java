@@ -18,8 +18,8 @@ public class SingleFragmentActivity extends BaseActivity {
         Intent intent = getIntent();
         String appBarTitle = intent.getStringExtra(Constants.APP_BAR_TITLE_EXTRA_NAME);
         toolbar = findViewById(R.id.top_app_bar);
-        setSupportActionBar(toolbar);
         toolbar.setTitle(appBarTitle);
+        setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v-> finish());
         Class<? extends Fragment> fragment = (Class<? extends Fragment>) intent.getSerializableExtra(Constants.INIT_FRAGMENT_EXTRA_NAME);
         if(fragment!=null){

@@ -3,16 +3,18 @@ package me.app.coinwallet.data.marketcap;
 import java.util.List;
 
 public class MarketCapJson {
-    public String id;
+    public Long id;
+    public String coinId;
     public String symbol;
     public String name;
     public String image;
     public Double currentPrice;
-    public Long marketCap;
+    public Long marketCapValue;
     public Integer marketCapRank;
     public Double totalVolume;
     public Double high;
     public Double low;
     public Float fluctuation;
-    public List<List<String>> chartDto;
+    public MarketChartJson chartDto;
+
 }

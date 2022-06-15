@@ -14,16 +14,19 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.github.mikephil.charting.data.Entry;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
-import me.app.coinwallet.data.marketcap.ChartEntry;
+import me.app.coinwallet.data.marketcap.MarketCapEntry;
 import me.app.coinwallet.ui.activities.MarketCapActivity;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.MarketCapTrendAdapter;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
 
-public class HomeFragment extends Fragment implements BaseAdapter.OnItemClickListener<ChartEntry> {
+import java.util.List;
+
+public class HomeFragment extends Fragment {
 
     TextView balance;
     TextView invisibleText;
@@ -73,13 +76,23 @@ public class HomeFragment extends Fragment implements BaseAdapter.OnItemClickLis
         });
 
         ImageButton coinMarketBtn=view.findViewById(R.id.coin_market_btn);
-        coinMarketBtn.setOnClickListener(v -> startActivity(new Intent(this.getContext(), MarketCapActivity.class)));
-//        marketCaps=view.findViewById(R.id.coin_market_cap).findViewById(R.id.market_list);
-//        MarketCapTrendAdapter adapter = new MarketCapTrendAdapter(this);
-//        marketCaps.setAdapter(adapter);
-//        marketCaps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-//        viewModel.getChartLiveData().observe(this, adapter::update);
-//        viewModel.fetchChart();
+        coinMarketBtn.setOnClickListener(v ->{
+            Intent intent = new Intent(requireActivity(), SingleFragmentActivity.class);
+            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Market Cap");
+            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, MarketCapFragment.class);
+            startActivity(intent);
+        });
+        marketCaps = view.findViewById(R.id.market_list);
+        MarketCapTrendAdapter adapter = new MarketCapTrendAdapter(item -> {
+            Intent i= new Intent(requireContext(), SingleFragmentActivity.class);
+            i.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME,ChartDetail.class);
+            i.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME,"Chart Detail");
+            i.putExtra("chart_detail", item);
+            startActivity(i);
+        });
+        marketCaps.setAdapter(adapter);
+        marketCaps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        viewModel.getTrendLiveData().observe(this,adapter::update);
     }
 
     private void hideOrShow() {
@@ -95,8 +108,5 @@ public class HomeFragment extends Fragment implements BaseAdapter.OnItemClickLis
         }
     }
 
-    @Override
-    public void onClick(ChartEntry item) {
 
-    }
 }
