@@ -1,27 +1,32 @@
 package me.app.coinwallet.data.marketcap;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.room.*;
 import com.github.mikephil.charting.data.Entry;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity(tableName = MarketCapEntry.TABLE_NAME,
-        indices = { @Index(value = { "source", "name" }, unique = true) },
-        foreignKeys = {@ForeignKey(entity = MarketCapEntry.class,parentColumns = "id",
-        childColumns = "id",onDelete = ForeignKey.CASCADE)})
-public final class MarketCapEntry {
+        indices = { @Index(value = { "source", "name" }, unique = true) }
+        )
+public final class MarketCapEntry implements Parcelable {
     public static final String TABLE_NAME = "market_caps";
 
     @PrimaryKey()
     @NonNull
     @ColumnInfo(name = "id")
-    private String id;
+    private Long id;
+
+    @NonNull
+    @ColumnInfo(name = "coin_id")
+    private String coinId;
 
     @NonNull
     @ColumnInfo(name = "source")
@@ -55,12 +60,6 @@ public final class MarketCapEntry {
     @ColumnInfo(name = "image")
     String image;
 
-
-    @NonNull
-    @ColumnInfo(name = "cap_timestamp")
-    @TypeConverters({ DateConverters.class })
-    private final Date capTimeStamp;
-
     @ColumnInfo(name = "current_price")
     private final double currentPrice;
 
@@ -73,11 +72,12 @@ public final class MarketCapEntry {
     @ColumnInfo(name = "chart")
     private final List<Entry> chart;
 
-    public MarketCapEntry(@NonNull String id, @NonNull String source, @NonNull String name, @NonNull String symbol,
+    public MarketCapEntry(@NonNull Long id, @NonNull String coinId, @NonNull String source, @NonNull String name, @NonNull String symbol,
                           @NonNull Float fluctuation, @NonNull Double high, @NonNull Double low,
-                          @NonNull Double totalVolume, @NonNull String image, @NonNull Date capTimeStamp,
+                          @NonNull Double totalVolume, @NonNull String image,
                           double currentPrice, long marketCap, int marketCapRank, List<Entry> chart) {
         this.id = id;
+        this.coinId=coinId;
         this.source = source;
         this.name = name;
         this.symbol = symbol;
@@ -86,7 +86,6 @@ public final class MarketCapEntry {
         this.low = low;
         this.totalVolume = totalVolume;
         this.image = image;
-        this.capTimeStamp = capTimeStamp;
         this.currentPrice = currentPrice;
         this.marketCap = marketCap;
         this.marketCapRank = marketCapRank;
@@ -94,11 +93,11 @@ public final class MarketCapEntry {
     }
 
     public MarketCapEntry(final String source, final MarketCapJson marketCapJson) {
+        Log.e("HD",marketCapJson.toString());
         this.source = source;
         this.name = marketCapJson.name;
         this.currentPrice = marketCapJson.currentPrice;
-        this.capTimeStamp = new Date();
-        this.marketCap = marketCapJson.marketCap;
+        this.marketCap = marketCapJson.marketCapValue;
         this.marketCapRank = marketCapJson.marketCapRank;
         this.symbol=marketCapJson.symbol;
         this.fluctuation=marketCapJson.fluctuation;
@@ -108,14 +107,112 @@ public final class MarketCapEntry {
         this.image=marketCapJson.image;
         this.id=marketCapJson.id;
         this.chart=chartFromJson(marketCapJson.chartDto);
+        this.coinId=marketCapJson.coinId;
     }
 
-    private List<Entry> chartFromJson(List<List<String>> json){
-        return json.stream().map(item->{
+    protected MarketCapEntry(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        coinId = in.readString();
+        source = in.readString();
+        name = in.readString();
+        symbol = in.readString();
+        if (in.readByte() == 0) {
+            fluctuation = null;
+        } else {
+            fluctuation = in.readFloat();
+        }
+        if (in.readByte() == 0) {
+            high = null;
+        } else {
+            high = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            low = null;
+        } else {
+            low = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            totalVolume = null;
+        } else {
+            totalVolume = in.readDouble();
+        }
+        image = in.readString();
+        currentPrice = in.readDouble();
+        marketCap = in.readLong();
+        marketCapRank = in.readInt();
+        chart = in.createTypedArrayList(Entry.CREATOR);
+    }
+
+    public static final Creator<MarketCapEntry> CREATOR = new Creator<MarketCapEntry>() {
+        @Override
+        public MarketCapEntry createFromParcel(Parcel in) {
+            return new MarketCapEntry(in);
+        }
+
+        @Override
+        public MarketCapEntry[] newArray(int size) {
+            return new MarketCapEntry[size];
+        }
+    };
+
+    private List<Entry> chartFromJson(MarketChartJson json){
+        return json.pointList.stream().map(item->{
             Float a = Float.valueOf(item.get(0));
             Float b = Float.valueOf(item.get(1));
             return new Entry(a,b);
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        if (id == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeLong(id);
+        }
+        parcel.writeString(coinId);
+        parcel.writeString(source);
+        parcel.writeString(name);
+        parcel.writeString(symbol);
+        if (fluctuation == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeFloat(fluctuation);
+        }
+        if (high == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(high);
+        }
+        if (low == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(low);
+        }
+        if (totalVolume == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(totalVolume);
+        }
+        parcel.writeString(image);
+        parcel.writeDouble(currentPrice);
+        parcel.writeLong(marketCap);
+        parcel.writeInt(marketCapRank);
+        parcel.writeTypedList(chart);
     }
 
     public static final class EntryConverters {
@@ -133,6 +230,11 @@ public final class MarketCapEntry {
             }).collect(Collectors.toList());
 
         }
+    }
+
+    @NonNull
+    public String getCoinId() {
+        return coinId;
     }
 
     @NonNull
@@ -166,7 +268,7 @@ public final class MarketCapEntry {
     }
 
     @NonNull
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -178,11 +280,6 @@ public final class MarketCapEntry {
     @NonNull
     public String getName() {
         return name;
-    }
-
-    @NonNull
-    public Date getCapTimeStamp() {
-        return capTimeStamp;
     }
 
     public double getCurrentPrice() {
@@ -201,7 +298,6 @@ public final class MarketCapEntry {
     public String getSymbol() {
         return symbol;
     }
-
 
     public static final class DateConverters {
         @TypeConverter
