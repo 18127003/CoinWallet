@@ -3,6 +3,7 @@ package me.app.coinwallet.ui.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,7 +55,9 @@ public class SyncFragment extends Fragment {
             @Override
             public void onPasswordDenied() {
                 ((BaseActivity) requireActivity()).loadFragment(SelectWalletFragment.class);
-                BlockchainSyncService.stop(context);
+                BlockchainSyncService.SHOULD_RESTART.set(false);
+                Log.e("HD", BlockchainSyncService.SHOULD_RESTART.get()+" out");
+                BlockchainSyncService.stop();
             }
 
             @Override

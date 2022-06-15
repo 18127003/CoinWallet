@@ -145,7 +145,7 @@ public class TransferFragment extends Fragment {
         }
         if(paymentRequest.hasAmount()){
             amountText.setText(String.valueOf(paymentRequest.getAmount().toBtc().doubleValue()));
-            amountText.setEnabled(false);
+//            amountText.setEnabled(false);
         }
     }
 

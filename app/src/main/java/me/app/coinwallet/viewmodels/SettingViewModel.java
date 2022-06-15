@@ -44,6 +44,7 @@ public class SettingViewModel extends AndroidViewModel {
     }
 
     public void logout(){
-        BlockchainSyncService.stop(getApplication());
+        BlockchainSyncService.SHOULD_RESTART.set(false);
+        BlockchainSyncService.stop();
     }
 }

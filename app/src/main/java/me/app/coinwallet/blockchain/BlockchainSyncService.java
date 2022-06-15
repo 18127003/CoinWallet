@@ -22,12 +22,14 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
     private PowerManager pm;
 
     private Configuration config;
-    private LocalWallet wallet;
+    private static final LocalWallet wallet = LocalWallet.getInstance();
     private final BlockchainLiveData blockchainLiveData = new BlockchainLiveData();
 
     private Stopwatch serviceUpTime;
     private boolean resetBlockchainOnShutdown = false;
     private final AtomicBoolean isBound = new AtomicBoolean(false);
+    private static final AtomicBoolean IS_RUNNING = new AtomicBoolean(false);
+    public static final AtomicBoolean SHOULD_RESTART = new AtomicBoolean(true);
 
     private static final String ACTION_START_SYNC = BlockchainSyncService.class.getPackage().getName()
             + ".sync_blockchain";
@@ -39,8 +41,9 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
         ContextCompat.startForegroundService(context, intent);
     }
 
-    public static void stop(final Context context){
-        context.stopService(new Intent(context, BlockchainSyncService.class));
+    public static void stop(){
+//        context.stopService(new Intent(context, BlockchainSyncService.class));
+        wallet.stopWallet();
     }
 
     public static void resetBlockchain(final Context context) {
@@ -73,6 +76,10 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 Log.e("HD","Sync complete");
                 updateForegroundNotification("Blockchain up to date");
                 blockchainLiveData.setSyncStatus(true);
+                break;
+            case SYNC_STOPPED:
+                IS_RUNNING.set(false);
+                stopSelf();
                 break;
         }
     }
@@ -117,9 +124,8 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
     public void onCreate() {
         serviceUpTime = Stopwatch.createStarted();
         super.onCreate();
-
         config = ((WalletApplication) getApplication()).getConfiguration();
-        wallet = LocalWallet.getInstance();
+//        wallet = LocalWallet.getInstance();
 
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
@@ -133,16 +139,19 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         super.onStartCommand(intent, flags, startId);
-
+        if(IS_RUNNING.get()){
+            wallet.stopWallet();
+            return START_NOT_STICKY;
+        }
         if (intent != null) {
             final String action = intent.getAction();
-            Log.i("HD","service start command: "+ action);
+            Log.e("HD","service start command: "+ action);
 
             if (ACTION_START_SYNC.equals(action)) {
                 BriefLogFormatter.init();
-//                Handler handler = new Handler(Looper.getMainLooper());
                 Threading.USER_THREAD = config.executorService;
                 wallet.subscribe(this);
+                wallet.configWalletAppKit();
                 wallet.initWallet();
             } else if (ACTION_RESET_BLOCKCHAIN.equals(action)) {
                 Log.d("HD","will remove blockchain on service shutdown");
@@ -154,21 +163,27 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
         } else {
             Log.e("HD","service restart, although it was started as non-sticky");
         }
-
+        IS_RUNNING.set(true);
+        SHOULD_RESTART.set(true);
         return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
 
-        wallet.stopWallet();
+        if(IS_RUNNING.get()){
+            wallet.stopWallet();
+        }
         if(resetBlockchainOnShutdown){
             // TODO: delete blockchain file
         }
         unregisterReceiver(deviceIdleModeReceiver);
-//        StartBlockchainSyncService.schedule(getApplication());
+        if(SHOULD_RESTART.get()){
+            StartBlockchainSyncService.schedule(getApplication());
+        }
         super.onDestroy();
         Log.i("HD","service was up for "+ serviceUpTime.stop());
+
     }
 
     @Override

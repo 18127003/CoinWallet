@@ -48,6 +48,7 @@ public class PaymentQrFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        viewModel = new ViewModelProvider(requireActivity()).get(PaymentQrReceiveViewModel.class);
         BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE))
                 .getAdapter();
         bluetoothHandler = new BluetoothHandler(this, new BluetoothHandler.BluetoothEnableCallback() {
@@ -81,7 +82,6 @@ public class PaymentQrFragment extends Fragment {
         qrCode = view.findViewById(R.id.qr_code_img);
         bluetoothNotify = view.findViewById(R.id.bluetooth_notify);
         bluetoothHandler.enableBluetooth();
-        viewModel = new ViewModelProvider(requireActivity()).get(PaymentQrReceiveViewModel.class);
         Intent intent = requireActivity().getIntent();
         String uriString = intent.getStringExtra("uri");
         try {
