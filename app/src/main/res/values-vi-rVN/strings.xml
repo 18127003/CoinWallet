@@ -62,4 +62,10 @@
 	<string name="send_bluetooth">Gửi bluetooth</string>
 	<string name="send_method">Phương thức gửi</string>
 	<string name="select">Chọn</string>
+    <string name="price">Giá</string>
+	<string name="ranking">Xếp hạng</string>
+    <string name="marketCapitalization">Vốn hóa thị trường</string>
+	<string name="marketCapDominationIndex" translatable="false">Chỉ số thống trị vốn hóa thị trường</string>
+	<string name="volume_and_marketCap" translatable="false">Khối lượng vốn hóa thị trường</string>
+	<string name="low_high_24h" translatable="false">Thấp nhất/Cao nhất trên 24h</string>
 </resources>

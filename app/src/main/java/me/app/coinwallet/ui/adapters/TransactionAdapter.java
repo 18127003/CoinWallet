@@ -12,7 +12,6 @@ import com.google.android.material.card.MaterialCardView;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
 import me.app.coinwallet.utils.Utils;
-import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.TransactionConfidence;
 
 public class TransactionAdapter extends BaseAdapter<TransactionWrapper, TransactionAdapter.ViewHolder> {
@@ -68,7 +67,7 @@ public class TransactionAdapter extends BaseAdapter<TransactionWrapper, Transact
             amount = view.findViewById(R.id.tx_amount);
             confirmNum = view.findViewById(R.id.tx_confirmation_number);
             status = view.findViewById(R.id.tx_status);
-            txCard = view.findViewById(R.id.transaction_item_card);
+            txCard = view.findViewById(R.id.tx_item_card);
         }
     }
 }

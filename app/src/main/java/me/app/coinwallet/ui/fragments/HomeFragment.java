@@ -2,8 +2,10 @@ package me.app.coinwallet.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,14 +16,15 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.github.mikephil.charting.data.Entry;
+import com.google.android.material.card.MaterialCardView;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
-import me.app.coinwallet.data.marketcap.MarketCapEntry;
-import me.app.coinwallet.ui.activities.MarketCapActivity;
+import me.app.coinwallet.data.transaction.TransactionWrapper;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.adapters.MarketCapTrendAdapter;
+import me.app.coinwallet.utils.Utils;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
+import org.bitcoinj.core.TransactionConfidence;
 
 public class HomeFragment extends Fragment {
 
@@ -32,6 +35,13 @@ public class HomeFragment extends Fragment {
     Button sendBtn;
     Button bluetoothBtn;
     Button requestBtn;
+    MaterialCardView transactionCard;
+    TextView receiver;
+    TextView time;
+    TextView amount;
+    TextView confirmNum;
+    ImageView status;
+    View txView;
 
     RecyclerView marketCaps;
 
@@ -107,6 +117,15 @@ public class HomeFragment extends Fragment {
         marketCaps.setAdapter(adapter);
         marketCaps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         viewModel.getTrendLiveData().observe(this,adapter::update);
+        txView = view.findViewById(R.id.card_latest_transaction).findViewById(R.id.transaction_item);
+        transactionCard = txView.findViewById(R.id.tx_item_card);
+//        Log.e("HD",transactionCard.);
+        receiver = txView.findViewById(R.id.tx_receiver);
+        time = txView.findViewById(R.id.tx_time);
+        amount = txView.findViewById(R.id.tx_amount);
+        confirmNum = txView.findViewById(R.id.tx_confirmation_number);
+        status = txView.findViewById(R.id.tx_status);
+        renderLastTx();
     }
 
     private void hideOrShow() {
@@ -120,5 +139,37 @@ public class HomeFragment extends Fragment {
             invisibleText.setVisibility(View.VISIBLE);
             visible.setBackgroundResource(R.drawable.ic_visibility_off);
         }
+    }
+
+    private void renderLastTx(){
+        TransactionWrapper tx=viewModel.getLatestTx();
+        if(tx==null){
+            return;
+        }
+        receiver.setText(tx.getReceiver().toString());
+        time.setText(Utils.formatDate(tx.getTime()));
+        confirmNum.setText(getResources().getText(R.string.confirmation)+": "+tx.getConfirmNum().toString());
+        amount.setText((tx.isSend()?"-":"+")+tx.getAmount().toFriendlyString());
+        TransactionConfidence.ConfidenceType type = tx.getStatus();
+        switch (type){
+            case DEAD:
+                status.setBackgroundResource(R.drawable.ic_baseline_cancel_24);
+                amount.setTextColor(getResources().getColor(R.color.red));
+                break;
+            case PENDING:
+                status.setBackgroundResource(R.drawable.ic_pending);
+                amount.setTextColor(getResources().getColor(R.color.grey));
+                break;
+            case BUILDING:
+                status.setBackgroundResource(R.drawable.ic_done);
+                amount.setTextColor(getResources().getColor(R.color.light_green));
+        }
+        txView.setOnClickListener(v-> {
+            Intent intent= new Intent(requireContext(), SingleFragmentActivity.class);
+            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME,"Transaction Detail");
+            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME,TransactionDetailFragment.class);
+            intent.putExtra("transaction",tx);
+            startActivity(intent);
+        });
     }
 }

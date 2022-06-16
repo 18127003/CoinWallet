@@ -102,6 +102,14 @@ public class WalletLiveData implements LocalWallet.EventListener {
         return result;
     }
 
+    public TransactionWrapper getLatestTx(){
+        Transaction tx = wallet.getLatestTx();
+        if(tx != null){
+            return TransactionWrapper.from(tx, wallet.wallet());
+        }
+        return null;
+    }
+
     @Override
     public void update(WalletNotificationType type, @Nullable LocalWallet.EventMessage<?> content) {
         switch (type){

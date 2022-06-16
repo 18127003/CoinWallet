@@ -8,6 +8,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.Service;
 import me.app.coinwallet.data.livedata.WalletLiveData;
+import me.app.coinwallet.data.transaction.TransactionWrapper;
 import org.bitcoinj.core.*;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.crypto.KeyCrypterException;
@@ -54,6 +55,14 @@ public class LocalWallet {
         Log.e("HD","CRA: "+wallet.currentReceiveAddress().toString());
         Log.e("HD","CCA: "+wallet.currentChangeAddress().toString());
         return wallet.currentReceiveAddress();
+    }
+
+    public Transaction getLatestTx(){
+        List<Transaction> txs = wallet.getTransactionsByTime();
+        if(txs.size()>0){
+            return txs.get(0);
+        }
+        return null;
     }
 
     public boolean isEncrypted(){ return wallet.isEncrypted(); }

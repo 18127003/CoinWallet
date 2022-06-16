@@ -8,6 +8,8 @@ import me.app.coinwallet.data.livedata.WalletLiveData;
 import me.app.coinwallet.data.marketcap.MarketCapEntry;
 import me.app.coinwallet.data.marketcap.MarketCapRepository;
 import me.app.coinwallet.data.transaction.MonthlyReport;
+import me.app.coinwallet.data.transaction.TransactionWrapper;
+
 import java.util.List;
 
 public class HomePageViewModel extends AndroidViewModel {
@@ -24,6 +26,10 @@ public class HomePageViewModel extends AndroidViewModel {
 
     public LiveData<List<MarketCapEntry>> getTrendLiveData() {
         return trendLiveData;
+    }
+
+    public TransactionWrapper getLatestTx(){
+        return walletLiveData.getLatestTx();
     }
 
     public HomePageViewModel(Application application){
