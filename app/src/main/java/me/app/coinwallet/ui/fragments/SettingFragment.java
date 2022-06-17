@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
@@ -26,12 +27,12 @@ import me.app.coinwallet.viewmodels.SettingViewModel;
  */
 public class SettingFragment extends Fragment {
 
-    private ImageButton walletManage;
-    private ImageButton changePassword;
+    private MaterialCardView walletManage;
+    private MaterialCardView changePassword;
     private SwitchMaterial fingerprintEnable;
-    private ImageButton changeLanguage;
-    private ImageButton about;
-    private ImageButton logout;
+    private MaterialCardView changeLanguage;
+    private MaterialCardView about;
+    private MaterialCardView logout;
     private SettingViewModel viewModel;
     private AuthenticateHandler authenticateHandler;
 
@@ -73,17 +74,17 @@ public class SettingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(SettingViewModel.class);
-        walletManage = view.findViewById(R.id.manage_wallet);
-        changePassword = view.findViewById(R.id.change_password);
+        walletManage = view.findViewById(R.id.wallet_manage_card);
+        changePassword = view.findViewById(R.id.change_password_card);
         fingerprintEnable = view.findViewById(R.id.fingerprint);
-        changeLanguage = view.findViewById(R.id.change_language);
-        about = view.findViewById(R.id.about);
+        changeLanguage = view.findViewById(R.id.change_language_card);
+        about = view.findViewById(R.id.about_card);
         changePassword.setOnClickListener(v-> authenticateHandler.accessPasswordDialog());
         changeLanguage.setOnClickListener(v-> moveToSettingSection(ChangeLanguageFragment.class, "Change Language"));
         fingerprintEnable.setChecked(((BaseActivity)requireActivity()).configuration.isFingerprintEnabled());
         fingerprintEnable.setOnCheckedChangeListener((v, isChecked)->
                 ((BaseActivity) requireActivity()).configuration.setFingerprintEnabled(isChecked));
-        logout = view.findViewById(R.id.logout);
+        logout = view.findViewById(R.id.logout_card);
         logout.setOnClickListener(v -> logout());
     }
 

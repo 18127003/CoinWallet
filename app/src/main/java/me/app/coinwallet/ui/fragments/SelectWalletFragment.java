@@ -18,11 +18,6 @@ import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.WalletInfoAdapter;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SelectWalletFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SelectWalletFragment extends Fragment{
     private InitPageViewModel viewModel;
     private Button createBtn;

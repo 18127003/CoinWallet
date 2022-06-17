@@ -52,17 +52,14 @@
 		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
 				  app:layout_constraintTop_toTopOf="parent"
 				  app:layout_constraintRight_toRightOf="parent"
-				  android:id="@+id/balance"
-				  android:text="$1244"
+				  android:id="@+id/price"
 				  style="@style/h6.white"
 		/>
 		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
 				  app:layout_constraintBottom_toBottomOf="parent"
 				  app:layout_constraintRight_toRightOf="parent"
 				  android:id="@+id/fluctuation"
-				  app:layout_constraintTop_toBottomOf="@id/balance"
-				  android:text="-4.0%"
-				  android:textColor="@color/red"/>
+				  app:layout_constraintTop_toBottomOf="@id/price"/>
 
 		<com.github.mikephil.charting.charts.LineChart
 				android:layout_width="wrap_content" android:layout_height="match_parent"
@@ -70,7 +67,7 @@
 				app:layout_constraintTop_toTopOf="parent"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintLeft_toRightOf="@id/name"
-				app:layout_constraintRight_toLeftOf="@id/balance"
+				app:layout_constraintRight_toLeftOf="@id/price"
 				android:id="@+id/chart"/>
 
 

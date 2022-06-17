@@ -2,6 +2,7 @@ package me.app.coinwallet.ui.activities;
 
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.fragments.ScanQrFragment;
@@ -38,5 +39,15 @@ public class ScanQrActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         loadFragment(ScanQrFragment.class);
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() > 1){
+            super.onBackPressed();
+        } else {
+            finish();
+        }
     }
 }

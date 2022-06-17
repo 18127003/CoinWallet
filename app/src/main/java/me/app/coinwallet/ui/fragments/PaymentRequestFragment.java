@@ -1,12 +1,8 @@
 package me.app.coinwallet.ui.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,7 +15,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
-import me.app.coinwallet.utils.QRUtil;
 import me.app.coinwallet.viewmodels.PaymentRequestViewModel;
 
 public class PaymentRequestFragment extends Fragment {
@@ -57,14 +52,7 @@ public class PaymentRequestFragment extends Fragment {
         generateBtn = view.findViewById(R.id.generate_qr_button);
         viewModel = new ViewModelProvider(requireActivity()).get(PaymentRequestViewModel.class);
         viewModel.getUri().observe(requireActivity(), s -> {
-//            Bitmap bm = QRUtil.createQRCodeBitmap(s);
-//            if (bm != null) {
-//                qrCode.setImageBitmap(Bitmap.createScaledBitmap(bm,
-//                        Constants.QR_BITMAP_SCALE_WIDTH, Constants.QR_BITMAP_SCALE_HEIGHT, false));
-//            }
-            Intent intent = new Intent(requireContext(), SingleFragmentActivity.class);
-            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, PaymentQrFragment.class);
-            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Scan Qr");
+            Intent intent = SingleFragmentActivity.newActivity(requireContext(), PaymentQrFragment.class, "Scan Qr");
             intent.putExtra("uri", s);
             startActivity(intent);
         });
@@ -76,11 +64,6 @@ public class PaymentRequestFragment extends Fragment {
                 // toast
             }
         });
-//        bluetoothSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//            if(isChecked){
-//                bluetoothHandler.enableBluetooth();
-//            }
-//        });
     }
 
 }

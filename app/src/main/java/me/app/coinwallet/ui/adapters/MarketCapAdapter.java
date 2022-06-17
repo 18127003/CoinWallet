@@ -20,6 +20,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.squareup.picasso.Picasso;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.marketcap.MarketCapEntry;
+import me.app.coinwallet.utils.ChartUtil;
+import org.w3c.dom.Text;
 
 
 public class MarketCapAdapter extends BaseAdapter<MarketCapEntry, MarketCapAdapter.ViewHolder> {
@@ -40,60 +42,39 @@ public class MarketCapAdapter extends BaseAdapter<MarketCapEntry, MarketCapAdapt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MarketCapEntry entry = data.get(position);
-        View view=holder.itemView;
-        CardView detail=view.findViewById(R.id.detail);
-        detail.setOnClickListener(v -> listener.onClick(entry));
-        ((TextView)view.findViewById(R.id.symbol)).setText(entry.getSymbol());
-        ((TextView)view.findViewById(R.id.name)).setText(entry.getName());
-        ((TextView)view.findViewById(R.id.rank)).setText("#"+entry.getMarketCapRank());
-        TextView fluctuation=((TextView)view.findViewById(R.id.fluctuation));
-        fluctuation.setText(""+entry.getFluctuation());
+        holder.card.setOnClickListener(v -> listener.onClick(entry));
+        holder.symbol.setText(entry.getSymbol());
+        holder.name.setText(entry.getName());
+        holder.rank.setText("#"+entry.getMarketCapRank());
+        holder.fluctuation.setText(""+entry.getFluctuation());
+        holder.fluctuation.setTextColor(entry.getFluctuation()>=0?Color.GREEN:Color.RED);
+        holder.price.setText("$"+entry.getCurrentPrice());
         Picasso.get().load(entry.getImage())
-                .resize(75,75).into((ImageView) view.findViewById(R.id.image));
-        LineChart chart= holder.itemView.findViewById(R.id.chart);
-        chart.setBackgroundColor(holder.itemView.getResources().getColor(R.color.zxing_transparent));
-        Description description=new Description();
-//        description.setText(entry.getChart().);
-        description.setEnabled(false);
-        chart.setDescription(description);
-        chart.getXAxis().setDrawAxisLine(false);
-        chart.getXAxis().setDrawLabels(false);
-        chart.getAxisLeft().setDrawAxisLine(false);
-        chart.getAxisLeft().setDrawLabels(false);
-        chart.getAxisRight().setDrawAxisLine(false);
-        chart.getAxisRight().setDrawLabels(false);
-        chart.getAxisLeft().setDrawGridLines(false);
-        chart.getXAxis().setDrawGridLines(false);
-        chart.getAxisRight().setDrawGridLines(false);
-        chart.getLegend().setEnabled(false);
-        LineDataSet lineDataSet=new LineDataSet(entry.getChart(),entry.getName());
-        lineDataSet.setDrawValues(false);
-        lineDataSet.setDrawCircles(false);
-        lineDataSet.setValueTextColor(holder.itemView.getResources().getColor(R.color.blue_black));
-        if(entry.getFluctuation()>=0){
-            fluctuation.setTextColor(Color.GREEN);
-            lineDataSet.setColor(holder.itemView.getResources().getColor(R.color.light_green));
-        }
-        else {
-            lineDataSet.setColor(holder.itemView.getResources().getColor(R.color.red));
-            fluctuation.setTextColor(Color.RED);
-        }
-
-        chart.setData(new LineData(lineDataSet));
-        chart.setClickable(false);
-        chart.setTouchEnabled(false);
-        chart.setDragEnabled(false);
-
-        chart.fitScreen();
-
+                .resize(75,75).into(holder.image);
+        new ChartUtil(entry, res).chart(holder.chart).disableTouch().disableDescription().disableAxis().visualize();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView symbol;
+        public TextView name;
+        public TextView rank;
+        public TextView fluctuation;
+        public ImageView image;
+        public CardView card;
+        public LineChart chart;
+        public TextView price;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
-
+            card = view.findViewById(R.id.detail);
+            symbol = view.findViewById(R.id.symbol);
+            name = view.findViewById(R.id.name);
+            rank = view.findViewById(R.id.rank);
+            fluctuation = view.findViewById(R.id.fluctuation);
+            image = view.findViewById(R.id.image);
+            chart = view.findViewById(R.id.chart);
+            price = view.findViewById(R.id.price);
         }
     }
 }

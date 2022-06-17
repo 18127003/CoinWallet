@@ -2,7 +2,6 @@ package me.app.coinwallet.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -109,11 +108,11 @@ public class HomeFragment extends Fragment {
         marketCaps = view.findViewById(R.id.market_list);
         MarketCapTrendAdapter adapter = new MarketCapTrendAdapter(item -> {
             Intent i= new Intent(requireContext(), SingleFragmentActivity.class);
-            i.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME,ChartDetail.class);
+            i.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, MarketCapDetailFragment.class);
             i.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME,"Chart Detail");
             i.putExtra("chart_detail", item);
             startActivity(i);
-        });
+        }, getResources());
         marketCaps.setAdapter(adapter);
         marketCaps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         viewModel.getTrendLiveData().observe(this,adapter::update);
