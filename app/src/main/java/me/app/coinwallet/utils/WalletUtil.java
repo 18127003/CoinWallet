@@ -5,6 +5,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.TypefaceSpan;
+import android.util.Log;
 import androidx.annotation.Nullable;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -15,6 +16,7 @@ import org.bitcoinj.core.*;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptException;
 import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.wallet.WalletTransaction;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,9 +61,7 @@ public class WalletUtil {
         public boolean equals(final Object o) {
             if (o == this)
                 return true;
-            if (o == null || o.getClass() != getClass())
-                return false;
-            return true;
+            return o != null && o.getClass() == getClass();
         }
 
         @Override
@@ -78,7 +78,7 @@ public class WalletUtil {
         final int len = hash.length();
         for (int i = 0; i < len; i += groupSize) {
             final int end = i + groupSize;
-            final String part = hash.substring(i, end < len ? end : len);
+            final String part = hash.substring(i, Math.min(end, len));
 
             builder.append(part);
             builder.setSpan(new MonospaceSpan(), builder.length() - part.length(), builder.length(),
@@ -178,18 +178,18 @@ public class WalletUtil {
         return transaction.getOutputs().size() > 20;
     }
 
-//    public static @Nullable String uriToProvider(final Uri uri) {
-//        if (uri == null || !uri.getScheme().equals("content"))
-//            return null;
-//        final String host = uri.getHost();
-//        if ("com.google.android.apps.docs.storage".equals(host) || "com.google.android.apps.docs.storage.legacy".equals(host))
-//            return "Google Drive";
-//        if ("org.nextcloud.documents".equals(host))
-//            return "Nextcloud";
-//        if ("com.box.android.documents".equals(host))
-//            return "Box";
-//        if ("com.android.providers.downloads.documents".equals(host))
-//            return "internal storage";
-//        return null;
-//    }
+    /***
+     * Returned coin is negative if is sent value and positive otherwise
+     */
+    public static Coin getRelatedValue(final Transaction transaction, TransactionBag wallet){
+        Coin amount = transaction.getValueSentFromMe(wallet);
+        Coin received = transaction.getValueSentToMe(wallet);
+        if(amount.isZero()){
+            amount = received;
+        } else {
+            amount = amount.minus(received).negate();
+        }
+        return amount;
+    }
+
 }

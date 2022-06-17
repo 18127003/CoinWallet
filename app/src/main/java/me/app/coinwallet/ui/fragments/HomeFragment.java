@@ -119,7 +119,6 @@ public class HomeFragment extends Fragment {
         viewModel.getTrendLiveData().observe(this,adapter::update);
         txView = view.findViewById(R.id.card_latest_transaction).findViewById(R.id.transaction_item);
         transactionCard = txView.findViewById(R.id.tx_item_card);
-//        Log.e("HD",transactionCard.);
         receiver = txView.findViewById(R.id.tx_receiver);
         time = txView.findViewById(R.id.tx_time);
         amount = txView.findViewById(R.id.tx_amount);
@@ -149,7 +148,7 @@ public class HomeFragment extends Fragment {
         receiver.setText(tx.getReceiver().toString());
         time.setText(Utils.formatDate(tx.getTime()));
         confirmNum.setText(getResources().getText(R.string.confirmation)+": "+tx.getConfirmNum().toString());
-        amount.setText((tx.isSend()?"-":"+")+tx.getAmount().toFriendlyString());
+        amount.setText(tx.getAmount().toFriendlyString());
         TransactionConfidence.ConfidenceType type = tx.getStatus();
         switch (type){
             case DEAD:

@@ -34,7 +34,7 @@ public class TransactionAdapter extends BaseAdapter<TransactionWrapper, Transact
         holder.receiver.setText(tx.getReceiver().toString());
         holder.time.setText(Utils.formatDate(tx.getTime()));
         holder.confirmNum.setText(res.getText(R.string.confirmation)+": "+tx.getConfirmNum().toString());
-        holder.amount.setText((tx.isSend()?"-":"+")+tx.getAmount().toFriendlyString());
+        holder.amount.setText(tx.getAmount().toFriendlyString());
         TransactionConfidence.ConfidenceType type = tx.getStatus();
         switch (type){
             case DEAD:

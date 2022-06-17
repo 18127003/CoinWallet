@@ -20,10 +20,13 @@ import org.bitcoinj.uri.BitcoinURI;
 import org.bitcoinj.uri.BitcoinURIParseException;
 import org.bitcoinj.wallet.SendRequest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static androidx.core.util.Preconditions.checkArgument;
 
 public class PaymentRequest implements Parcelable {
     public enum Standard {
@@ -32,7 +35,7 @@ public class PaymentRequest implements Parcelable {
 
     public final Standard standard;
 
-    @Nullable
+    @NonNull
     public final List<Output> outputs;
 
     @NonNull
@@ -41,7 +44,7 @@ public class PaymentRequest implements Parcelable {
     @Nullable
     public final String memo;
 
-    public PaymentRequest(final Standard standard, @Nullable final List<Output> outputs,
+    public PaymentRequest(final Standard standard, @NonNull final List<Output> outputs,
                          @Nullable final String memo, final boolean useBluetooth) {
         this.standard = standard;
         this.outputs = outputs;
@@ -51,10 +54,6 @@ public class PaymentRequest implements Parcelable {
 
     private PaymentRequest(final Address address, @Nullable final String addressLabel) {
         this(Standard.NONE, buildSimplePayTo(Coin.ZERO, address), addressLabel, false);
-    }
-
-    public static PaymentRequest blank() {
-        return new PaymentRequest(Standard.NONE, null, null, false);
     }
 
     public static PaymentRequest from(final Address address, @Nullable final String addressLabel) {
@@ -87,6 +86,23 @@ public class PaymentRequest implements Parcelable {
         return new PaymentRequest(Standard.BIP21, outputs, bitcoinUri.getLabel(), useBluetooth);
     }
 
+    public PaymentRequest mergeWithEditedValues(final String editedAmount) throws IllegalArgumentException{
+        Coin amount = Coin.parseCoin(editedAmount);
+        return mergeWithEditedValues(amount);
+    }
+
+    public PaymentRequest mergeWithEditedValues(final Coin editedAmount) {
+        final Output[] outputs;
+
+        if (hasOutputs()) {
+            outputs = new Output[] { new Output(editedAmount, this.outputs.get(0).script) };
+        } else {
+            throw new IllegalStateException();
+        }
+
+        return new PaymentRequest(standard, Arrays.asList(outputs), memo, useBluetooth);
+    }
+
     public SendRequest toSendRequest() {
         final Transaction transaction = new Transaction(Constants.NETWORK_PARAMETERS);
         outputs.forEach(output -> transaction.addOutput(output.amount, output.script));
@@ -98,7 +114,7 @@ public class PaymentRequest implements Parcelable {
     }
 
     public boolean hasOutputs() {
-        return outputs != null && outputs.size() > 0;
+        return outputs.size() > 0;
     }
 
     public boolean hasAddress() {
@@ -106,7 +122,7 @@ public class PaymentRequest implements Parcelable {
     }
 
     public Address getAddress() {
-        if (outputs == null || outputs.size() != 1)
+        if (outputs.size() != 1)
             throw new IllegalStateException();
 
         final Script script = outputs.get(0).script;
@@ -165,12 +181,8 @@ public class PaymentRequest implements Parcelable {
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeSerializable(standard);
-        if (outputs != null) {
-            dest.writeInt(outputs.size());
-            dest.writeTypedArray(outputs.toArray(new Output[0]), 0);
-        } else {
-            dest.writeInt(0);
-        }
+        dest.writeInt(outputs.size());
+        dest.writeTypedArray(outputs.toArray(new Output[0]), 0);
         dest.writeString(memo);
         dest.writeInt(useBluetooth?1:0);
     }
@@ -195,7 +207,7 @@ public class PaymentRequest implements Parcelable {
             in.readTypedArray(outputs1, Output.CREATOR);
             outputs = Arrays.stream(outputs1).collect(Collectors.toList());
         } else {
-            outputs = null;
+            outputs = new ArrayList<>();
         }
         memo = in.readString();
         useBluetooth = in.readInt() == 1;
