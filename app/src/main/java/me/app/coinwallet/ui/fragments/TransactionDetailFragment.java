@@ -1,10 +1,7 @@
 package me.app.coinwallet.ui.fragments;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.content.Context;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -32,6 +29,11 @@ public class TransactionDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
         transactionWrapper=(TransactionWrapper) requireActivity().getIntent().getSerializableExtra("transaction");
     }
 
@@ -55,17 +57,15 @@ public class TransactionDetailFragment extends Fragment {
         TextView fee=view.findViewById(R.id.fee);
         TextView conf=view.findViewById(R.id.conf);
         TextView address=view.findViewById(R.id.address);
+        amount.setText(transactionWrapper.getAmount().toFriendlyString());
         if(transactionWrapper.isSend()){
             icon.setBackgroundResource(R.drawable.ic_send);
             type.setText(R.string.send_button_label);
-            amount.setText("-"+transactionWrapper.getAmount().toFriendlyString());
             address.setText(transactionWrapper.getReceiver().toString());
         }
         else {
             icon.setBackgroundResource(R.drawable.ic_receive);
             type.setText(R.string.receive);
-            amount.setText("+"+transactionWrapper.getAmount().toFriendlyString());
-
         }
         switch (transactionWrapper.getStatus()){
             case PENDING:
@@ -87,8 +87,6 @@ public class TransactionDetailFragment extends Fragment {
         tx_id.setText(getString(R.string.transaction_id)+": "+transactionWrapper.getTxId().toString());
         time.setText(Utils.formatDate(transactionWrapper.getTime()));
         fee.setText(transactionWrapper.getFee().toFriendlyString());
-        conf.setText(""+transactionWrapper.getConfirmNum());
-
-
+        conf.setText(transactionWrapper.getConfirmNum().toString());
     }
 }

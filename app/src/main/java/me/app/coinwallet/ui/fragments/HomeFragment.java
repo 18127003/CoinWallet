@@ -2,7 +2,6 @@ package me.app.coinwallet.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -109,23 +108,22 @@ public class HomeFragment extends Fragment {
         marketCaps = view.findViewById(R.id.market_list);
         MarketCapTrendAdapter adapter = new MarketCapTrendAdapter(item -> {
             Intent i= new Intent(requireContext(), SingleFragmentActivity.class);
-            i.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME,ChartDetail.class);
+            i.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, MarketCapDetailFragment.class);
             i.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME,"Chart Detail");
             i.putExtra("chart_detail", item);
             startActivity(i);
-        });
+        }, getResources());
         marketCaps.setAdapter(adapter);
         marketCaps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         viewModel.getTrendLiveData().observe(this,adapter::update);
         txView = view.findViewById(R.id.card_latest_transaction).findViewById(R.id.transaction_item);
         transactionCard = txView.findViewById(R.id.tx_item_card);
-//        Log.e("HD",transactionCard.);
         receiver = txView.findViewById(R.id.tx_receiver);
         time = txView.findViewById(R.id.tx_time);
         amount = txView.findViewById(R.id.tx_amount);
         confirmNum = txView.findViewById(R.id.tx_confirmation_number);
         status = txView.findViewById(R.id.tx_status);
-        renderLastTx();
+        viewModel.getLatestTx().observe(this, this::renderLastTx);
     }
 
     private void hideOrShow() {
@@ -141,15 +139,14 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void renderLastTx(){
-        TransactionWrapper tx=viewModel.getLatestTx();
+    private void renderLastTx(TransactionWrapper tx){
         if(tx==null){
             return;
         }
         receiver.setText(tx.getReceiver().toString());
         time.setText(Utils.formatDate(tx.getTime()));
         confirmNum.setText(getResources().getText(R.string.confirmation)+": "+tx.getConfirmNum().toString());
-        amount.setText((tx.isSend()?"-":"+")+tx.getAmount().toFriendlyString());
+        amount.setText(tx.getAmount().toFriendlyString());
         TransactionConfidence.ConfidenceType type = tx.getStatus();
         switch (type){
             case DEAD:

@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
+import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.utils.BluetoothUtil;
 import me.app.coinwallet.utils.QRUtil;
 import me.app.coinwallet.viewmodels.PaymentQrReceiveViewModel;
@@ -64,6 +67,7 @@ public class PaymentQrFragment extends Fragment {
 
             @Override
             public void onRejected() {
+                ((BaseActivity) requireActivity()).configuration.toastUtil.postToast("Enable bluetooth and try again", Toast.LENGTH_SHORT);
                 requireActivity().finish();
             }
         });
@@ -81,7 +85,6 @@ public class PaymentQrFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         qrCode = view.findViewById(R.id.qr_code_img);
         bluetoothNotify = view.findViewById(R.id.bluetooth_notify);
-        bluetoothHandler.enableBluetooth();
         Intent intent = requireActivity().getIntent();
         String uriString = intent.getStringExtra("uri");
         try {
@@ -97,6 +100,7 @@ public class PaymentQrFragment extends Fragment {
                 bluetoothNotify.setText("Please stay on this screen until you received the payment");
             }
         } catch (BitcoinURIParseException e) {
+            ((BaseActivity) requireActivity()).configuration.toastUtil.postToast("Unsupported bitcoin uri format", Toast.LENGTH_SHORT);
             requireActivity().finish();
         }
     }

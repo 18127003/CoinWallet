@@ -2,11 +2,13 @@ package me.app.coinwallet;
 
 import android.text.format.DateUtils;
 import com.google.common.io.BaseEncoding;
+import me.app.coinwallet.utils.SmallestCoinSelector;
 import okhttp3.OkHttpClient;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
+import org.bitcoinj.wallet.CoinSelector;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +32,8 @@ public final class Constants {
     public static final int QR_BITMAP_SCALE_HEIGHT = 500;
 
     public static final int QR_BITMAP_SCALE_WIDTH = 500;
+
+    public static final CoinSelector DEFAULT_COIN_SELECTOR = SmallestCoinSelector.get();
 
     public static final NetworkParameters NETWORK_PARAMETERS = TestNet3Params.get();
 

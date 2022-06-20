@@ -17,10 +17,9 @@ public class TransactionWrapper implements Serializable {
     private Integer confirmNum;
     private final Coin fee;
     private final Coin amount;
-    private final boolean isSend;
 
     public TransactionWrapper(Sha256Hash txId, Date time, @Nullable Address receiver, TransactionConfidence.ConfidenceType status,
-                              Integer confirmNum, Coin fee, Coin amount, boolean isSend) {
+                              Integer confirmNum, Coin fee, Coin amount) {
         this.txId = txId;
         this.time = time;
         this.receiver = receiver;
@@ -28,7 +27,6 @@ public class TransactionWrapper implements Serializable {
         this.confirmNum = confirmNum;
         this.fee = fee;
         this.amount = amount;
-        this.isSend = isSend;
     }
 
     public static TransactionWrapper from(Transaction tx, Wallet wallet){
@@ -38,18 +36,12 @@ public class TransactionWrapper implements Serializable {
         TransactionConfidence confidence = tx.getConfidence();
         Integer confirmNum = confidence.getDepthInBlocks();
         TransactionConfidence.ConfidenceType status = confidence.getConfidenceType();
-        boolean isSend = true;
         Coin fee=tx.getFee();
         if(fee==null){
             fee=Coin.ZERO;
         }
-        Coin amount = tx.getValueSentFromMe(wallet);
-        if(amount.isZero()){
-            amount = tx.getValueSentToMe(wallet);
-            isSend = false;
-        }
-//        double amountStr = amount.toBtc().doubleValue();
-        return new TransactionWrapper(txId, time, receiver, status, confirmNum, fee, amount, isSend);
+        Coin amount = WalletUtil.getRelatedValue(tx, wallet);
+        return new TransactionWrapper(txId, time, receiver, status, confirmNum, fee, amount);
     }
 
     public Coin getFee() {
@@ -81,7 +73,7 @@ public class TransactionWrapper implements Serializable {
     }
 
     public boolean isSend() {
-        return isSend;
+        return amount.isNegative();
     }
 
     public Sha256Hash getTxId() {
@@ -101,14 +93,11 @@ public class TransactionWrapper implements Serializable {
         return txId.hashCode();
     }
 
-    public static final Comparator<TransactionWrapper> SORT_BY_UPDATE_TIME = new Comparator<TransactionWrapper>() {
-        @Override
-        public int compare(final TransactionWrapper tx1, final TransactionWrapper tx2) {
-            final long time1 = tx1.getTime().getTime();
-            final long time2 = tx2.getTime().getTime();
-            final int updateTimeComparison = -(Long.compare(time1, time2));
-            //If time1==time2, compare by tx hash to make comparator consistent with equals
-            return updateTimeComparison != 0 ? updateTimeComparison : tx1.getTxId().compareTo(tx2.getTxId());
-        }
+    public static final Comparator<TransactionWrapper> SORT_BY_UPDATE_TIME = (tx1, tx2) -> {
+        final long time1 = tx1.getTime().getTime();
+        final long time2 = tx2.getTime().getTime();
+        final int updateTimeComparison = -(Long.compare(time1, time2));
+        //If time1==time2, compare by tx hash to make comparator consistent with equals
+        return updateTimeComparison != 0 ? updateTimeComparison : tx1.getTxId().compareTo(tx2.getTxId());
     };
 }

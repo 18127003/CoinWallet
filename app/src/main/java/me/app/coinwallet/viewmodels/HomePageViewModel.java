@@ -28,7 +28,7 @@ public class HomePageViewModel extends AndroidViewModel {
         return trendLiveData;
     }
 
-    public TransactionWrapper getLatestTx(){
+    public LiveData<TransactionWrapper> getLatestTx(){
         return walletLiveData.getLatestTx();
     }
 

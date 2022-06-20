@@ -57,14 +57,6 @@ public class LocalWallet {
         return wallet.currentReceiveAddress();
     }
 
-    public Transaction getLatestTx(){
-        List<Transaction> txs = wallet.getTransactionsByTime();
-        if(txs.size()>0){
-            return txs.get(0);
-        }
-        return null;
-    }
-
     public boolean isEncrypted(){ return wallet.isEncrypted(); }
 
     public String getPlainBalance(){
@@ -113,6 +105,7 @@ public class LocalWallet {
     public void send(SendRequest sendRequest, String password) throws InsufficientMoneyException, Wallet.DustySendRequested,
             Wallet.ExceededMaxTransactionSize, Wallet.CouldNotAdjustDownwards, Wallet.BadWalletEncryptionKeyException {
         sendRequest.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
+        sendRequest.coinSelector = Constants.DEFAULT_COIN_SELECTOR;
         if (password != null){
             sendRequest.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
         }

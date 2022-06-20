@@ -55,12 +55,10 @@ public class ScanQrFragment extends Fragment {
         barcodeView = view.findViewById(R.id.barcode_view);
         barcodeView.setStatusText("");
         barcodeView.decodeContinuous(result -> {
-            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
             try {
                 PaymentRequest paymentRequest = PaymentRequest.from(result.getText());
+                Intent intent = SingleFragmentActivity.newActivity(requireContext(), TransferFragment.class, "Transfer Money");
                 intent.putExtra(Constants.QR_CONTENT, paymentRequest);
-                intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Transfer Money");
-                intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, TransferFragment.class);
                 startActivity(intent);
             } catch (BitcoinURIParseException e) {
                 // swallow
