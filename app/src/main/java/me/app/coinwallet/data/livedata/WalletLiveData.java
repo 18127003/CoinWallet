@@ -2,6 +2,7 @@ package me.app.coinwallet.data.livedata;
 
 import android.util.Log;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -22,7 +23,7 @@ public class WalletLiveData implements LocalWallet.EventListener {
     private final MutableLiveData<List<MonthlyReport>> monthlyReports = new MutableLiveData<>();
     private final LocalWallet wallet;
     private Multimap<String, TransactionWrapper> monthlyReportMap;
-    private final MutableLiveData<Boolean> isActive = new MutableLiveData<>();
+    private final MutableLiveData<TransactionWrapper> lastTx = new MutableLiveData<>();
 
     private static WalletLiveData _instance;
 
@@ -44,12 +45,17 @@ public class WalletLiveData implements LocalWallet.EventListener {
 
     public void refreshCurrentReceivingAddress(){ currentReceivingAddress.postValue(wallet.getAddress().toString()); }
 
-    public void refreshIsActive(){ isActive.postValue(wallet.wallet()!=null); }
+    public void refreshLatestTx(TransactionWrapper tx){
+        lastTx.postValue(tx);
+    }
 
     public void refreshTxHistory(){
         List<TransactionWrapper> txs = wrapTransaction(wallet.history());
         monthlyReportMap = splitTransactions(txs);
         monthlyReports.postValue(getMonthlyReportList(monthlyReportMap));
+        if(txs.size() > 0){
+            refreshLatestTx(txs.get(0));
+        }
     }
 
     public void refreshTxHistory(Transaction transaction){
@@ -63,13 +69,12 @@ public class WalletLiveData implements LocalWallet.EventListener {
         }
         monthlyReportMap.put(time, txWrapper);
         monthlyReports.postValue(getMonthlyReportList(monthlyReportMap));
+        refreshLatestTx(txWrapper);
     }
 
     public MutableLiveData<List<MonthlyReport>> getMonthlyReports() {
         return monthlyReports;
     }
-
-    public MutableLiveData<Boolean> getIsActive() { return isActive; }
 
     public MutableLiveData<String> getExpectedBalance() {
         return expectedBalance;
@@ -102,12 +107,8 @@ public class WalletLiveData implements LocalWallet.EventListener {
         return result;
     }
 
-    public TransactionWrapper getLatestTx(){
-        Transaction tx = wallet.getLatestTx();
-        if(tx != null){
-            return TransactionWrapper.from(tx, wallet.wallet());
-        }
-        return null;
+    public LiveData<TransactionWrapper> getLatestTx(){
+        return lastTx;
     }
 
     @Override
@@ -125,7 +126,6 @@ public class WalletLiveData implements LocalWallet.EventListener {
                 break;
             case SETUP_COMPLETED:
                 Log.e("HD","refresh wallet");
-                refreshIsActive();
                 refreshAvailableBalance();
                 refreshTxHistory();
                 refreshExpectedBalance();

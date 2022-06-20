@@ -123,7 +123,7 @@ public class HomeFragment extends Fragment {
         amount = txView.findViewById(R.id.tx_amount);
         confirmNum = txView.findViewById(R.id.tx_confirmation_number);
         status = txView.findViewById(R.id.tx_status);
-        renderLastTx();
+        viewModel.getLatestTx().observe(this, this::renderLastTx);
     }
 
     private void hideOrShow() {
@@ -139,8 +139,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void renderLastTx(){
-        TransactionWrapper tx=viewModel.getLatestTx();
+    private void renderLastTx(TransactionWrapper tx){
         if(tx==null){
             return;
         }
