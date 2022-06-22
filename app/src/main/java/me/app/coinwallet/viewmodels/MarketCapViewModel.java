@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import me.app.coinwallet.WalletApplication;
 import me.app.coinwallet.data.marketcap.MarketCapDao;
-import me.app.coinwallet.data.marketcap.MarketCapEntry;
+import me.app.coinwallet.data.marketcap.MarketCapEntity;
 import me.app.coinwallet.data.marketcap.MarketCapRepository;
 
 import java.util.List;
@@ -16,8 +16,8 @@ import java.util.Locale;
 public class MarketCapViewModel extends AndroidViewModel {
     private final WalletApplication application;
     private final MarketCapDao marketCapDao;
-    private final MediatorLiveData<List<MarketCapEntry>> marketCapLiveData = new MediatorLiveData<>();
-    private LiveData<List<MarketCapEntry>> underlyingMarketCapLiveData;
+    private final MediatorLiveData<List<MarketCapEntity>> marketCapLiveData = new MediatorLiveData<>();
+    private LiveData<List<MarketCapEntity>> underlyingMarketCapLiveData;
     private boolean isFiltered = false;
 
     public MarketCapViewModel(final Application application){
@@ -27,7 +27,7 @@ public class MarketCapViewModel extends AndroidViewModel {
         fetch(null);
     }
 
-    public LiveData<List<MarketCapEntry>> marketCapData() {
+    public LiveData<List<MarketCapEntity>> marketCapData() {
         return marketCapLiveData;
     }
 

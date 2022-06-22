@@ -1,6 +1,5 @@
 package me.app.coinwallet.data.marketcap;
 
-import android.util.Log;
 import com.squareup.moshi.*;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MarketCapHost {
     private final static String HOST_PREFIX = "https://cryptowallet-backend.herokuapp.com/api/";
@@ -45,13 +43,13 @@ public class MarketCapHost {
         return builder.build();
     }
 
-    public List<MarketCapEntry> parse(final BufferedSource jsonSource) throws IOException, JsonDataException {
+    public List<MarketCapEntity> parse(final BufferedSource jsonSource) throws IOException, JsonDataException {
         Type responseType = Types.newParameterizedType(List.class, MarketCapJson.class);
         final JsonAdapter<List<MarketCapJson>> jsonAdapter = moshi.adapter(responseType);
         final List<MarketCapJson> jsonResponse = jsonAdapter.fromJson(jsonSource);
-        final List<MarketCapEntry> result = new ArrayList<>(jsonResponse.size());
+        final List<MarketCapEntity> result = new ArrayList<>(jsonResponse.size());
         for (MarketCapJson json : jsonResponse) {
-            result.add(new MarketCapEntry(SOURCE, json));
+            result.add(new MarketCapEntity(SOURCE, json));
         }
         return result;
     }

@@ -7,16 +7,16 @@ import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import me.app.coinwallet.R;
-import me.app.coinwallet.data.marketcap.MarketCapEntry;
+import me.app.coinwallet.data.marketcap.MarketCapEntity;
 
 
 public class ChartUtil {
-    private final MarketCapEntry cap;
+    private final MarketCapEntity cap;
     private final Resources res;
     private LineChart chart;
     private Description description;
 
-    public ChartUtil(MarketCapEntry cap, Resources res){
+    public ChartUtil(MarketCapEntity cap, Resources res){
         this.cap = cap;
         this.res = res;
     }

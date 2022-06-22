@@ -24,48 +24,38 @@
 				<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:text="@string/available_balance_label"
-						android:id="@+id/text_available"/>
-				<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:text="0.00"
-						android:layout_toEndOf="@id/text_available"
-						android:layout_marginStart="5dp"/>
-				<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
 						android:text="@string/from"
-						android:layout_alignParentEnd="true"
 						android:id="@+id/text_from"/>
-				<include
-						android:layout_width="150dp"
+				<TextView
+						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_below="@id/text_available"
-						layout="@layout/autocomplete_text_field"
+						android:text="@string/to"
+						android:layout_alignLeft="@id/card_to"
+						android:id="@+id/text_to"/>
+
+				<TextView
+						android:layout_width="100dp"
+						android:layout_height="match_parent"
+						android:layout_alignBottom="@id/card_to"
+						android:layout_alignTop="@id/card_to"
+						android:layout_centerVertical="true"
+						android:gravity="bottom|left"
+						android:text="@string/bitcoin"
+						style="@style/h6.black"
+						android:paddingBottom="5dp"
 						android:id="@+id/card_from"/>
-				<com.google.android.material.textfield.TextInputLayout
+				<include
+						android:layout_width="250dp"
 						android:layout_height="wrap_content"
-						android:layout_width="150dp"
-						app:boxBackgroundColor="@color/white"
-						style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-						android:layout_alignParentEnd="true"
+						android:layout_alignParentRight="true"
 						android:layout_below="@id/text_from"
-						app:hintEnabled="false">
-					<com.google.android.material.textfield.TextInputEditText
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:id="@+id/coin_from"
-							android:maxLines="1"
-							android:hint="@string/balance_label"/>
-				</com.google.android.material.textfield.TextInputLayout>
+						layout="@layout/autocomplete_text_field"
+						android:id="@+id/card_to"/>
+
 			</RelativeLayout>
 		</com.google.android.material.card.MaterialCardView>
-		<ImageButton
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:background="@drawable/ic_transform"
-				android:layout_gravity="center_horizontal"/>
+
+		<Space android:layout_width="match_parent" android:layout_height="20dp"/>
 		<com.google.android.material.card.MaterialCardView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -79,51 +69,49 @@
 				<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:text="@string/available_balance_label"
-						android:id="@+id/text_available_1"/>
-				<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:text="0.00"
-						android:layout_toEndOf="@id/text_available_1"
-						android:layout_marginStart="5dp"/>
-				<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:text="@string/to"
-						android:layout_alignParentEnd="true"
-						android:id="@+id/text_to"/>
-				<include
-						android:layout_width="150dp"
-						android:layout_height="wrap_content"
-						android:layout_below="@id/text_available_1"
-						layout="@layout/autocomplete_text_field"
-				        android:id="@+id/card_to"/>
+						android:text="@string/amount_label"
+						android:id="@+id/text_amount"/>
+
+
 				<com.google.android.material.textfield.TextInputLayout
 						android:layout_height="wrap_content"
-						android:layout_width="150dp"
+						android:layout_width="match_parent"
 						app:boxBackgroundColor="@color/white"
 						style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
 						android:layout_alignParentEnd="true"
-						android:layout_below="@id/text_to"
-						app:hintEnabled="false">
+						android:layout_below="@id/text_amount"
+						app:hintEnabled="false"
+
+				>
 					<com.google.android.material.textfield.TextInputEditText
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
-							android:id="@+id/coin_to"
+							android:id="@+id/currency"
 							android:maxLines="1"
-							android:hint="@string/balance_label"/>
+							android:hint="@string/amount"
+							android:inputType="numberDecimal"
+					/>
 				</com.google.android.material.textfield.TextInputLayout>
 			</RelativeLayout>
 		</com.google.android.material.card.MaterialCardView>
+
+		<Button
+				android:layout_marginTop="20dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/bottom_nav_label_transfer_rate"
+				style="@style/ButtonStyle"
+				android:id="@+id/button"
+				android:drawableLeft="@drawable/ic_transfer_rate"
+				android:layout_gravity="center_horizontal"/>
 		<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:id="@+id/rate"
-				android:text="Rate: "
-				style="@style/subtitle"
+				android:id="@+id/result"
+				style="@style/h6.white"
 				android:layout_gravity="center_horizontal"
 				android:layout_marginTop="10dp"
-				android:padding="10dp"/>
+				android:padding="10dp"
+		/>
 	</LinearLayout>
 </FrameLayout>

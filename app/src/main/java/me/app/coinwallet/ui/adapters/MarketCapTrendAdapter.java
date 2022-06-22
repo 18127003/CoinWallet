@@ -10,13 +10,13 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.google.android.material.card.MaterialCardView;
 import me.app.coinwallet.R;
 
-import me.app.coinwallet.data.marketcap.MarketCapEntry;
+import me.app.coinwallet.data.marketcap.MarketCapEntity;
 import me.app.coinwallet.utils.ChartUtil;
 
-public class MarketCapTrendAdapter extends BaseAdapter<MarketCapEntry, MarketCapTrendAdapter.ViewHolder>{
+public class MarketCapTrendAdapter extends BaseAdapter<MarketCapEntity, MarketCapTrendAdapter.ViewHolder>{
 
     private final Resources res;
-    public MarketCapTrendAdapter(OnItemClickListener<MarketCapEntry> listener, Resources res) {
+    public MarketCapTrendAdapter(OnItemClickListener<MarketCapEntity> listener, Resources res) {
         super(listener);
         this.res = res;
     }
@@ -30,7 +30,7 @@ public class MarketCapTrendAdapter extends BaseAdapter<MarketCapEntry, MarketCap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MarketCapEntry cap = data.get(position);
+        MarketCapEntity cap = data.get(position);
 
         holder.trendCard.setOnClickListener(view -> listener.onClick(cap));
         new ChartUtil(cap, res).chart(holder.chart).disableTouch().description().visualize();

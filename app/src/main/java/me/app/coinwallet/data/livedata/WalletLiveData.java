@@ -12,6 +12,8 @@ import me.app.coinwallet.data.transaction.MonthlyReport;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
 import me.app.coinwallet.utils.Utils;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionConfidence;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +26,7 @@ public class WalletLiveData implements LocalWallet.EventListener {
     private final LocalWallet wallet;
     private Multimap<String, TransactionWrapper> monthlyReportMap;
     private final MutableLiveData<TransactionWrapper> lastTx = new MutableLiveData<>();
+    private TransactionConfidence.ConfidenceType filter;
 
     private static WalletLiveData _instance;
 
@@ -39,6 +42,11 @@ public class WalletLiveData implements LocalWallet.EventListener {
         return _instance;
     }
 
+    public void filterTx(TransactionConfidence.ConfidenceType type){
+        filter = type;
+        refreshTxHistory(type);
+    }
+
     public void refreshAvailableBalance(){ availableBalance.postValue(wallet.getPlainBalance()); wallet.check();}
 
     public void refreshExpectedBalance(){ expectedBalance.postValue(wallet.getExpectedBalance()); }
@@ -49,42 +57,54 @@ public class WalletLiveData implements LocalWallet.EventListener {
         lastTx.postValue(tx);
     }
 
-    public void refreshTxHistory(){
-        List<TransactionWrapper> txs = wrapTransaction(wallet.history());
-        monthlyReportMap = splitTransactions(txs);
+    public void refreshTxHistory(TransactionConfidence.ConfidenceType type){
+        List<Transaction> txs = wallet.history();
+        if(type!=null){
+            txs = txs.stream().filter(tx->tx.getConfidence().getConfidenceType().equals(type))
+                    .collect(Collectors.toList());
+        }
+
+        List<TransactionWrapper> txWrappers = wrapTransaction(txs);
+        monthlyReportMap = splitTransactions(txWrappers);
         monthlyReports.postValue(getMonthlyReportList(monthlyReportMap));
         if(txs.size() > 0){
-            refreshLatestTx(txs.get(0));
+            refreshLatestTx(txWrappers.get(0));
         }
     }
 
-    public void refreshTxHistory(Transaction transaction){
-        TransactionWrapper txWrapper = TransactionWrapper.from(transaction, wallet.wallet());
-        String time = Utils.getMonthYearFromDate(txWrapper.getTime());
+    public void refreshTxHistory(Transaction transaction, TransactionConfidence.ConfidenceType type){
         if (monthlyReportMap == null){
-            refreshTxHistory();
+            refreshTxHistory(type);
         }
+        TransactionWrapper txWrapper = TransactionWrapper.from(transaction, wallet.wallet());
+        refreshLatestTx(txWrapper);
+        if(!transaction.getConfidence().getConfidenceType().equals(type)){
+            return;
+        }
+
+
+        String time = Utils.getMonthYearFromDate(txWrapper.getTime());
+
         if (monthlyReportMap.containsEntry(time, txWrapper)){
             monthlyReportMap.remove(time, txWrapper);
         }
         monthlyReportMap.put(time, txWrapper);
         monthlyReports.postValue(getMonthlyReportList(monthlyReportMap));
-        refreshLatestTx(txWrapper);
     }
 
-    public MutableLiveData<List<MonthlyReport>> getMonthlyReports() {
+    public LiveData<List<MonthlyReport>> getMonthlyReports() {
         return monthlyReports;
     }
 
-    public MutableLiveData<String> getExpectedBalance() {
+    public LiveData<String> getExpectedBalance() {
         return expectedBalance;
     }
 
-    public MutableLiveData<String> getAvailableBalance() {
+    public LiveData<String> getAvailableBalance() {
         return availableBalance;
     }
 
-    public MutableLiveData<String> getCurrentReceivingAddress() {
+    public LiveData<String> getCurrentReceivingAddress() {
         return currentReceivingAddress;
     }
 
@@ -117,17 +137,17 @@ public class WalletLiveData implements LocalWallet.EventListener {
             case TX_RECEIVED:
                 refreshCurrentReceivingAddress();
                 refreshExpectedBalance();
-                refreshTxHistory((Transaction) content.getContent());
+                refreshTxHistory((Transaction) content.getContent(),filter);
                 break;
             case TX_ACCEPTED:
                 refreshAvailableBalance();
-                refreshTxHistory((Transaction) content.getContent());
+                refreshTxHistory((Transaction) content.getContent(),filter);
                 refreshAvailableBalance();
                 break;
             case SETUP_COMPLETED:
                 Log.e("HD","refresh wallet");
                 refreshAvailableBalance();
-                refreshTxHistory();
+                refreshTxHistory(filter);
                 refreshExpectedBalance();
                 refreshCurrentReceivingAddress();
                 break;

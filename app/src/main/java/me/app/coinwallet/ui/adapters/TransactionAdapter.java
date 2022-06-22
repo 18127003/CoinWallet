@@ -14,6 +14,8 @@ import me.app.coinwallet.data.transaction.TransactionWrapper;
 import me.app.coinwallet.utils.Utils;
 import org.bitcoinj.core.TransactionConfidence;
 
+import java.util.stream.Collectors;
+
 public class TransactionAdapter extends BaseAdapter<TransactionWrapper, TransactionAdapter.ViewHolder> {
     private Resources res;
     public TransactionAdapter(OnItemClickListener<TransactionWrapper> listener) {

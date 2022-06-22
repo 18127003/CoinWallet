@@ -66,4 +66,5 @@ public class TxHistoryAdapter extends BaseAdapter<MonthlyReport, TxHistoryAdapte
         }
     }
 
+
 }

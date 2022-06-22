@@ -32,15 +32,13 @@ import me.app.coinwallet.ui.adapters.AddressBookAdapter;
 import me.app.coinwallet.transfer.PaymentRequest;
 import me.app.coinwallet.viewmodels.TransferPageViewModel;
 
-import java.util.Objects;
-
 public class TransferFragment extends Fragment {
 
     private TextInputEditText addressText;
     private TextInputEditText amountText;
     private SwitchMaterial saveContactSwitch;
-    private MaterialCardView sendMethodCard;
     private View saveContactView;
+    private View sendMethodView;
     private FrameLayout saveContactLayout;
     private RecyclerView addressBook;
     private Button sendBtn;
@@ -74,17 +72,14 @@ public class TransferFragment extends Fragment {
         authenticateHandler = new AuthenticateHandler(this, new AuthenticateHandler.AuthenticateResultCallback() {
             @Override
             public void onPasswordVerified(String password) {
-                final String sendAddressText = Objects.requireNonNull(addressText.getText()).toString();
-                final String sendAmountText =  Objects.requireNonNull(amountText.getText()).toString();
                 if(viewModel.paymentRequest != null){
-                    if(!viewModel.paymentRequest.hasAmount()){
-                        viewModel.paymentRequest = viewModel.paymentRequest.mergeWithEditedValues(sendAmountText);
-                    }
                     viewModel.send(password);
                 } else {
+                    final String sendAddressText = addressText.getText().toString();
+                    final String sendAmountText =  amountText.getText().toString();
                     viewModel.send(sendAddressText, sendAmountText, password);
+                    saveContact(sendAddressText);
                 }
-                saveContact(sendAddressText);
             }
 
             @Override
@@ -106,7 +101,6 @@ public class TransferFragment extends Fragment {
         saveContactSwitch = view.findViewById(R.id.save_contact_switch);
         sendBtn = view.findViewById(R.id.send_button);
         saveContactLayout = view.findViewById(R.id.save_contact_layout);
-        sendMethodCard = view.findViewById(R.id.send_method_card);
         selectedSendMethodHint = view.findViewById(R.id.selected_method_hint);
         sendBtn.setOnClickListener(v -> authenticateHandler.accessPasswordDialog());
         saveContactView = LayoutInflater.from(getContext()).inflate(R.layout.save_contact_view, saveContactLayout, false);
@@ -124,7 +118,8 @@ public class TransferFragment extends Fragment {
                 saveContactLayout.removeView(saveContactView);
             }
         });
-        sendMethodCard.setOnClickListener(v->{
+        sendMethodView= view.findViewById(R.id.send_method_view);
+        sendMethodView.setOnClickListener(v->{
             selectSendMethodLauncher.launch(viewModel.sendMethod.getValue());
         });
         viewModel.sendMethod.observe(this, s->selectedSendMethodHint.setText(s.toString()));
@@ -149,8 +144,8 @@ public class TransferFragment extends Fragment {
             addressText.setEnabled(false);
         }
         if(paymentRequest.hasAmount()){
-            amountText.setText(paymentRequest.getAmount().toBtc().toPlainString());
-            amountText.setEnabled(false);
+            amountText.setText(String.valueOf(paymentRequest.getAmount().toBtc().doubleValue()));
+//            amountText.setEnabled(false);
         }
     }
 

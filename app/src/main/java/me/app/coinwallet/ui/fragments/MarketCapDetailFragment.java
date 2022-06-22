@@ -11,15 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import me.app.coinwallet.R;
-import me.app.coinwallet.data.marketcap.MarketCapEntry;
+import me.app.coinwallet.data.marketcap.MarketCapEntity;
 import me.app.coinwallet.utils.ChartUtil;
 
 public class MarketCapDetailFragment extends Fragment {
-    private MarketCapEntry marketCapEntry;
+    private MarketCapEntity marketCapEntity;
     LineChart chart;
 
     public MarketCapDetailFragment(){}
@@ -36,7 +33,7 @@ public class MarketCapDetailFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Intent intent= requireActivity().getIntent();
-        marketCapEntry= intent.getParcelableExtra("chart_detail");
+        marketCapEntity = intent.getParcelableExtra("chart_detail");
     }
 
     @Override
@@ -50,7 +47,7 @@ public class MarketCapDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         chart = view.findViewById(R.id.chart);
-        new ChartUtil(marketCapEntry, getResources()).chart(chart)
+        new ChartUtil(marketCapEntity, getResources()).chart(chart)
                 .axisColor(R.color.white)
                 .description()
                 .descriptionColor(R.color.white)
@@ -59,18 +56,16 @@ public class MarketCapDetailFragment extends Fragment {
         TextView price=view.findViewById(R.id.price);
         TextView marketCapDominationIndex=view.findViewById(R.id.market_cap_domination_index);
         TextView marketCapitalization=view.findViewById(R.id.market_capitalization);
-        TextView tradingVolume=view.findViewById(R.id.trading_volume);
         TextView volumeMarketCap=view.findViewById(R.id.volume_marketCap);
         TextView highLow=view.findViewById(R.id.low_high_24h);
         TextView rank=view.findViewById(R.id.ranking);
 
-        price.setText(""+marketCapEntry.getCurrentPrice());
-        highLow.setText(""+marketCapEntry.getLow()+"/"+marketCapEntry.getHigh());
-        tradingVolume.setText(""+marketCapEntry.getTotalVolume());
-        marketCapDominationIndex.setText(""+marketCapEntry.getFluctuation());
-        marketCapitalization.setText(""+marketCapEntry.getMarketCap());
-        rank.setText(""+marketCapEntry.getMarketCapRank());
-        volumeMarketCap.setText(""+marketCapEntry.getTotalVolume());
+        price.setText(""+ marketCapEntity.getCurrentPrice());
+        highLow.setText(""+ marketCapEntity.getLow()+"/"+ marketCapEntity.getHigh());
+        marketCapDominationIndex.setText(""+ marketCapEntity.getFluctuation());
+        marketCapitalization.setText(""+ marketCapEntity.getMarketCap());
+        rank.setText(""+ marketCapEntity.getMarketCapRank());
+        volumeMarketCap.setText(""+ marketCapEntity.getTotalVolume());
     }
 
 

@@ -6,8 +6,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-@Database(entities = { MarketCapEntry.class }, version = 1, exportSchema = false)
-@TypeConverters({MarketCapEntry.EntryConverters.class})
+@Database(entities = { MarketCapEntity.class }, version = 1, exportSchema = false)
+@TypeConverters({MarketCapEntity.EntryConverters.class})
 public abstract class MarketCapDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "market_caps";
     private static MarketCapDatabase INSTANCE;

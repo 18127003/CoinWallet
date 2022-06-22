@@ -7,16 +7,15 @@ import androidx.annotation.NonNull;
 import androidx.room.*;
 import com.github.mikephil.charting.data.Entry;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Entity(tableName = MarketCapEntry.TABLE_NAME,
+@Entity(tableName = MarketCapEntity.TABLE_NAME,
         indices = { @Index(value = { "source", "name" }, unique = true) }
         )
-public final class MarketCapEntry implements Parcelable {
+public final class MarketCapEntity implements Parcelable {
     public static final String TABLE_NAME = "market_caps";
 
     @PrimaryKey()
@@ -72,10 +71,10 @@ public final class MarketCapEntry implements Parcelable {
     @ColumnInfo(name = "chart")
     private final List<Entry> chart;
 
-    public MarketCapEntry(@NonNull Long id, @NonNull String coinId, @NonNull String source, @NonNull String name, @NonNull String symbol,
-                          @NonNull Float fluctuation, @NonNull Double high, @NonNull Double low,
-                          @NonNull Double totalVolume, @NonNull String image,
-                          double currentPrice, long marketCap, int marketCapRank, List<Entry> chart) {
+    public MarketCapEntity(@NonNull Long id, @NonNull String coinId, @NonNull String source, @NonNull String name, @NonNull String symbol,
+                           @NonNull Float fluctuation, @NonNull Double high, @NonNull Double low,
+                           @NonNull Double totalVolume, @NonNull String image,
+                           double currentPrice, long marketCap, int marketCapRank, List<Entry> chart) {
         this.id = id;
         this.coinId=coinId;
         this.source = source;
@@ -92,7 +91,7 @@ public final class MarketCapEntry implements Parcelable {
         this.chart = chart;
     }
 
-    public MarketCapEntry(final String source, final MarketCapJson marketCapJson) {
+    public MarketCapEntity(final String source, final MarketCapJson marketCapJson) {
         Log.e("HD",marketCapJson.toString());
         this.source = source;
         this.name = marketCapJson.name;
@@ -110,7 +109,7 @@ public final class MarketCapEntry implements Parcelable {
         this.coinId=marketCapJson.coinId;
     }
 
-    protected MarketCapEntry(Parcel in) {
+    protected MarketCapEntity(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
         } else {
@@ -147,15 +146,15 @@ public final class MarketCapEntry implements Parcelable {
         chart = in.createTypedArrayList(Entry.CREATOR);
     }
 
-    public static final Creator<MarketCapEntry> CREATOR = new Creator<MarketCapEntry>() {
+    public static final Creator<MarketCapEntity> CREATOR = new Creator<MarketCapEntity>() {
         @Override
-        public MarketCapEntry createFromParcel(Parcel in) {
-            return new MarketCapEntry(in);
+        public MarketCapEntity createFromParcel(Parcel in) {
+            return new MarketCapEntity(in);
         }
 
         @Override
-        public MarketCapEntry[] newArray(int size) {
-            return new MarketCapEntry[size];
+        public MarketCapEntity[] newArray(int size) {
+            return new MarketCapEntity[size];
         }
     };
 

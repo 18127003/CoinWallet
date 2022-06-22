@@ -59,40 +59,36 @@
 			        style="@style/ButtonStyle"
 			        android:text="@string/send_button_label"/>
 		</androidx.constraintlayout.widget.ConstraintLayout>
-		<com.google.android.material.card.MaterialCardView
+		<RelativeLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				style="@style/TransparentCardView"
-				android:id="@+id/send_method_card">
-			<RelativeLayout
-					android:layout_width="match_parent"
+				android:padding="20dp"
+				android:id="@+id/send_method_view"
+				android:orientation="horizontal">
+			<TextView
+					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:orientation="horizontal">
-				<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						style="@style/h5"
-						android:text="@string/send_method"
-						android:padding="10dp"
-						android:layout_alignParentStart="true"
-						android:layout_toStartOf="@id/selected_method_hint"/>
-				<TextView
-						android:id="@+id/selected_method_hint"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						style="@style/h6.white"
-						android:layout_toStartOf="@id/select_send_method_expand"
-						android:layout_centerInParent="true"
-						/>
-				<ImageButton
-						android:id="@+id/select_send_method_expand"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:background="@drawable/ic_navigate_next_white"
-						android:layout_alignParentEnd="true"
-						android:layout_centerVertical="true"/>
-			</RelativeLayout>
-		</com.google.android.material.card.MaterialCardView>
+					style="@style/h5"
+					android:text="@string/send_method"
+
+					android:layout_alignParentStart="true"
+					android:layout_toStartOf="@id/selected_method_hint"/>
+			<TextView
+					android:id="@+id/selected_method_hint"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					style="@style/h6.white"
+					android:layout_toStartOf="@id/select_send_method_expand"
+					android:layout_centerInParent="true"
+			/>
+			<ImageButton
+					android:id="@+id/select_send_method_expand"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:background="@drawable/ic_navigate_next_white"
+					android:layout_alignParentEnd="true"
+					android:layout_centerVertical="true"/>
+		</RelativeLayout>
 		<RelativeLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"

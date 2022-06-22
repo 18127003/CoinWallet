@@ -10,7 +10,6 @@ import com.google.common.base.Stopwatch;
 import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.Moshi;
 import me.app.coinwallet.Constants;
-import me.app.coinwallet.WalletApplication;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,7 @@ public class MarketCapRepository {
     private static final Logger log = LoggerFactory.getLogger(MarketCapRepository.class);
     private final MarketCapDatabase db;
     private final MarketCapDao dao;
-    private final MutableLiveData<List<MarketCapEntry>> trends = new MutableLiveData<>();
+    private final MutableLiveData<List<MarketCapEntity>> trends = new MutableLiveData<>();
 
     private final AtomicLong lastUpdated = new AtomicLong(0);
     private final AtomicLong lastUpdatedTrend = new AtomicLong(0);
@@ -73,7 +72,7 @@ public class MarketCapRepository {
                 Log.e("HD","Market cap request success");
                 try {
                     if (response.isSuccessful()) {
-                        List<MarketCapEntry> data = marketCapHost.parse(response.body().source());
+                        List<MarketCapEntity> data = marketCapHost.parse(response.body().source());
                         Log.e("HD",data.size()+"llll");
                         dao.insertOrUpdateAll(data);
 
@@ -99,7 +98,7 @@ public class MarketCapRepository {
         });
     }
 
-    public LiveData<List<MarketCapEntry>> getTrends() {
+    public LiveData<List<MarketCapEntity>> getTrends() {
         return trends;
     }
 
@@ -118,7 +117,7 @@ public class MarketCapRepository {
                 Log.e("HD","Trend request success");
                 try {
                     if (response.isSuccessful()) {
-                        List<MarketCapEntry> data = marketCapHost.parse(response.body().source());
+                        List<MarketCapEntity> data = marketCapHost.parse(response.body().source());
                         trends.postValue(data);
                         MarketCapRepository.this.lastUpdatedTrend.set(now);
                         watch.stop();

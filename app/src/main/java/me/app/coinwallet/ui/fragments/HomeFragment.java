@@ -31,8 +31,7 @@ public class HomeFragment extends Fragment {
     TextView invisibleText;
     ImageButton visible;
     HomePageViewModel viewModel;
-    Button sendBtn;
-    Button bluetoothBtn;
+    Button exchangeRatesBtn;
     Button requestBtn;
     MaterialCardView transactionCard;
     TextView receiver;
@@ -74,20 +73,16 @@ public class HomeFragment extends Fragment {
         balance = view.findViewById(R.id.balance_text);
         invisibleText = view.findViewById(R.id.invisible);
         visible=view.findViewById(R.id.invisible_button);
-        sendBtn = view.findViewById(R.id.send_button);
         visible.setBackgroundResource(R.drawable.ic_visibility_off);
         visible.setOnClickListener(v-> hideOrShow());
         viewModel.getBalance().observe(this, s -> balance.setText(s));
-        sendBtn.setOnClickListener(v->{
+
+        exchangeRatesBtn = view.findViewById(R.id.exchange_rate_btn);
+        exchangeRatesBtn.setOnClickListener(v->{
             Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
             intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, ExchangeRateFragment.class);
             intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Exchange rate");
             startActivity(intent);
-        });
-
-        bluetoothBtn = view.findViewById(R.id.bt_text_button);
-        bluetoothBtn.setOnClickListener(v->{
-
         });
 
         requestBtn = view.findViewById(R.id.request_button);

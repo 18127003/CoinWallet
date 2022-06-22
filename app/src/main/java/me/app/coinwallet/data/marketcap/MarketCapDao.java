@@ -11,18 +11,18 @@ import java.util.List;
 @Dao
 public interface MarketCapDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOrUpdate(MarketCapEntry marketCapEntry);
+    void insertOrUpdate(MarketCapEntity marketCapEntity);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOrUpdateAll(List<MarketCapEntry> marketCapEntries);
+    void insertOrUpdateAll(List<MarketCapEntity> marketCapEntries);
 
     @Query("SELECT * FROM market_caps ORDER BY market_cap_rank COLLATE LOCALIZED ASC Limit 20" )
-    LiveData<List<MarketCapEntry>> findAll();
+    LiveData<List<MarketCapEntity>> findAll();
 
     @Query("SELECT * FROM market_caps WHERE name LIKE '%' || :filter || '%' ORDER BY name " +
             "COLLATE LOCALIZED ASC")
-    LiveData<List<MarketCapEntry>> findByFilter(String filter);
+    LiveData<List<MarketCapEntity>> findByFilter(String filter);
 
     @Query("SELECT * FROM market_caps WHERE name = :name")
-    MarketCapEntry findByName(String name);
+    MarketCapEntity findByName(String name);
 }

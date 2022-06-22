@@ -41,7 +41,7 @@
 	<string name="confirm_password">Mật khẩu xác nhận</string>
 	<string name="create_btn_label">Tạo ví</string>
 	<string name="restore_btn_label">Phục hồi ví</string>
-	<string name="balance_label">Số dư</string>
+	<string name="Amount">Số dư</string>
 	<string name="from">Từ</string>
 	<string name="to">Chuyển sang</string>
 	<string name="type_coin">Nhập tên coin</string>
@@ -68,4 +68,7 @@
 	<string name="marketCapDominationIndex" translatable="false">Chỉ số thống trị vốn hóa thị trường</string>
 	<string name="volume_and_marketCap" translatable="false">Khối lượng vốn hóa thị trường</string>
 	<string name="low_high_24h" translatable="false">Thấp nhất/Cao nhất trên 24h</string>
+    <string name="all">Tất cả</string>
+    <string name="exchange_rate_button_label">Tỉ xuất chuyển đổi</string>
+	<string name="amount_label">Nhập số tiền</string>
 </resources>

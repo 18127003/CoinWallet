@@ -1,9 +1,7 @@
 package me.app.coinwallet.ui.adapters;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.squareup.picasso.Picasso;
 import me.app.coinwallet.R;
-import me.app.coinwallet.data.marketcap.MarketCapEntry;
+import me.app.coinwallet.data.marketcap.MarketCapEntity;
 import me.app.coinwallet.utils.ChartUtil;
-import org.w3c.dom.Text;
 
 
-public class MarketCapAdapter extends BaseAdapter<MarketCapEntry, MarketCapAdapter.ViewHolder> {
+public class MarketCapAdapter extends BaseAdapter<MarketCapEntity, MarketCapAdapter.ViewHolder> {
 
     Resources res;
-    public MarketCapAdapter(OnItemClickListener<MarketCapEntry> listener, Resources res){
+    public MarketCapAdapter(OnItemClickListener<MarketCapEntity> listener, Resources res){
         super(listener);
         this.res=res;
     }
@@ -41,7 +34,7 @@ public class MarketCapAdapter extends BaseAdapter<MarketCapEntry, MarketCapAdapt
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MarketCapEntry entry = data.get(position);
+        MarketCapEntity entry = data.get(position);
         holder.card.setOnClickListener(v -> listener.onClick(entry));
         holder.symbol.setText(entry.getSymbol());
         holder.name.setText(entry.getName());
