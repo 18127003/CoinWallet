@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
@@ -27,10 +28,13 @@ import com.google.android.material.textfield.TextInputEditText;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.transfer.SendMethod;
+import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.adapters.AddressBookAdapter;
 import me.app.coinwallet.transfer.PaymentRequest;
 import me.app.coinwallet.viewmodels.TransferPageViewModel;
+
+import java.util.Objects;
 
 public class TransferFragment extends Fragment {
 
@@ -72,19 +76,23 @@ public class TransferFragment extends Fragment {
         authenticateHandler = new AuthenticateHandler(this, new AuthenticateHandler.AuthenticateResultCallback() {
             @Override
             public void onPasswordVerified(String password) {
+                final String sendAddressText = Objects.requireNonNull(addressText.getText()).toString();
+                final String sendAmountText =  Objects.requireNonNull(amountText.getText()).toString();
                 if(viewModel.paymentRequest != null){
+                    if(!viewModel.paymentRequest.hasAmount()){
+                        viewModel.paymentRequest = viewModel.paymentRequest.mergeWithEditedValues(sendAmountText);
+                    }
                     viewModel.send(password);
                 } else {
-                    final String sendAddressText = addressText.getText().toString();
-                    final String sendAmountText =  amountText.getText().toString();
                     viewModel.send(sendAddressText, sendAmountText, password);
-                    saveContact(sendAddressText);
                 }
+                saveContact(sendAddressText);
             }
 
             @Override
             public void onPasswordDenied() {
                 // Toast
+                ((BaseActivity) requireActivity()).configuration.toastUtil.postToast("Wrong password", Toast.LENGTH_SHORT);
             }
         });
 
@@ -144,8 +152,8 @@ public class TransferFragment extends Fragment {
             addressText.setEnabled(false);
         }
         if(paymentRequest.hasAmount()){
-            amountText.setText(String.valueOf(paymentRequest.getAmount().toBtc().doubleValue()));
-//            amountText.setEnabled(false);
+            amountText.setText(paymentRequest.getAmount().toBtc().toPlainString());
+            amountText.setEnabled(false);
         }
     }
 

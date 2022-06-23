@@ -60,9 +60,19 @@ public class TransferPageViewModel extends AndroidViewModel {
         switch (method.method){
             case DEFAULT:
                 if(Utils.hasInternetAccess(getApplication())){
-                    sendTask = new SimpleSendTask(configuration) {};
+                    sendTask = new SimpleSendTask(configuration) {
+                        @Override
+                        protected void onSuccess(Transaction transaction) {
+                            configuration.toastUtil.postToast("Send money success", Toast.LENGTH_SHORT);
+                        }
+                    };
                 } else {
-                    sendTask = new OfflineSendTask(configuration) {};
+                    sendTask = new OfflineSendTask(configuration) {
+                        @Override
+                        protected void onSuccess(Transaction transaction) {
+                            configuration.toastUtil.postToast("Send money success, wait for Internet to broadcast", Toast.LENGTH_SHORT);
+                        }
+                    };
                 }
                 break;
             case BLUETOOTH:
@@ -79,12 +89,17 @@ public class TransferPageViewModel extends AndroidViewModel {
                 sendTask = new OfflineSendTask(configuration) {
                     @Override
                     protected void onSuccess(Transaction transaction) {
-                        // toast
+                        configuration.toastUtil.postToast("Send money success, wait for Internet to broadcast", Toast.LENGTH_SHORT);
                     }
                 };
                 break;
             default:
-                sendTask = new SimpleSendTask(configuration) {};
+                sendTask = new SimpleSendTask(configuration) {
+                    @Override
+                    protected void onSuccess(Transaction transaction) {
+                        configuration.toastUtil.postToast("Send money success", Toast.LENGTH_SHORT);
+                    }
+                };
         }
         sendTask.send(paymentRequest.toSendRequest(), password);
     }

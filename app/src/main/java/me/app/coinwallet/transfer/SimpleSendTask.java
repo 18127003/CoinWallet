@@ -26,8 +26,9 @@ public abstract class SimpleSendTask extends SendTask{
     @Override
     void onSend(SendRequest sendRequest, String password) {
         try{
-            Log.e("MN",sendRequest.tx.getOutput(0).getValue().toFriendlyString());
-            localWallet.send(sendRequest, password);
+            Log.e("HD",sendRequest.tx.getOutput(0).getValue().toFriendlyString());
+            Transaction tx = localWallet.send(sendRequest, password);
+            onSuccess(tx);
         } catch (InsufficientMoneyException e){
             final Coin missing = e.missing;
             String m = missing==null?"coins": missing.toFriendlyString();

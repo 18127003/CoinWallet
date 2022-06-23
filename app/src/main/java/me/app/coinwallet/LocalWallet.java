@@ -102,10 +102,10 @@ public class LocalWallet {
         return BitcoinURI.convertToBitcoinURI(address, amountToSend, label, message);
     }
 
-    public void send(SendRequest sendRequest, String password) throws InsufficientMoneyException, Wallet.DustySendRequested,
+    public Transaction send(SendRequest sendRequest, String password) throws InsufficientMoneyException, Wallet.DustySendRequested,
             Wallet.ExceededMaxTransactionSize, Wallet.CouldNotAdjustDownwards, Wallet.BadWalletEncryptionKeyException {
         sendRequest.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
-        sendRequest.coinSelector = Constants.DEFAULT_COIN_SELECTOR;
+//        sendRequest.coinSelector = Constants.DEFAULT_COIN_SELECTOR;
         if (password != null){
             sendRequest.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
         }
@@ -115,6 +115,7 @@ public class LocalWallet {
             Log.e("HD", "Tx broadcast completed");
             notifyObservers(WalletNotificationType.TX_BROADCAST_COMPLETED, null);
         }, Runnable::run);
+        return sendResult.tx;
     }
 
     public Transaction sendOffline(SendRequest sendRequest, String password) throws InsufficientMoneyException, Wallet.DustySendRequested,
