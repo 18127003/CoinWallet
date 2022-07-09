@@ -1,6 +1,7 @@
 package me.app.coinwallet.ui.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,13 @@ public class TxHistoryAdapter extends BaseAdapter<MonthlyReport, TxHistoryAdapte
     private Context context;
     private final RecyclerView.RecycledViewPool viewPool;
     private final OnItemClickListener<TransactionWrapper> txListener;
+    private Resources res;
 
-    public TxHistoryAdapter(OnItemClickListener<TransactionWrapper> txListener){
+    public TxHistoryAdapter(OnItemClickListener<TransactionWrapper> txListener, Resources res){
         super(null);
         this.txListener = txListener;
         viewPool = new RecyclerView.RecycledViewPool();
+        this.res = res;
     }
 
     @NonNull
@@ -38,12 +41,11 @@ public class TxHistoryAdapter extends BaseAdapter<MonthlyReport, TxHistoryAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MonthlyReport monthlyReport = data.get(position);
-        TransactionAdapter adapter = new TransactionAdapter(txListener);
+        TransactionAdapter adapter = new TransactionAdapter(txListener, res);
         adapter.update(monthlyReport.getTransactions());
         holder.transactions.setAdapter(adapter);
         holder.transactions.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         holder.transactions.setRecycledViewPool(viewPool);
-//        monthlyReport.getTransactions().observe(this, adapter::update);
         holder.income.setText(monthlyReport.sumIncome());
         holder.outcome.setText(monthlyReport.sumOutcome());
         holder.time.setText(monthlyReport.getTime());

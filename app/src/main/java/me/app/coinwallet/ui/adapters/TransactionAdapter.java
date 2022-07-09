@@ -18,15 +18,15 @@ import java.util.stream.Collectors;
 
 public class TransactionAdapter extends BaseAdapter<TransactionWrapper, TransactionAdapter.ViewHolder> {
     private Resources res;
-    public TransactionAdapter(OnItemClickListener<TransactionWrapper> listener) {
+    public TransactionAdapter(OnItemClickListener<TransactionWrapper> listener, Resources res) {
         super(listener);
+        this.res = res;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_item_card,parent,false);
-        res=parent.getResources();
         return new TransactionAdapter.ViewHolder(rootView);
     }
 

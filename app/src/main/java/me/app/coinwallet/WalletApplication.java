@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager;
 import me.app.coinwallet.data.livedata.WalletLiveData;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.utils.LocaleUtil;
+import me.app.coinwallet.utils.NotificationHandler;
 import me.app.coinwallet.utils.ToastUtil;
 import org.bitcoinj.utils.Threading;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ public class WalletApplication extends MultiDexApplication {
 
         final Configuration config = getConfiguration();
         config.updateLastVersionCode(packageInfo.versionCode);
-
         WalletLiveData.get();
     }
 

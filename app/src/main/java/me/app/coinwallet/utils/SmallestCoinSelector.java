@@ -63,7 +63,8 @@ public class SmallestCoinSelector implements CoinSelector {
         // Only pick chain-included transactions, or transactions that are ours and building.
         TransactionConfidence confidence = tx.getConfidence();
         TransactionConfidence.ConfidenceType type = confidence.getConfidenceType();
-        return type.equals(TransactionConfidence.ConfidenceType.BUILDING) &&
+        return type.equals(TransactionConfidence.ConfidenceType.BUILDING) ||
+                type.equals(TransactionConfidence.ConfidenceType.PENDING) &&
                 confidence.getSource().equals(TransactionConfidence.Source.SELF) &&
                 (confidence.numBroadcastPeers() > 0 || tx.getParams().getId().equals(NetworkParameters.ID_REGTEST));
     }

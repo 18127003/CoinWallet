@@ -3,8 +3,8 @@ package me.app.coinwallet.bluetooth;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
+import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
-import me.app.coinwallet.utils.BluetoothUtil;
 import org.bitcoin.protocols.payments.Protos;
 import org.bitcoinj.protocols.payments.PaymentProtocol;
 
@@ -33,7 +33,7 @@ public class BluetoothPaymentRequest extends DirectPaymentRequest{
                 throw new IllegalArgumentException("wrong transactions count");
 
             try (final BluetoothSocket socket =
-                         bluetoothDevice.createInsecureRfcommSocketToServiceRecord(BluetoothUtil.CLASSIC_PAYMENT_PROTOCOL_UUID)) {
+                         bluetoothDevice.createInsecureRfcommSocketToServiceRecord(Constants.BLUETOOTH_PAYMENT_PROTOCOL_UUID)) {
                 socket.connect();
                 Log.i("HD","connected to payment protocol "+ bluetoothDevice.getAddress());
                 final DataOutputStream os = new DataOutputStream(socket.getOutputStream());

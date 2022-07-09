@@ -3,7 +3,7 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto">
-	<com.google.android.material.card.MaterialCardView
+	<com.google.android.material.button.MaterialButton
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:padding="20dp"
@@ -11,10 +11,7 @@
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintRight_toRightOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"
-			>
-		<TextView
-				android:id="@+id/mnemonic_label"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-	</com.google.android.material.card.MaterialCardView>
+			android:id="@+id/mnemonic_label"
+			style="@style/OutlinedButtonLabel">
+	</com.google.android.material.button.MaterialButton>
 </androidx.constraintlayout.widget.ConstraintLayout>

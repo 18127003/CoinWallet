@@ -19,4 +19,6 @@
 	<string name="send_method">Send method</string>
 	<string name="select">Select</string>
 	<string name="price">Price</string>
+	<string name="save">Save</string>
+	<string name="mnemonic">Mnemonic</string>
 </resources>

@@ -68,7 +68,7 @@ public class HistoryFragment extends Fragment {
             intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Transaction Detail");
             intent.putExtra("transaction",item);
             startActivity(intent);
-        });
+        }, getResources());
         history.setAdapter(adapter);
         history.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         viewModel.getMonthlyReports().observe(this, adapter::update);

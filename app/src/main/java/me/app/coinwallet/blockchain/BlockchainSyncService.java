@@ -10,10 +10,12 @@ import androidx.lifecycle.LifecycleService;
 import com.google.common.base.Stopwatch;
 import me.app.coinwallet.*;
 import me.app.coinwallet.data.livedata.BlockchainLiveData;
+import me.app.coinwallet.utils.NotificationHandler;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.utils.Threading;
 
+import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -175,7 +177,12 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
             wallet.stopWallet();
         }
         if(resetBlockchainOnShutdown){
-            // TODO: delete blockchain file
+            File chainFile = new File(config.directory, wallet.getLabel()+".spvchain");
+            try {
+                chainFile.delete();
+            } catch (SecurityException e){
+                Log.e("HD", "No access to file "+chainFile.getName());
+            }
         }
         unregisterReceiver(deviceIdleModeReceiver);
         if(SHOULD_RESTART.get()){

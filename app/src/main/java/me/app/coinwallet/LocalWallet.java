@@ -11,10 +11,13 @@ import me.app.coinwallet.data.livedata.WalletLiveData;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
 import org.bitcoinj.core.*;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
+import org.bitcoinj.crypto.EncryptedData;
+import org.bitcoinj.crypto.KeyCrypter;
 import org.bitcoinj.crypto.KeyCrypterException;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.uri.BitcoinURI;
 import org.bitcoinj.wallet.*;
+import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,6 +60,12 @@ public class LocalWallet {
         return wallet.currentReceiveAddress();
     }
 
+    public DeterministicSeed seed(String password){
+        DeterministicSeed seed = wallet.getKeyChainSeed();
+        KeyCrypter keyCrypter = wallet.getKeyCrypter();
+        return seed.decrypt(keyCrypter, "", keyCrypter.deriveKey(password));
+    }
+
     public boolean isEncrypted(){ return wallet.isEncrypted(); }
 
     public String getPlainBalance(){
@@ -96,6 +105,10 @@ public class LocalWallet {
         return wallet.checkPassword(password);
     }
 
+    public void changePassword(String currentPassword, String newPassword) throws Wallet.BadWalletEncryptionKeyException {
+        wallet.changeEncryptionPassword(currentPassword, newPassword);
+    }
+
     public String generatePaymentRequest(double amount, String label, String message){
         Address address = getAddress();
         Coin amountToSend = Coin.ofBtc(BigDecimal.valueOf(amount));
@@ -105,7 +118,7 @@ public class LocalWallet {
     public Transaction send(SendRequest sendRequest, String password) throws InsufficientMoneyException, Wallet.DustySendRequested,
             Wallet.ExceededMaxTransactionSize, Wallet.CouldNotAdjustDownwards, Wallet.BadWalletEncryptionKeyException {
         sendRequest.feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
-//        sendRequest.coinSelector = Constants.DEFAULT_COIN_SELECTOR;
+        sendRequest.coinSelector = Constants.DEFAULT_COIN_SELECTOR;
         if (password != null){
             sendRequest.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
         }
@@ -195,8 +208,8 @@ public class LocalWallet {
         walletAppKit.setDownloadListener(BTCListener);
         walletAppKit.setBlockingStartup(false);
         walletAppKit.setCheckpoints(walletInfo.checkPoint);
-        if(walletInfo.mnemonicRestore!=null){
-            restoreWallet();
+        if(walletInfo.restoreSeed != null){
+            walletAppKit.restoreWalletFromSeed(walletInfo.restoreSeed);
         }
     }
 
@@ -225,16 +238,6 @@ public class LocalWallet {
     public void stopWallet(){
         walletAppKit.stopAsync();
         walletAppKit.awaitTerminated();
-    }
-
-    private void restoreWallet(){
-        try{
-            String passphrase = "";
-            long creationTime = 1409478661L;
-            walletAppKit.restoreWalletFromSeed(new DeterministicSeed(walletInfo.mnemonicRestore, null, passphrase, creationTime));
-        } catch (UnreadableWalletException ex){
-            Log.e("HD","Unreadable wallet");
-        }
     }
 
     public void encryptWallet(String passphrase){
@@ -276,7 +279,7 @@ public class LocalWallet {
 
     public static class WalletInfo{
         public File directory;
-        public String mnemonicRestore;
+        public DeterministicSeed restoreSeed;
         public String label;
         public InputStream checkPoint;
     }

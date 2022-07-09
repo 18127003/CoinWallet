@@ -63,14 +63,14 @@ public class TransferPageViewModel extends AndroidViewModel {
                     sendTask = new SimpleSendTask(configuration) {
                         @Override
                         protected void onSuccess(Transaction transaction) {
-                            configuration.toastUtil.postToast("Send money success", Toast.LENGTH_SHORT);
+                            configuration.toastUtil.toast("Send money success", Toast.LENGTH_SHORT);
                         }
                     };
                 } else {
                     sendTask = new OfflineSendTask(configuration) {
                         @Override
                         protected void onSuccess(Transaction transaction) {
-                            configuration.toastUtil.postToast("Send money success, wait for Internet to broadcast", Toast.LENGTH_SHORT);
+                            configuration.toastUtil.toast("Send money success, wait for Internet to broadcast", Toast.LENGTH_SHORT);
                         }
                     };
                 }
@@ -89,7 +89,7 @@ public class TransferPageViewModel extends AndroidViewModel {
                 sendTask = new OfflineSendTask(configuration) {
                     @Override
                     protected void onSuccess(Transaction transaction) {
-                        configuration.toastUtil.postToast("Send money success, wait for Internet to broadcast", Toast.LENGTH_SHORT);
+                        configuration.toastUtil.toast("Send money success, wait for Internet to broadcast", Toast.LENGTH_SHORT);
                     }
                 };
                 break;
@@ -97,7 +97,7 @@ public class TransferPageViewModel extends AndroidViewModel {
                 sendTask = new SimpleSendTask(configuration) {
                     @Override
                     protected void onSuccess(Transaction transaction) {
-                        configuration.toastUtil.postToast("Send money success", Toast.LENGTH_SHORT);
+                        configuration.toastUtil.toast("Send money success", Toast.LENGTH_SHORT);
                     }
                 };
         }

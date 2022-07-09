@@ -1,4 +1,4 @@
-package me.app.coinwallet;
+package me.app.coinwallet.utils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationChannelCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import me.app.coinwallet.Constants;
+import me.app.coinwallet.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;

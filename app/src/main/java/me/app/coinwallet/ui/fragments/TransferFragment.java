@@ -87,6 +87,8 @@ public class TransferFragment extends Fragment {
                     viewModel.send(sendAddressText, sendAmountText, password);
                 }
                 saveContact(sendAddressText);
+                addressText.getText().clear();
+                amountText.getText().clear();
             }
 
             @Override

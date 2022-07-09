@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.BaseActivity;
-import me.app.coinwallet.utils.BluetoothUtil;
 import me.app.coinwallet.utils.QRUtil;
 import me.app.coinwallet.viewmodels.PaymentQrReceiveViewModel;
 import org.bitcoinj.uri.BitcoinURI;
@@ -94,7 +92,7 @@ public class PaymentQrFragment extends Fragment {
                 qrCode.setImageBitmap(Bitmap.createScaledBitmap(bm,
                         Constants.QR_BITMAP_SCALE_WIDTH, Constants.QR_BITMAP_SCALE_HEIGHT, false));
             }
-            boolean useBluetooth = Boolean.parseBoolean((String) uri.getParameterByName(BluetoothUtil.MAC_URI_PARAM));
+            boolean useBluetooth = Boolean.parseBoolean((String) uri.getParameterByName(Constants.BT_ENABLED_PARAM));
             if(useBluetooth){
                 bluetoothHandler.enableBluetooth();
                 bluetoothNotify.setText("Please stay on this screen until you received the payment");

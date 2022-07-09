@@ -5,10 +5,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import me.app.coinwallet.Constants;
-import me.app.coinwallet.utils.BluetoothUtil;
 import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.protocols.payments.PaymentProtocol;
@@ -82,7 +80,7 @@ public class PaymentRequest implements Parcelable {
     public static PaymentRequest fromBitcoinUri(final BitcoinURI bitcoinUri) {
         final Address address = bitcoinUri.getAddress();
         final List<Output> outputs = address != null ? buildSimplePayTo(bitcoinUri.getAmount(), address) : null;
-        final boolean useBluetooth = Boolean.parseBoolean((String) bitcoinUri.getParameterByName(BluetoothUtil.MAC_URI_PARAM));
+        final boolean useBluetooth = Boolean.parseBoolean((String) bitcoinUri.getParameterByName(Constants.BT_ENABLED_PARAM));
         return new PaymentRequest(Standard.BIP21, outputs, bitcoinUri.getLabel(), useBluetooth);
     }
 

@@ -3,14 +3,13 @@ package me.app.coinwallet.viewmodels;
 import android.bluetooth.BluetoothAdapter;
 import androidx.lifecycle.ViewModel;
 import me.app.coinwallet.LocalWallet;
-import me.app.coinwallet.bluetooth.AcceptBluetoothThread;
 import me.app.coinwallet.bluetooth.SimpleBluetoothThread;
 import org.bitcoinj.core.Transaction;
 
 import java.io.IOException;
 
 public class PaymentQrReceiveViewModel extends ViewModel {
-    private AcceptBluetoothThread bluetoothThread;
+    private SimpleBluetoothThread bluetoothThread;
     private final LocalWallet localWallet = LocalWallet.getInstance();
 
     public void initBtThread(BluetoothAdapter bluetoothAdapter) throws IOException {

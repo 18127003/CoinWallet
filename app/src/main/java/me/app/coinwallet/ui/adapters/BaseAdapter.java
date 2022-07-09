@@ -34,7 +34,6 @@ public abstract class BaseAdapter<T, N extends RecyclerView.ViewHolder> extends 
     }
 
     public void update(List<T> newData){
-        Log.e("HD","Update adapter data " + newData.size());
         data.clear();
         data = newData;
         notifyDataSetChanged();

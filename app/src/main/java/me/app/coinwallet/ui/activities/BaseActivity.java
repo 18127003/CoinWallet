@@ -1,6 +1,7 @@
 package me.app.coinwallet.ui.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,10 +53,14 @@ public abstract class BaseActivity extends AppCompatActivity {
             } catch (NoSuchMethodException| IllegalAccessException| IllegalArgumentException| InvocationTargetException e){
                 // Ignore
             }
-            transaction.addToBackStack(null);
         }
         transaction.replace(frameId, current, fragment.getSimpleName());
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void loadFragmentOut(Class<? extends Fragment> fragment, String label){
+        Intent intent = SingleFragmentActivity.newActivity(this, fragment, label);
+        startActivity(intent);
     }
 }

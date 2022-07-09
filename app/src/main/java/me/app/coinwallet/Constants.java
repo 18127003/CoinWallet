@@ -10,6 +10,7 @@ import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.wallet.CoinSelector;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public final class Constants {
@@ -42,6 +43,12 @@ public final class Constants {
     public static final Script.ScriptType DEFAULT_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2WPKH;
 
     public static final BaseEncoding HEX = BaseEncoding.base16().lowerCase();
+
+    public static final UUID BLUETOOTH_PAYMENT_PROTOCOL_UUID = UUID.fromString("3357A7BB-762D-464A-8D9A-DCA592D57D5B");
+
+    public static final String BLUETOOTH_PAYMENT_PROTOCOL_NAME = "Bitcoin classic payment protocol BIP21";
+
+    public static final String BT_ENABLED_PARAM = "bt";
 
     /** Number of confirmations until a transaction is fully confirmed. */
     public static final int MAX_NUM_CONFIRMATIONS = 7;

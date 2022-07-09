@@ -1,5 +1,7 @@
 package me.app.coinwallet.transfer;
 
+import android.os.Handler;
+import android.os.Looper;
 import me.app.coinwallet.Configuration;
 import me.app.coinwallet.Constants;
 import org.bitcoinj.core.Coin;
@@ -8,13 +10,14 @@ import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.Wallet;
 
 import java.util.concurrent.Executor;
-import java.util.logging.Handler;
 
 public abstract class SendTask {
     protected final Configuration configuration;
+    protected final Handler callbackHandler;
 
     protected SendTask(final Configuration configuration){
         this.configuration = configuration;
+        callbackHandler = new Handler(Looper.getMainLooper());
     }
 
     public void send(SendRequest sendRequest, String password){

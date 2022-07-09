@@ -78,10 +78,9 @@ public class WalletLiveData implements LocalWallet.EventListener {
         }
         TransactionWrapper txWrapper = TransactionWrapper.from(transaction, wallet.wallet());
         refreshLatestTx(txWrapper);
-        if(!transaction.getConfidence().getConfidenceType().equals(type)){
+        if(type != null && !transaction.getConfidence().getConfidenceType().equals(type)){
             return;
         }
-
 
         String time = Utils.getMonthYearFromDate(txWrapper.getTime());
 
@@ -142,7 +141,6 @@ public class WalletLiveData implements LocalWallet.EventListener {
             case TX_ACCEPTED:
                 refreshAvailableBalance();
                 refreshTxHistory((Transaction) content.getContent(),filter);
-                refreshAvailableBalance();
                 break;
             case SETUP_COMPLETED:
                 Log.e("HD","refresh wallet");

@@ -77,35 +77,37 @@
 	<string name="confirmation">Confirmation</string>
 	<string name="fee">Fee</string>
 	<string name="tx_update_time">Update time</string>
-    <string name="receive">Receive</string>
-	<string name="transaction_id" >Transaction ID</string>
-    <string name="generate_qr">Generate qr</string>
-    <string name="request">Request</string>
-    <string name="select_paired_device">Select a device</string>
-    <string name="send_default">Default</string>
-    <string name="send_offline">Send offline</string>
-    <string name="send_bluetooth">Send bluetooth</string>
-    <string name="send_method">Send method</string>
-    <string name="select">Select</string>
-    <string name="service_notification_title">Background activity</string>
-    <string name="log_out">Log out</string>
-    <string name="bluetooth">Bluetooth</string>
-    <string name="hour" translatable="false">1h</string>
-    <string name="day" translatable="false">24h</string>
-    <string name="week" translatable="false">7 days</string>
-    <string name="month" translatable="false">30 days</string>
-    <string name="year" translatable="false">a year</string>
-    <string name="data_coin_market" translatable="false">Data about Coin Market</string>
-    <string name="price">Price</string>
-    <string name="marketCapitalization">Market Capitalization</string>
-    <string name="marketCapDominationIndex">Market Cap Domination Index</string>
+	<string name="receive">Receive</string>
+	<string name="transaction_id">Transaction ID</string>
+	<string name="generate_qr">Generate qr</string>
+	<string name="request">Request</string>
+	<string name="select_paired_device">Select a device</string>
+	<string name="send_default">Default</string>
+	<string name="send_offline">Send offline</string>
+	<string name="send_bluetooth">Send bluetooth</string>
+	<string name="send_method">Send method</string>
+	<string name="select">Select</string>
+	<string name="service_notification_title">Background activity</string>
+	<string name="log_out">Log out</string>
+	<string name="bluetooth">Bluetooth</string>
+	<string name="hour" translatable="false">1h</string>
+	<string name="day" translatable="false">24h</string>
+	<string name="week" translatable="false">7 days</string>
+	<string name="month" translatable="false">30 days</string>
+	<string name="year" translatable="false">a year</string>
+	<string name="data_coin_market" translatable="false">Data about Coin Market</string>
+	<string name="price">Price</string>
+	<string name="marketCapitalization">Market Capitalization</string>
+	<string name="marketCapDominationIndex">Market Cap Domination Index</string>
 	<string name="volume_and_marketCap">Volume/MarketCap</string>
-    <string name="low_high_24h">Low for 24h/High for 24h</string>
-    <string name="low_high_week" translatable="false">"Low/High for a week "</string>
-    <string name="ranking">Ranking</string>
-    <string name="name_coin_list" translatable="false">Name Coin List</string>
-    <string name="exchange_rate_button_label">Exchange Rates</string>
-    <string name="bitcoin" translatable="false">Bitcoin</string>
+	<string name="low_high_24h">Low for 24h/High for 24h</string>
+	<string name="low_high_week" translatable="false">"Low/High for a week "</string>
+	<string name="ranking">Ranking</string>
+	<string name="name_coin_list" translatable="false">Name Coin List</string>
+	<string name="exchange_rate_button_label">Exchange Rates</string>
+	<string name="bitcoin" translatable="false">Bitcoin</string>
 	<string name="all">All</string>
 	<string name="amount_label">Input amount</string>
+	<string name="save">Save</string>
+	<string name="mnemonic">Mnemonic</string>
 </resources>

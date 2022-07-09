@@ -71,4 +71,6 @@
     <string name="all">Tất cả</string>
     <string name="exchange_rate_button_label">Tỉ xuất chuyển đổi</string>
 	<string name="amount_label">Nhập số tiền</string>
+	<string name="save">Save</string>
+	<string name="mnemonic">Mnemonic</string>
 </resources>

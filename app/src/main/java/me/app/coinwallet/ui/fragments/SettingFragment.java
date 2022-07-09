@@ -34,7 +34,6 @@ public class SettingFragment extends Fragment {
     private MaterialCardView about;
     private MaterialCardView logout;
     private SettingViewModel viewModel;
-    private AuthenticateHandler authenticateHandler;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -59,15 +58,6 @@ public class SettingFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        authenticateHandler = new AuthenticateHandler(this, new AuthenticateHandler.AuthenticateResultCallback() {
-            @Override
-            public void onPasswordVerified(String password) {
-                moveToSettingSection(ChangePasswordFragment.class, "Change Password");
-            }
-
-            @Override
-            public void onPasswordDenied() { }
-        });
     }
 
     @Override
@@ -79,13 +69,14 @@ public class SettingFragment extends Fragment {
         fingerprintEnable = view.findViewById(R.id.fingerprint);
         changeLanguage = view.findViewById(R.id.change_language_card);
         about = view.findViewById(R.id.about_card);
-        changePassword.setOnClickListener(v-> authenticateHandler.accessPasswordDialog());
+        changePassword.setOnClickListener(v-> moveToSettingSection(ChangePasswordFragment.class, "Change Password"));
         changeLanguage.setOnClickListener(v-> moveToSettingSection(ChangeLanguageFragment.class, "Change Language"));
         fingerprintEnable.setChecked(((BaseActivity)requireActivity()).configuration.isFingerprintEnabled());
         fingerprintEnable.setOnCheckedChangeListener((v, isChecked)->
                 ((BaseActivity) requireActivity()).configuration.setFingerprintEnabled(isChecked));
         logout = view.findViewById(R.id.logout_card);
         logout.setOnClickListener(v -> logout());
+        walletManage.setOnClickListener(v->moveToSettingSection(MnemonicFragment.class, "Mnemonic"));
     }
 
     private void logout(){
@@ -96,9 +87,6 @@ public class SettingFragment extends Fragment {
     }
 
     private void moveToSettingSection(Class<? extends Fragment> fragment, String title){
-        Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
-        intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, fragment);
-        intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, title);
-        startActivity(intent);
+        ((BaseActivity) requireActivity()).loadFragmentOut(fragment, title);
     }
 }

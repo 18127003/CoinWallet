@@ -17,11 +17,10 @@ import java.util.concurrent.Executor;
 
 public abstract class OfflineSendTask extends SendTask {
     private final LocalWallet localWallet = LocalWallet.getInstance();
-    private final Handler callbackHandler;
+
 
     public OfflineSendTask(Configuration configuration){
         super(configuration);
-        callbackHandler = new Handler(Looper.getMainLooper());
     }
 
     @Override

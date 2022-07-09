@@ -5,6 +5,8 @@ import me.app.coinwallet.Constants;
 import org.bitcoinj.core.*;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptException;
+import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
 
 public class WalletUtil {
@@ -93,4 +95,25 @@ public class WalletUtil {
         return amount;
     }
 
+    public static String encryptMnemonic(DeterministicSeed seed, String label){
+        String content = seed.getMnemonicString() + "," + seed.getCreationTimeSeconds();
+        return CryptoEngine.getInstance().cipher(label, content);
+    }
+
+    public static DeterministicSeed decryptMnemonic(String encrypted, String label) {
+        String decrypted = CryptoEngine.getInstance().decipher(label, encrypted);
+        String mnemonic = decrypted.split(",")[0];
+        String creationTime = decrypted.split(",")[1];
+        long creationTimeL = 0L;
+        try {
+            creationTimeL = Long.parseLong(creationTime);
+        } catch (NumberFormatException e){
+            // swallow
+        }
+        try {
+            return new DeterministicSeed(mnemonic, null, "", creationTimeL);
+        } catch (UnreadableWalletException e) {
+            return null;
+        }
+    }
 }

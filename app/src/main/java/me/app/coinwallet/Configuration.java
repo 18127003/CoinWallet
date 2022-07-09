@@ -1,11 +1,9 @@
 package me.app.coinwallet;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import me.app.coinwallet.utils.BiometricUtil;
+import me.app.coinwallet.utils.NotificationHandler;
 import me.app.coinwallet.utils.ToastUtil;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.TestNet3Params;

@@ -16,7 +16,10 @@ import me.app.coinwallet.data.wallets.WalletInfoEntry;
 import me.app.coinwallet.utils.CryptoEngine;
 import me.app.coinwallet.utils.Utils;
 import me.app.coinwallet.blockchain.StartBlockchainSyncService;
+import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.wallet.UnreadableWalletException;
 
 import java.io.File;
 import java.io.InputStream;
@@ -31,7 +34,7 @@ public class InitPageViewModel extends AndroidViewModel implements LocalWallet.E
     private final MutableLiveData<String> syncProgress = new MutableLiveData<>();
     private final MutableLiveData<Integer> status = new MutableLiveData<>();
     private final MutableLiveData<String> selectedWalletLabel = new MutableLiveData<>();
-    private final MutableLiveData<String> selectedMnemonic = new MutableLiveData<>();
+    private DeterministicSeed restoreSeed;
 
     public InitPageViewModel(@NonNull final Application application) {
         super(application);
@@ -39,10 +42,6 @@ public class InitPageViewModel extends AndroidViewModel implements LocalWallet.E
         localWallet.subscribe(this);
         walletInfoDao = WalletInfoDatabase.getDatabase(application.getApplicationContext()).walletInfoDao();
         refreshMnemonic();
-    }
-
-    public void setSelectedMnemonic(String selectedMnemonic) {
-        this.selectedMnemonic.setValue(selectedMnemonic);
     }
 
     public void setSelectedWalletLabel(String selectedWalletLabel) {
@@ -66,8 +65,11 @@ public class InitPageViewModel extends AndroidViewModel implements LocalWallet.E
         SharedPreferences preferences = application.getSharedPreferences(
                 application.getString(R.string.mnemonic_preference_file), Context.MODE_PRIVATE);
         String encrypted = preferences.getString(label, null);
-        CryptoEngine engine = CryptoEngine.getInstance();
-        return engine.decipher(label, encrypted);
+        restoreSeed = WalletUtil.decryptMnemonic(encrypted, label);
+        if(restoreSeed != null){
+          return restoreSeed.getMnemonicString();
+        }
+        return null;
     }
 
     public void refreshMnemonic(){
@@ -82,13 +84,20 @@ public class InitPageViewModel extends AndroidViewModel implements LocalWallet.E
         return status;
     }
 
+    public void restoreWallet(String mnemonic) throws UnreadableWalletException {
+        if(restoreSeed == null){
+            restoreSeed = new DeterministicSeed(mnemonic, null, "", 0L);
+            setSelectedWalletLabel("wallet");
+        }
+    }
+
     public void initWallet(File directory, NetworkParameters parameters, InputStream checkpoints){
         LocalWallet.WalletInfo walletInfo = new LocalWallet.WalletInfo();
         walletInfo.directory = directory;
         walletInfo.checkPoint = checkpoints;
         walletInfo.label = selectedWalletLabel.getValue();
-        if (selectedMnemonic.getValue()!=null){
-            walletInfo.mnemonicRestore = selectedMnemonic.getValue();
+        if (restoreSeed != null){
+            walletInfo.restoreSeed = restoreSeed;
         }
         localWallet.registerWallet(parameters, walletInfo);
 

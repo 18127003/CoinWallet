@@ -1,24 +1,28 @@
 package me.app.coinwallet.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 import me.app.coinwallet.Constants;
-import me.app.coinwallet.utils.BluetoothUtil;
 import org.bitcoinj.core.ProtocolException;
 import org.bitcoinj.core.Transaction;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /***
  * Bluetooth server thread
  */
-public abstract class SimpleBluetoothThread extends AcceptBluetoothThread{
+public abstract class SimpleBluetoothThread extends Thread{
+    protected final BluetoothServerSocket listeningSocket;
+    protected final AtomicBoolean running = new AtomicBoolean(true);
+
     public SimpleBluetoothThread(final BluetoothAdapter adapter) throws IOException {
-        super(adapter.listenUsingInsecureRfcommWithServiceRecord(BluetoothUtil.CLASSIC_PAYMENT_PROTOCOL_NAME,
-                BluetoothUtil.CLASSIC_PAYMENT_PROTOCOL_UUID));
+        listeningSocket = adapter.listenUsingInsecureRfcommWithServiceRecord(Constants.BLUETOOTH_PAYMENT_PROTOCOL_NAME,
+                Constants.BLUETOOTH_PAYMENT_PROTOCOL_UUID);
     }
 
     @Override
@@ -58,4 +62,16 @@ public abstract class SimpleBluetoothThread extends AcceptBluetoothThread{
             }
         }
     }
+
+    public void stopAccepting() {
+        running.set(false);
+
+        try {
+            listeningSocket.close();
+        } catch (final IOException x) {
+            // swallow
+        }
+    }
+
+    protected abstract boolean handleTx(Transaction tx);
 }

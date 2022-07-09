@@ -1,12 +1,12 @@
 package me.app.coinwallet.ui.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.button.MaterialButton;
 import me.app.coinwallet.R;
 
 public class RestoreMnemonicAdapter extends BaseAdapter<String, RestoreMnemonicAdapter.ViewHolder>{
@@ -30,7 +30,7 @@ public class RestoreMnemonicAdapter extends BaseAdapter<String, RestoreMnemonicA
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView label;
+        private final MaterialButton label;
 
         public ViewHolder(View view) {
             super(view);
