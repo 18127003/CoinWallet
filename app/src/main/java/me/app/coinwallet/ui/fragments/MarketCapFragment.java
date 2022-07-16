@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.adapters.MarketCapAdapter;
@@ -19,6 +20,7 @@ import me.app.coinwallet.viewmodels.MarketCapViewModel;
 public class MarketCapFragment extends Fragment {
 
     MarketCapViewModel viewModel;
+    ShimmerFrameLayout placeholder;
 
     public MarketCapFragment() {
         // Required empty public constructor
@@ -45,6 +47,7 @@ public class MarketCapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(MarketCapViewModel.class);
+        placeholder = view.findViewById(R.id.market_cap_placeholder);
         RecyclerView marketCaps = view.findViewById(R.id.market_caps);
         marketCaps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         MarketCapAdapter adapter = new MarketCapAdapter(item -> {
@@ -54,6 +57,25 @@ public class MarketCapFragment extends Fragment {
             startActivity(i);
         }, getResources());
         marketCaps.setAdapter(adapter);
-        viewModel.marketCapData().observe(this, adapter::update);
+        viewModel.marketCapData().observe(this, l->{
+            if(l.size() > 0){
+                placeholder.stopShimmerAnimation();
+                placeholder.setVisibility(View.GONE);
+            }
+            marketCaps.setVisibility(View.VISIBLE);
+            adapter.update(l);
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        placeholder.startShimmerAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        placeholder.stopShimmerAnimation();
     }
 }

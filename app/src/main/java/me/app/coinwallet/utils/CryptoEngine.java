@@ -47,13 +47,10 @@ public class CryptoEngine {
     public String cipher(String alias, String input) {
         Key key;
         try{
-            keyStore.deleteEntry(alias);
+//            keyStore.deleteEntry(alias);
             if(!keyStore.containsAlias(alias)){
-                Log.e("HD","Keystore not contains alias, generating secret key with key generator");
                 key = generateKeyAndroidM(alias);
-
-            } else {
-                Log.e("HD","Keystore contains alias, get secret key from key store");
+        } else {
                 key = keyStore.getKey(alias, null);
             }
 

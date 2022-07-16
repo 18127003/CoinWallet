@@ -43,35 +43,6 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				style="@style/TransparentCardView"
-				android:id="@+id/send_offline_card">
-			<RelativeLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content">
-				<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						style="@style/h6.white"
-						android:text="@string/send_offline"
-						android:padding="10dp"/>
-				<ImageView
-						android:id="@+id/offline_selected_icon"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:src="@drawable/ic_done"
-						android:visibility="gone"
-						android:layout_alignParentEnd="true"
-						android:layout_centerInParent="true"/>
-			</RelativeLayout>
-		</com.google.android.material.card.MaterialCardView>
-		<View
-				android:layout_marginHorizontal="5dp"
-				android:layout_width="fill_parent"
-				android:layout_height="1dp"
-				android:background="@android:color/darker_gray" />
-		<com.google.android.material.card.MaterialCardView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				style="@style/TransparentCardView"
 				android:id="@+id/send_bluetooth_card">
 			<RelativeLayout
 					android:layout_width="match_parent"

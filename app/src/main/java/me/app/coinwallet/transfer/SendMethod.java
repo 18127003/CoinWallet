@@ -35,7 +35,6 @@ public class SendMethod implements Parcelable {
 
     public enum Method {
         DEFAULT,
-        OFFLINE,
         BLUETOOTH
     }
     public BluetoothDevice bluetoothDevice;

@@ -93,12 +93,9 @@ public class TransferFragment extends Fragment {
 
             @Override
             public void onPasswordDenied() {
-                // Toast
                 ((BaseActivity) requireActivity()).configuration.toastUtil.postToast("Wrong password", Toast.LENGTH_SHORT);
             }
         });
-
-//        bluetoothHandler.registerReceiver(() -> bluetoothSwitch.setChecked(false));
     }
 
     @Override

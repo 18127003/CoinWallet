@@ -85,14 +85,6 @@ public class TransferPageViewModel extends AndroidViewModel {
                     }
                 };
                 break;
-            case OFFLINE:
-                sendTask = new OfflineSendTask(configuration) {
-                    @Override
-                    protected void onSuccess(Transaction transaction) {
-                        configuration.toastUtil.toast("Send money success, wait for Internet to broadcast", Toast.LENGTH_SHORT);
-                    }
-                };
-                break;
             default:
                 sendTask = new SimpleSendTask(configuration) {
                     @Override

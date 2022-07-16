@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
@@ -40,7 +41,7 @@ public class HomeFragment extends Fragment {
     TextView confirmNum;
     ImageView status;
     View txView;
-
+    ShimmerFrameLayout placeholder;
     RecyclerView marketCaps;
 
 
@@ -72,7 +73,8 @@ public class HomeFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(HomePageViewModel.class);
         balance = view.findViewById(R.id.balance_text);
         invisibleText = view.findViewById(R.id.invisible);
-        visible=view.findViewById(R.id.invisible_button);
+        visible = view.findViewById(R.id.invisible_button);
+        placeholder = view.findViewById(R.id.trend_placeholder);
         visible.setBackgroundResource(R.drawable.ic_visibility_off);
         visible.setOnClickListener(v-> hideOrShow());
         viewModel.getBalance().observe(this, s -> balance.setText(s));
@@ -110,7 +112,12 @@ public class HomeFragment extends Fragment {
         }, getResources());
         marketCaps.setAdapter(adapter);
         marketCaps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        viewModel.getTrendLiveData().observe(this,adapter::update);
+        viewModel.getTrendLiveData().observe(this,l->{
+            placeholder.stopShimmerAnimation();
+            placeholder.setVisibility(View.GONE);
+            marketCaps.setVisibility(View.VISIBLE);
+            adapter.update(l);
+        });
         txView = view.findViewById(R.id.card_latest_transaction).findViewById(R.id.transaction_item);
         transactionCard = txView.findViewById(R.id.tx_item_card);
         receiver = txView.findViewById(R.id.tx_receiver);
@@ -119,6 +126,19 @@ public class HomeFragment extends Fragment {
         confirmNum = txView.findViewById(R.id.tx_confirmation_number);
         status = txView.findViewById(R.id.tx_status);
         viewModel.getLatestTx().observe(this, this::renderLastTx);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        placeholder.startShimmerAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        placeholder.stopShimmerAnimation();
     }
 
     private void hideOrShow() {

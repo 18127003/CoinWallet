@@ -4,15 +4,37 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".ui.fragments.MarketCapFragment">
-
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/market_caps"
-        />
-    </androidx.core.widget.NestedScrollView>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/market_caps"
+                    android:visibility="gone"
+                    />
+            <com.facebook.shimmer.ShimmerFrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/market_cap_placeholder">
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                    <include layout="@layout/market_cap_placeholder"/>
+                    <include layout="@layout/market_cap_placeholder"/>
+                    <include layout="@layout/market_cap_placeholder"/>
+                    <include layout="@layout/market_cap_placeholder"/>
+                    <include layout="@layout/market_cap_placeholder"/>
+                    <include layout="@layout/market_cap_placeholder"/>
+                    <include layout="@layout/market_cap_placeholder"/>
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+        </LinearLayout>
 
+    </androidx.core.widget.NestedScrollView>
 </FrameLayout>

@@ -26,9 +26,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/market_list"
-            android:paddingTop="20dp"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
     />
-
-
-
+    <com.facebook.shimmer.ShimmerFrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:id="@+id/trend_placeholder">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <include layout="@layout/trend_card_placeholder"/>
+            <include layout="@layout/trend_card_placeholder"/>
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 </LinearLayout>
