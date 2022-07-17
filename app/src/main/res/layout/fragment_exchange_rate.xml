@@ -10,7 +10,8 @@
 			android:layout_height="match_parent"
 			android:layout_marginTop="64dp"
 			android:padding="20dp"
-			android:orientation="vertical">
+			android:orientation="vertical"
+			android:gravity="center_horizontal">
 		<com.google.android.material.card.MaterialCardView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -102,14 +103,20 @@
 				android:text="@string/bottom_nav_label_transfer_rate"
 				style="@style/ButtonStyle"
 				android:id="@+id/button"
-				android:drawableLeft="@drawable/ic_transfer_rate"
-				android:layout_gravity="center_horizontal"/>
+				android:drawableLeft="@drawable/ic_transfer_rate"/>
+		<com.google.android.material.progressindicator.CircularProgressIndicator
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dp"
+				android:indeterminate="true"
+				app:indicatorColor="@color/yellow"
+				android:id="@+id/progress_circular"
+				android:visibility="gone"/>
 		<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/result"
 				style="@style/h6.white"
-				android:layout_gravity="center_horizontal"
 				android:layout_marginTop="10dp"
 				android:padding="10dp"
 		/>

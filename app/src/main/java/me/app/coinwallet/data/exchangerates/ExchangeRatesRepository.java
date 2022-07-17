@@ -13,6 +13,7 @@ import com.squareup.moshi.Moshi;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.marketcap.MarketCapRepository;
+import me.app.coinwallet.ui.listeners.RepositoryQueryListener;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ExchangeRatesRepository {
     private static ExchangeRatesRepository INSTANCE;
     private final Application application;
-    private static final long UPDATE_NAME =  DateUtils.DAY_IN_MILLIS;
+    private static final long UPDATE_NAME_FREQ_MS =  DateUtils.DAY_IN_MILLIS;
     private static final Logger log = LoggerFactory.getLogger(MarketCapRepository.class);
     private final AtomicLong lastUpdatedNameList = new AtomicLong(0);
     final ExchangeRatesHost exchangeRatesHost = new ExchangeRatesHost(new Moshi.Builder().build());
@@ -72,7 +73,7 @@ public class ExchangeRatesRepository {
         final Stopwatch watch = Stopwatch.createStarted();
         final long now = System.currentTimeMillis();
 
-        if(!needRequest(lastUpdatedNameList, now, UPDATE_NAME)){
+        if(!needRequest(lastUpdatedNameList, now, UPDATE_NAME_FREQ_MS)){
             return;
         }
 
@@ -115,12 +116,12 @@ public class ExchangeRatesRepository {
         });
     }
 
-    public void requestExchangeRate(String name){
+    public void requestExchangeRate(String name, RepositoryQueryListener listener){
         HttpUrl url = exchangeRatesHost.getExchangeRatesUlr(name);
-        maybeRequestExchangeRates(url);
+        maybeRequestExchangeRates(url, listener);
     }
 
-    private void maybeRequestExchangeRates(HttpUrl url) {
+    private void maybeRequestExchangeRates(HttpUrl url, RepositoryQueryListener listener) {
 
         Log.e("HD","Exchange Rates request");
 
@@ -134,6 +135,7 @@ public class ExchangeRatesRepository {
 
                         ExchangeRatesJson data = exchangeRatesHost.parseExchange(response.body().source());
                         Log.e("MN","finish");
+                        listener.onSucceed();
                         exchangeRatesJsonMutableLiveData.postValue(data);
                     } else {
                         log.warn("http status {} {} when fetching exchange rates from {}", response.code(),
@@ -142,14 +144,17 @@ public class ExchangeRatesRepository {
                 } catch (final IOException x) {
                     Log.e("HD",x.getMessage());
                     log.warn("problem fetching exchange rates from " + url, x);
+                    listener.onFailed();
                 } catch (final JsonDataException j) {
                     Log.e("HD",j.getMessage());
+                    listener.onFailed();
                 }
             }
 
             @Override
             public void onFailure(final Call call, final IOException x) {
                 Log.e("HD","Exchange Rates request failed");
+                listener.onFailed();
             }
         });
     }
