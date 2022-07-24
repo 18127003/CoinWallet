@@ -45,8 +45,10 @@ public class InitPageViewModel extends AndroidViewModel implements LocalWallet.E
     }
 
     public void setSelectedWalletLabel(String selectedWalletLabel) {
-        this.selectedWalletLabel.setValue(selectedWalletLabel);
+        this.selectedWalletLabel.postValue(selectedWalletLabel);
     }
+
+    public LiveData<String> getSelectedWalletLabel(){ return selectedWalletLabel; }
 
     public MutableLiveData<List<String>> getMnemonicLabels() {
         return mnemonicLabels;

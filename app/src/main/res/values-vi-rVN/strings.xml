@@ -73,4 +73,5 @@
 	<string name="amount_label">Nhập số tiền</string>
 	<string name="save">Save</string>
 	<string name="mnemonic">Mnemonic</string>
+	<string name="wallet_label">Wallet Label</string>
 </resources>

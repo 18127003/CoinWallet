@@ -1,10 +1,15 @@
 package me.app.coinwallet.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.biometric.BiometricPrompt;
@@ -17,8 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputEditText;
 import me.app.coinwallet.Configuration;
+import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.BaseActivity;
+import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.RestoreMnemonicAdapter;
 import me.app.coinwallet.utils.BiometricUtil;
@@ -27,22 +34,41 @@ import org.bitcoinj.wallet.UnreadableWalletException;
 
 public class MnemonicRestoreFragment extends Fragment {
     private InitPageViewModel viewModel;
-    private Button cancelBtn;
     private Button restoreBtn;
     private RecyclerView mnemonicLabels;
     private BiometricUtil biometricUtil;
     private TextInputEditText mnemonicText;
-    private Configuration configuration;
+    private String label;
+    private final ActivityResultLauncher<String> askLabel = registerForActivityResult(
+            new ActivityResultContract<String, String>() {
+                @NonNull
+                @Override
+                public Intent createIntent(@NonNull Context context, String input) {
+                    return SingleFragmentActivity.newActivity(context, CreateWalletFragment.class, "Create wallet label");
+                }
+                @Override
+                public String parseResult(int resultCode, @Nullable Intent intent) {
+                    if(resultCode == Activity.RESULT_OK && intent!=null){
+                        return intent.getStringExtra(Constants.WALLET_LABEL_EXTRA_NAME);
+                    }
+                    return "wallet";
+                }
+            },
+            new ActivityResultCallback<String>() {
+                @Override
+                public void onActivityResult(String result) {
+                    label = result;
+                    result(label, mnemonicText.getText().toString());
+                }
+            }
+    );
 
     public MnemonicRestoreFragment() {
         // Required empty public constructor
     }
 
     public static MnemonicRestoreFragment newInstance() {
-        MnemonicRestoreFragment fragment = new MnemonicRestoreFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new MnemonicRestoreFragment();
     }
 
     @Override
@@ -53,8 +79,7 @@ public class MnemonicRestoreFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        configuration = ((BaseActivity) requireActivity()).configuration;
-        biometricUtil = configuration.biometricUtil;
+        biometricUtil = ((BaseActivity) requireActivity()).configuration.biometricUtil;
     }
 
     @Override
@@ -67,18 +92,15 @@ public class MnemonicRestoreFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        cancelBtn = view.findViewById(R.id.cancel_button);
         restoreBtn = view.findViewById(R.id.restore_button);
         mnemonicText = view.findViewById(R.id.mnemonic_text_field);
         mnemonicLabels = view.findViewById(R.id.restore_mnemonic_list);
         viewModel = new ViewModelProvider(requireActivity()).get(InitPageViewModel.class);
-        cancelBtn.setOnClickListener(v->((BaseActivity) requireActivity()).loadFragment(SelectWalletFragment.class));
         restoreBtn.setOnClickListener(v->{
-            try {
-                viewModel.restoreWallet(mnemonicText.getText().toString());
-                ((BaseActivity) requireActivity()).loadFragment(SyncFragment.class);
-            } catch (UnreadableWalletException e) {
-                configuration.toastUtil.postToast("Mnemonic not available", Toast.LENGTH_SHORT);
+            if(label==null){
+                askLabel.launch(null);
+            } else if (mnemonicText.getText() != null){
+                result(label, mnemonicText.getText().toString());
             }
         });
         RestoreMnemonicAdapter adapter = new RestoreMnemonicAdapter(new BaseAdapter.OnItemClickListener<String>() {
@@ -89,7 +111,7 @@ public class MnemonicRestoreFragment extends Fragment {
                     public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                         super.onAuthenticationSucceeded(result);
                         String mnemonic = viewModel.decryptMnemonic(item);
-                        viewModel.setSelectedWalletLabel(item);
+                        label = item;
                         mnemonicText.setText(mnemonic);
                     }
 
@@ -103,5 +125,13 @@ public class MnemonicRestoreFragment extends Fragment {
         mnemonicLabels.setAdapter(adapter);
         mnemonicLabels.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         viewModel.getMnemonicLabels().observe(this, adapter::update);
+    }
+
+    void result(String label, String mnemonic){
+        Intent result = new Intent();
+        result.putExtra(Constants.WALLET_LABEL_EXTRA_NAME, label);
+        result.putExtra(Constants.MNEMONIC_EXTRA_NAME, mnemonic);
+        requireActivity().setResult(Activity.RESULT_OK, result);
+        requireActivity().finish();
     }
 }
