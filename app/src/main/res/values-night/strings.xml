@@ -22,4 +22,5 @@
 	<string name="save">Save</string>
 	<string name="mnemonic">Mnemonic</string>
 	<string name="wallet_label">Wallet Label</string>
+	<string name="exchange">Exchange</string>
 </resources>

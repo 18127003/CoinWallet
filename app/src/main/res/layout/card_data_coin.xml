@@ -40,7 +40,7 @@
                   android:orientation="horizontal"
     android:padding="5dp">
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="@string/marketCapitalization"
+                  android:text="@string/market_capitalization"
                  />
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:text="58.82434754US$"
@@ -58,7 +58,7 @@
                   android:orientation="horizontal"
     android:padding="5dp">
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="@string/marketCapDominationIndex"
+                  android:text="@string/market_cap_domination_index"
                  />
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:text="58.82434754US$"

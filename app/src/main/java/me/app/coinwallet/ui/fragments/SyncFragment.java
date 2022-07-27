@@ -54,6 +54,7 @@ public class SyncFragment extends Fragment {
 
             @Override
             public void onPasswordDenied() {
+                Log.e("HD","Pwd denied");
                 ((BaseActivity) requireActivity()).loadFragment(SelectWalletFragment.class);
                 BlockchainSyncService.SHOULD_RESTART.set(false);
                 BlockchainSyncService.stop();

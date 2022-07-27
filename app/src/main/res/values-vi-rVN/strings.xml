@@ -16,7 +16,6 @@
 	<string name="bottom_nav_label_history">Lịch sử</string>
 	<string name="bottom_nav_label_transfer_rate">Chuyển khoản</string>
 	<string name="bottom_nav_label_setting">Cài đặt</string>
-	<string name="page_title">Ví điện tử</string>
 	<string name="qr_code_scanner">Quét mã QR</string>
 	<string name="qr_code">Mã QR</string>
 	<string name="manage_wallet_label">Quản lý ví</string>
@@ -55,7 +54,7 @@
   <string name="receive">Nhận</string>
   <string name="transaction_id">Mã giao dịch</string>
 	<string name="generate_qr">Tạo mã QR</string>
-	<string name="request">Request</string>
+	<string name="request">Yêu cầu thanh toán</string>
 	<string name="select_paired_device">Chọn 1 thiết bị</string>
 	<string name="send_default">Mặc định</string>
 	<string name="send_offline">Gửi offline</string>
@@ -64,14 +63,20 @@
 	<string name="select">Chọn</string>
     <string name="price">Giá</string>
 	<string name="ranking">Xếp hạng</string>
-    <string name="marketCapitalization">Vốn hóa thị trường</string>
-	<string name="marketCapDominationIndex" translatable="false">Chỉ số thống trị vốn hóa thị trường</string>
+    <string name="market_capitalization">Vốn hóa thị trường</string>
+	<string name="market_cap_domination_index" translatable="false">Chỉ số thống trị vốn hóa thị trường</string>
 	<string name="volume_and_marketCap" translatable="false">Khối lượng vốn hóa thị trường</string>
 	<string name="low_high_24h" translatable="false">Thấp nhất/Cao nhất trên 24h</string>
     <string name="all">Tất cả</string>
     <string name="exchange_rate_button_label">Tỉ xuất chuyển đổi</string>
 	<string name="amount_label">Nhập số tiền</string>
-	<string name="save">Save</string>
+	<string name="save">Lưu</string>
 	<string name="mnemonic">Mnemonic</string>
 	<string name="wallet_label">Wallet Label</string>
+	<string name="low_high_week" translatable="false">Thấp nhất/Cao nhất trong tuần</string>
+	<string name="name_coin_list" translatable="false">Danh sách tiền</string>
+	<string name="data_coin_market">Dữ liệu thị trường</string>
+	<string name="market_cap_button_label">Vốn hóa thị trường</string>
+	<string name="market_cap_trend">Xu hướng thị trường</string>
+	<string name="exchange">Chuyển đổi</string>
 </resources>
