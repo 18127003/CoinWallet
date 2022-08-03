@@ -2,6 +2,7 @@ package me.app.coinwallet;
 
 import android.text.format.DateUtils;
 import com.google.common.io.BaseEncoding;
+import me.app.coinwallet.bitcoinj.Bip44KeyChainGroupStructure;
 import me.app.coinwallet.utils.SmallestCoinSelector;
 import okhttp3.OkHttpClient;
 import org.bitcoinj.core.Context;
@@ -9,6 +10,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.wallet.CoinSelector;
+import org.bitcoinj.wallet.KeyChainGroupStructure;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +43,8 @@ public final class Constants {
     public static final CoinSelector DEFAULT_COIN_SELECTOR = SmallestCoinSelector.get();
 
     public static final NetworkParameters NETWORK_PARAMETERS = TestNet3Params.get();
+
+    public static final KeyChainGroupStructure WALLET_STRUCTURE = Bip44KeyChainGroupStructure.get();
 
     public static final Context BITCOIN_CONTEXT = new Context(NETWORK_PARAMETERS);
 

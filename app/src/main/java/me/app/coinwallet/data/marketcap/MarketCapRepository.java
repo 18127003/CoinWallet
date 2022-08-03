@@ -157,7 +157,7 @@ public class MarketCapRepository {
 
     private OkHttpClient httpClient(){
         final OkHttpClient.Builder httpClientBuilder = Constants.HTTP_CLIENT.newBuilder();
-        httpClientBuilder.connectionSpecs(Collections.singletonList(ConnectionSpec.RESTRICTED_TLS));
+        httpClientBuilder.connectionSpecs(Collections.singletonList(ConnectionSpec.MODERN_TLS));
         return httpClientBuilder.build();
     }
 }

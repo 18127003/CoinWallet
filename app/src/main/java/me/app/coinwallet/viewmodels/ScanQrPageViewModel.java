@@ -4,7 +4,6 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import me.app.coinwallet.LocalWallet;
 import me.app.coinwallet.data.livedata.WalletLiveData;
 
 public class ScanQrPageViewModel extends AndroidViewModel {

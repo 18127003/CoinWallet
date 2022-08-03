@@ -49,6 +49,9 @@ public class SyncFragment extends Fragment {
         authenticateHandler = new AuthenticateHandler(this, new AuthenticateHandler.AuthenticateResultCallback() {
             @Override
             public void onPasswordVerified(String password) {
+                if(viewModel.createNewAccount){
+                    viewModel.addAccount(password);
+                }
                 toHomePage();
             }
 
@@ -80,16 +83,17 @@ public class SyncFragment extends Fragment {
         sync = view.findViewById(R.id.sync);
         status = view.findViewById(R.id.status);
         viewModel = new ViewModelProvider(requireActivity()).get(InitPageViewModel.class);
-        InputStream checkpoints = ((BaseActivity) requireActivity()).configuration.getBlockchainCheckpointFile();
-        viewModel.initWallet(configuration.directory, configuration.parameters, checkpoints);
+        InputStream checkpoints = configuration.getBlockchainCheckpointFile();
+        viewModel.initWallet(checkpoints);
         viewModel.getSyncProgress().observe(this, s -> sync.setText(s));
         viewModel.getStatus().observe(this, (i)->{
             status.setText(i);
             if(i.equals(R.string.app_setup_completed)){
-                if(viewModel.isEncrypted()){
-                    authenticateHandler.authenticateAccess();
-                } else {
+                if(viewModel.createNewAccount){
                     authenticateHandler.accessPasswordDialog();
+                }
+                else if(viewModel.isEncrypted()){
+                    authenticateHandler.authenticateAccess();
                 }
             }
         });
@@ -97,6 +101,7 @@ public class SyncFragment extends Fragment {
     }
 
     private void toHomePage(){
+
         Intent intent = new Intent(getContext(), HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

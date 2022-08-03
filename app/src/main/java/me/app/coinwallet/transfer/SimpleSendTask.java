@@ -1,20 +1,14 @@
 package me.app.coinwallet.transfer;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 import me.app.coinwallet.Configuration;
-import me.app.coinwallet.Constants;
-import me.app.coinwallet.LocalWallet;
-import org.bitcoinj.core.AddressFormatException;
+import me.app.coinwallet.bitcoinj.LocalWallet;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.Wallet;
-
-import java.util.concurrent.Executor;
 
 public abstract class SimpleSendTask extends SendTask{
     private final LocalWallet localWallet = LocalWallet.getInstance();

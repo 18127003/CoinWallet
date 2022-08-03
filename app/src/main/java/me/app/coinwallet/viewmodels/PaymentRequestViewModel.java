@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import me.app.coinwallet.Constants;
-import me.app.coinwallet.LocalWallet;
+import me.app.coinwallet.bitcoinj.LocalWallet;
 
 public class PaymentRequestViewModel extends AndroidViewModel {
     MutableLiveData<String> uri = new MutableLiveData<>();

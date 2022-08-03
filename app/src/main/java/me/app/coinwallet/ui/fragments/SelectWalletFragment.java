@@ -23,7 +23,6 @@ import me.app.coinwallet.R;
 import me.app.coinwallet.data.wallets.WalletInfoEntry;
 import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
-import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.WalletInfoAdapter;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
 import org.bitcoinj.wallet.UnreadableWalletException;
@@ -51,8 +50,8 @@ public class SelectWalletFragment extends Fragment{
                 @Override
                 public void onActivityResult(String result) {
                     if(result!=null){
-                        viewModel.saveWalletInfo(result);
-                        viewModel.setSelectedWalletLabel(result);
+                        WalletInfoEntry entry = viewModel.saveWalletInfo(result);
+                        viewModel.setSelectedWallet(entry);
                     }
                 }
             }
@@ -82,8 +81,7 @@ public class SelectWalletFragment extends Fragment{
                     if(label != null && mnemonic != null){
                         try {
                             viewModel.restoreWallet(mnemonic);
-                            viewModel.saveWalletInfo(label);
-                            viewModel.setSelectedWalletLabel(label);
+                            viewModel.setSelectedWallet(new WalletInfoEntry( 0,"wallet 0", "BITCOIN"));
                         } catch (UnreadableWalletException e) {
                             ((BaseActivity) requireActivity()).configuration.toastUtil.postToast("Mnemonic unacceptable", Toast.LENGTH_SHORT);
                         }
@@ -97,10 +95,7 @@ public class SelectWalletFragment extends Fragment{
     }
 
     public static SelectWalletFragment newInstance() {
-        SelectWalletFragment fragment = new SelectWalletFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new SelectWalletFragment();
     }
 
     @Override
@@ -122,13 +117,13 @@ public class SelectWalletFragment extends Fragment{
         createBtn = view.findViewById(R.id.create_wallet_btn);
         restoreBtn = view.findViewById(R.id.restore_wallet_btn);
         RecyclerView walletInfoList = view.findViewById(R.id.wallet_info_list);
-        WalletInfoAdapter adapter = new WalletInfoAdapter(item -> viewModel.setSelectedWalletLabel(item.getLabel()));
+        WalletInfoAdapter adapter = new WalletInfoAdapter(item -> viewModel.setSelectedWallet(item));
         walletInfoList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         walletInfoList.setAdapter(adapter);
         viewModel.getWalletInfos().observe(this, adapter::update);
         restoreBtn.setOnClickListener((v)-> askMnemonic.launch(null));
         createBtn.setOnClickListener((v)-> askLabel.launch(null));
-        viewModel.getSelectedWalletLabel().observe(this, label->{
+        viewModel.getSelectedWallet().observe(this, label->{
             if(label!=null){
                 ((BaseActivity) requireActivity()).loadFragment(SyncFragment.class);
             }

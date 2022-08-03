@@ -13,8 +13,11 @@ public interface WalletInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrUpdate(WalletInfoEntry walletInfoEntry);
 
-    @Query("DELETE FROM wallet_info WHERE label = :label")
-    void delete(String label);
+    @Query("DELETE FROM wallet_info WHERE account = :account")
+    void delete(int account);
+
+    @Query("SELECT * FROM wallet_info WHERE account IN (:accounts) ORDER BY label COLLATE LOCALIZED ASC")
+    LiveData<List<WalletInfoEntry>> getByAccounts(List<Integer> accounts);
 
     @Query("SELECT * FROM wallet_info ORDER BY label COLLATE LOCALIZED ASC")
     LiveData<List<WalletInfoEntry>> getAll();

@@ -6,8 +6,8 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-import me.app.coinwallet.LocalWallet;
-import me.app.coinwallet.WalletNotificationType;
+import me.app.coinwallet.bitcoinj.LocalWallet;
+import me.app.coinwallet.bitcoinj.WalletNotificationType;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.utils.Threading;
 // Deprecated

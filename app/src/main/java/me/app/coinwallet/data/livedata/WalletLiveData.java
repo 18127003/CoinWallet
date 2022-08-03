@@ -6,11 +6,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import me.app.coinwallet.LocalWallet;
-import me.app.coinwallet.WalletNotificationType;
+import me.app.coinwallet.bitcoinj.LocalWallet;
+import me.app.coinwallet.bitcoinj.WalletNotificationType;
 import me.app.coinwallet.data.transaction.MonthlyReport;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
 import me.app.coinwallet.utils.Utils;
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 
@@ -51,7 +52,12 @@ public class WalletLiveData implements LocalWallet.EventListener {
 
     public void refreshExpectedBalance(){ expectedBalance.postValue(wallet.getExpectedBalance()); }
 
-    public void refreshCurrentReceivingAddress(){ currentReceivingAddress.postValue(wallet.getAddress().toString()); }
+    public void refreshCurrentReceivingAddress(){
+        Address address = wallet.getAddress();
+        if(address!=null){
+            currentReceivingAddress.postValue(wallet.getAddress().toString());
+        }
+    }
 
     public void refreshLatestTx(TransactionWrapper tx){
         lastTx.postValue(tx);
@@ -147,6 +153,10 @@ public class WalletLiveData implements LocalWallet.EventListener {
                 refreshAvailableBalance();
                 refreshTxHistory(filter);
                 refreshExpectedBalance();
+                refreshCurrentReceivingAddress();
+                break;
+            case ACCOUNT_ADDED:
+                Log.e("HD","refresh address");
                 refreshCurrentReceivingAddress();
                 break;
         }
