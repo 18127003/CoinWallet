@@ -110,4 +110,5 @@
 	<string name="wallet_label">Wallet Label</string>
 	<string name="market_cap_trend">Market cap trend</string>
 	<string name="exchange">Exchange</string>
+	<string name="blockchain_network">Blockchain Network</string>
 </resources>
