@@ -18,7 +18,7 @@ public class MarketCapHost {
     private final static HttpUrl TREND_ULR=HttpUrl.parse(HOST_PREFIX+"marketCap/trend");
     private final static HttpUrl EXCHANGE_RATE_URL = HttpUrl.parse(HOST_PREFIX + "exchange_rates");
 
-    private static final MediaType MEDIA_TYPE = MediaType.get("application/json");
+    private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
     private static final String SOURCE = "CoinGecko.com";
 
     private static final Logger log = LoggerFactory.getLogger(MarketCapHost.class);

@@ -5,7 +5,7 @@
 	<string name="available_balance_label">Balance</string>
 	<string name="expected_balance_label">Expected Balance</string>
 	<string name="send_button_label">Send</string>
-	<string name="market_cap_button_label" translatable="false">Market Cap</string>
+	<string name="market_cap_button_label">Market Cap</string>
 	<string name="add_address_book_button_label">Add contact</string>
 	<string name="check_utxo_button_label" translatable="false">Check utxo</string>
 	<string name="extract_mnemonic_button_label" translatable="false">Extract mnemonic</string>
@@ -37,13 +37,11 @@
 	<string name="bottom_nav_label_history">History</string>
 	<string name="bottom_nav_label_transfer_rate">Transfer</string>
 	<string name="bottom_nav_label_setting">Settings</string>
-	<string name="page_title">Crypto Wallet</string>
 	<string name="title_activity_qr_code_scanner" translatable="false">QrCodeScannerActivity</string>
 	<string name="qr_code_scanner">Scan Qr</string>
 	<string name="qr_code">Qr code</string>
 	<string name="manage_wallet_label">Manage Wallet</string>
 	<string name="last_transaction">Latest Transaction</string>
-	<string name="market_cap" translatable="false">Coin Market Cap</string>
 	<string name="success">Success</string>
 	<string name="fail">Fail</string>
 	<string name="pending">Pending</string>
@@ -60,7 +58,7 @@
 	<string name="english" translatable="false">English</string>
 	<string name="vietnam" translatable="false">Vietnamese</string>
 	<string name="invisible_placeholder" translatable="false">**********</string>
-	<string name="notification" translatable="false">Notification</string>
+	<string name="notification">Notification</string>
 	<string name="profile">Person</string>
 	<string name="save_contact">Save contact</string>
 	<string name="contact">Contact</string>
@@ -72,7 +70,6 @@
 	<string name="from">From</string>
 	<string name="to">To</string>
 	<string name="type_coin">Type coin</string>
-	<!-- TODO: Remove or change this placeholder text -->
 	<string name="more_info">More Info</string>
 	<string name="confirmation">Confirmation</string>
 	<string name="fee">Fee</string>
@@ -95,24 +92,22 @@
 	<string name="week" translatable="false">7 days</string>
 	<string name="month" translatable="false">30 days</string>
 	<string name="year" translatable="false">a year</string>
-	<string name="data_coin_market" translatable="false">Data about Coin Market</string>
+	<string name="data_coin_market">Data about Coin Market</string>
 	<string name="price">Price</string>
-	<string name="marketCapitalization">Market Capitalization</string>
-	<string name="marketCapDominationIndex">Market Cap Domination Index</string>
+	<string name="market_capitalization">Market Capitalization</string>
+	<string name="market_cap_domination_index">Market Cap Domination Index</string>
 	<string name="volume_and_marketCap">Volume/MarketCap</string>
 	<string name="low_high_24h">Low for 24h/High for 24h</string>
-	<string name="low_high_week" translatable="false">"Low/High for a week "</string>
+	<string name="low_high_week">"Low/High for a week "</string>
 	<string name="ranking">Ranking</string>
-	<string name="name_coin_list" translatable="false">Name Coin List</string>
+	<string name="name_coin_list">Name Coin List</string>
 	<string name="exchange_rate_button_label">Exchange Rates</string>
 	<string name="bitcoin" translatable="false">Bitcoin</string>
 	<string name="all">All</string>
 	<string name="amount_label">Input amount</string>
 	<string name="save">Save</string>
 	<string name="mnemonic">Mnemonic</string>
-	<string name="wallet_label">Input Wallet Label</string>
-	<string name="blockchain_network" translatable="false">Blockchain Network</string>
-	<string name="bitcoin_mainnet" translatable="false">Bitcoin Mainnet</string>
-	<string name="bitcoin_testnet" translatable="false">Bitcoin Testnet</string>
-	<string name="linecoin_testnet" translatable="false">Linecoin Testnet</string>
+	<string name="wallet_label">Wallet Label</string>
+	<string name="market_cap_trend">Market cap trend</string>
+	<string name="exchange">Exchange</string>
 </resources>

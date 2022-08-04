@@ -1,19 +1,16 @@
 package me.app.coinwallet.viewmodels;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import me.app.coinwallet.LocalWallet;
+import me.app.coinwallet.bitcoinj.LocalWallet;
 import me.app.coinwallet.R;
 import me.app.coinwallet.blockchain.BlockchainSyncService;
 import me.app.coinwallet.data.language.LanguageOption;
-import me.app.coinwallet.utils.CryptoEngine;
 import me.app.coinwallet.utils.LocaleUtil;
 import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.wallet.DeterministicSeed;

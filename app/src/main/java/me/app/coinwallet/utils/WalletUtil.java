@@ -1,13 +1,23 @@
 package me.app.coinwallet.utils;
 
+import android.util.Log;
 import androidx.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
 import me.app.coinwallet.Constants;
+import me.app.coinwallet.bitcoinj.WalletNotificationType;
 import org.bitcoinj.core.*;
+import org.bitcoinj.crypto.HDPath;
+import org.bitcoinj.crypto.KeyCrypterScrypt;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptException;
-import org.bitcoinj.wallet.DeterministicSeed;
-import org.bitcoinj.wallet.UnreadableWalletException;
-import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.wallet.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class WalletUtil {
 
@@ -115,5 +125,26 @@ public class WalletUtil {
         } catch (UnreadableWalletException e) {
             return null;
         }
+    }
+
+    public static List<Integer> accounts(NetworkParameters params, File walletFile){
+        if(walletFile.exists()){
+            try (FileInputStream walletStream = new FileInputStream(walletFile)) {
+                Protos.Wallet proto = WalletProtobufSerializer.parseToProto(walletStream);
+                KeyChainGroup keyChainGroup;
+                if (proto.hasEncryptionParameters()) {
+                    Protos.ScryptParameters encryptionParameters = proto.getEncryptionParameters();
+                    KeyCrypterScrypt keyCrypter = new KeyCrypterScrypt(encryptionParameters);
+                    keyChainGroup = KeyChainGroup.fromProtobufEncrypted(params, proto.getKeyList(), keyCrypter);
+                } else {
+                    keyChainGroup = KeyChainGroup.fromProtobufUnencrypted(params, proto.getKeyList());
+                }
+                List<HDPath> accounts = keyChainGroup.accounts();
+                return accounts.stream().map(path->path.get(path.size()-1).num()).collect(Collectors.toList());
+            } catch (IOException | UnreadableWalletException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+        return Collections.emptyList();
     }
 }

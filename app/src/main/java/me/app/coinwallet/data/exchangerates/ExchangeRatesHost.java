@@ -20,7 +20,7 @@ public class ExchangeRatesHost {
     private final static HttpUrl NAME_LIST_URL = HttpUrl.parse(HOST_PREFIX + "exchangeRates/name");
     private final static HttpUrl EXCHANGE_RATES_ULR=HttpUrl.parse(HOST_PREFIX+"exchangeRates");
 
-    private static final MediaType MEDIA_TYPE = MediaType.get("application/json");
+    private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
     private final Moshi moshi;
 
     public ExchangeRatesHost(final Moshi moshi){

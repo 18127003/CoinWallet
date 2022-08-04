@@ -84,7 +84,7 @@ public class ChartUtil {
         LineDataSet lineDataSet=new LineDataSet(cap.getChart(), cap.getName());
         lineDataSet.setValueTextColor(res.getColor(R.color.white));
         lineDataSet.setDrawCircles(false);
-        lineDataSet.setDrawValues(false);
+        lineDataSet.setDrawValues(true);
         if(cap.getFluctuation()>=0){
             lineDataSet.setColor(res.getColor(R.color.light_green));
         }

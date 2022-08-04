@@ -1,14 +1,12 @@
 package me.app.coinwallet.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import me.app.coinwallet.Configuration;
-import me.app.coinwallet.LocalWallet;
 import me.app.coinwallet.WalletApplication;
 import me.app.coinwallet.bluetooth.BluetoothPaymentRequest;
 import me.app.coinwallet.bluetooth.DirectPaymentRequest;
@@ -16,11 +14,9 @@ import me.app.coinwallet.data.addressbook.AddressBookDao;
 import me.app.coinwallet.data.addressbook.AddressBookDatabase;
 import me.app.coinwallet.data.addressbook.AddressBookEntry;
 import me.app.coinwallet.transfer.*;
-import me.app.coinwallet.ui.fragments.TransferFragment;
 import me.app.coinwallet.utils.Utils;
 import org.bitcoin.protocols.payments.Protos;
 import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.protocols.payments.PaymentProtocol;
 

@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleService;
 import com.google.common.base.Stopwatch;
 import me.app.coinwallet.*;
+import me.app.coinwallet.bitcoinj.LocalWallet;
+import me.app.coinwallet.bitcoinj.WalletNotificationType;
 import me.app.coinwallet.data.livedata.BlockchainLiveData;
 import me.app.coinwallet.utils.NotificationHandler;
 import org.bitcoinj.core.Transaction;
@@ -153,7 +155,6 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 BriefLogFormatter.init();
                 Threading.USER_THREAD = config.executorService;
                 wallet.subscribe(this);
-                wallet.configWalletAppKit();
                 wallet.initWallet();
             } else if (ACTION_RESET_BLOCKCHAIN.equals(action)) {
                 Log.d("HD","will remove blockchain on service shutdown");

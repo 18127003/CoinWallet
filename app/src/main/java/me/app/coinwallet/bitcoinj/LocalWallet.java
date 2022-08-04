@@ -1,4 +1,4 @@
-package me.app.coinwallet;
+package me.app.coinwallet.bitcoinj;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -7,17 +7,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.Service;
-import me.app.coinwallet.data.livedata.WalletLiveData;
-import me.app.coinwallet.data.transaction.TransactionWrapper;
+import me.app.coinwallet.Constants;
+import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.*;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
-import org.bitcoinj.crypto.EncryptedData;
+import org.bitcoinj.crypto.HDPath;
 import org.bitcoinj.crypto.KeyCrypter;
 import org.bitcoinj.crypto.KeyCrypterException;
+import org.bitcoinj.crypto.KeyCrypterScrypt;
 import org.bitcoinj.kits.WalletAppKit;
+import org.bitcoinj.script.Script;
 import org.bitcoinj.uri.BitcoinURI;
 import org.bitcoinj.wallet.*;
-import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 public class LocalWallet {
     private static LocalWallet _instance = null;
+    private static final String WALLET_FILE = "coinwallet";
 
     private final List<EventListener> observers = new ArrayList<>();
 
@@ -53,11 +55,38 @@ public class LocalWallet {
     private WalletInfo walletInfo;
     private WalletAppKit walletAppKit;
     private Wallet wallet;
+    private File directory;
 
     public Address getAddress(){
-        Log.e("HD","CRA: "+wallet.currentReceiveAddress().toString());
-        Log.e("HD","CCA: "+wallet.currentChangeAddress().toString());
-        return wallet.currentReceiveAddress();
+//        Log.e("HD","CRA: "+wallet.currentReceiveAddress().toString());
+//        Log.e("HD","CCA: "+wallet.currentChangeAddress().toString());
+        try{
+            return wallet.currentReceiveAddress();
+        } catch (DeterministicUpgradeRequiredException e){
+            //swallow
+        }
+        return null;
+    }
+
+    public void addAccount(int index, String password){
+        if(index == 0){
+            return;
+        }
+        DeterministicSeed seed = seed(password);
+        HDPath accountPath = Constants.WALLET_STRUCTURE.accountPathFor(index, Script.ScriptType.P2PKH);
+        DeterministicKeyChain chain = DeterministicKeyChain.builder()
+                .seed(seed)
+                .outputScriptType(Script.ScriptType.P2PKH)
+                .accountPath(accountPath)
+                .build();
+        KeyCrypterScrypt scrypt = new KeyCrypterScrypt();
+        wallet.addAndActivateHDChain(chain.toEncrypted(scrypt, scrypt.deriveKey(password)));
+        notifyObservers(WalletNotificationType.ACCOUNT_ADDED, null);
+    }
+
+    public List<Integer> allAccounts(){
+        File walletFile = new File(directory, WALLET_FILE + ".wallet");
+        return WalletUtil.accounts(parameters, walletFile);
     }
 
     public DeterministicSeed seed(String password){
@@ -161,17 +190,19 @@ public class LocalWallet {
     }
 
     public boolean hasChainFileDownloaded(String prefix){
-        File chainFile = new File(walletInfo.directory, prefix + ".spvchain");
+        File chainFile = new File(directory, prefix + ".spvchain");
         return chainFile.exists();
     }
 
-    public void registerWallet(NetworkParameters parameters, WalletInfo walletInfo){
+    public void registerWallet(NetworkParameters parameters, File directory){
         this.parameters = parameters;
-        this.walletInfo = walletInfo;
+        this.directory = directory;
     }
 
-    public void configWalletAppKit(){
-        walletAppKit = new WalletAppKit(parameters, walletInfo.directory, walletInfo.label) {
+    public void configWalletAppKit(WalletInfo walletInfo){
+        this.walletInfo = walletInfo;
+        walletAppKit = new WalletAppKit(parameters, Script.ScriptType.P2PKH, Constants.WALLET_STRUCTURE,
+                directory, WALLET_FILE, walletInfo.accountIndex) {
             @Override
             protected void onSetupCompleted() {
                 Log.e("HD", "Set up complete");
@@ -220,14 +251,14 @@ public class LocalWallet {
     }
 
     public void initWalletOffline(){
-        File walletFile = new File(walletInfo.directory, walletInfo.label + ".wallet");
+        File walletFile = new File(directory, WALLET_FILE + ".wallet");
         if(walletFile.exists()){
             try (FileInputStream walletStream = new FileInputStream(walletFile)) {
                 List<WalletExtension> extensions = ImmutableList.of();
                 WalletExtension[] extArray = extensions.toArray(new WalletExtension[extensions.size()]);
                 Protos.Wallet proto = WalletProtobufSerializer.parseToProto(walletStream);
                 final WalletProtobufSerializer serializer = new WalletProtobufSerializer();
-                wallet = serializer.readWallet(parameters, extArray, proto);
+                wallet = serializer.readWallet(parameters, extArray,walletInfo.accountIndex, proto);
                 notifyObservers(WalletNotificationType.SETUP_COMPLETED, null);
             } catch (IOException | UnreadableWalletException ioException) {
                 ioException.printStackTrace();
@@ -278,10 +309,10 @@ public class LocalWallet {
     }
 
     public static class WalletInfo{
-        public File directory;
         public DeterministicSeed restoreSeed;
         public String label;
         public InputStream checkPoint;
+        public int accountIndex;
     }
 
     public static class EventMessage<T> {

@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.biometric.BiometricPrompt;
 import androidx.fragment.app.Fragment;
 import me.app.coinwallet.Configuration;
-import me.app.coinwallet.LocalWallet;
+import me.app.coinwallet.bitcoinj.LocalWallet;
 import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.dialogs.ConfirmDialog;
 import me.app.coinwallet.ui.dialogs.SingleTextFieldDialog;

@@ -2,7 +2,7 @@ package me.app.coinwallet.viewmodels;
 
 import android.bluetooth.BluetoothAdapter;
 import androidx.lifecycle.ViewModel;
-import me.app.coinwallet.LocalWallet;
+import me.app.coinwallet.bitcoinj.LocalWallet;
 import me.app.coinwallet.bluetooth.SimpleBluetoothThread;
 import org.bitcoinj.core.Transaction;
 

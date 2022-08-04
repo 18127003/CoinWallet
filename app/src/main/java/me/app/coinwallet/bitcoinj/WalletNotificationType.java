@@ -1,4 +1,4 @@
-package me.app.coinwallet;
+package me.app.coinwallet.bitcoinj;
 
 public enum WalletNotificationType {
     SETUP_COMPLETED,
@@ -9,5 +9,6 @@ public enum WalletNotificationType {
     TX_RECEIVED,
     TX_ACCEPTED,
     TX_BROADCAST_COMPLETED,
-    SYNC_STOPPED
+    SYNC_STOPPED,
+    ACCOUNT_ADDED
 }

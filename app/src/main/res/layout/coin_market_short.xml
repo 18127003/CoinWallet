@@ -12,7 +12,7 @@
                     android:orientation="horizontal">
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="@string/market_cap"
+                  android:text="@string/market_cap_trend"
                   style="@style/h5"/>
         <ImageButton android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
