@@ -110,5 +110,9 @@
 	<string name="amount_label">Input amount</string>
 	<string name="save">Save</string>
 	<string name="mnemonic">Mnemonic</string>
-	<string name="wallet_label">Wallet Label</string>
+	<string name="wallet_label">Input Wallet Label</string>
+	<string name="blockchain_network" translatable="false">Blockchain Network</string>
+	<string name="bitcoin_mainnet" translatable="false">Bitcoin Mainnet</string>
+	<string name="bitcoin_testnet" translatable="false">Bitcoin Testnet</string>
+	<string name="linecoin_testnet" translatable="false">Linecoin Testnet</string>
 </resources>
