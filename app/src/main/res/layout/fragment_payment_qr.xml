@@ -16,7 +16,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="360dp"
 				android:layout_marginTop="32dp"
-				android:layout_marginHorizontal="32dp"
+				android:layout_marginHorizontal="10dp"
 				app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialCardView.Cut">
 			<androidx.constraintlayout.widget.ConstraintLayout
 					android:layout_width="match_parent"
@@ -28,7 +28,8 @@
 						app:layout_constraintTop_toTopOf="parent"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
-						android:padding="72dp"
+						android:layout_margin="32dp"
+						android:backgroundTint="?attr/colorOnSurface"
 						android:id="@+id/qr_code_img"/>
 			</androidx.constraintlayout.widget.ConstraintLayout>
 		</com.google.android.material.card.MaterialCardView>
@@ -36,7 +37,7 @@
 				android:id="@+id/bluetooth_notify"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				style="@style/h6.white"/>
+				style="@style/h6.reflect"/>
 	</LinearLayout>
 
 </FrameLayout>

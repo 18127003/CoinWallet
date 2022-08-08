@@ -19,7 +19,6 @@ import java.util.concurrent.Executors;
 public class Configuration {
     public final int lastVersionCode;
     public final File directory;
-    public final NetworkParameters parameters;
     public final ExecutorService executorService;
     public final BiometricUtil biometricUtil;
     public final NotificationHandler notificationHandler;
@@ -40,7 +39,6 @@ public class Configuration {
         this.directory = directory;
         this.lastVersionCode = prefs.getInt(PREFS_KEY_LAST_VERSION, 0);
         this.notificationHandler = notificationHandler;
-        this.parameters = TestNet3Params.get();
         this.executorService = Executors.newFixedThreadPool(NUMBER_OF_CORES);
         this.biometricUtil = biometricUtil;
         this.assetManager = assetManager;

@@ -20,7 +20,7 @@
 				android:layout_height="?attr/actionBarSize"
 				app:menu="@menu/basic_top_app_bar"
 				app:navigationIcon="@drawable/ic_back"
-				style="@style/Widget.MaterialComponents.Toolbar.Primary"
+				style="@style/TopAppBar"
 				/>
 	</com.google.android.material.appbar.AppBarLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

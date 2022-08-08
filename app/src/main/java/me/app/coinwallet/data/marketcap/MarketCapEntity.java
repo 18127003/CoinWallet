@@ -92,7 +92,6 @@ public final class MarketCapEntity implements Parcelable {
     }
 
     public MarketCapEntity(final String source, final MarketCapJson marketCapJson) {
-        Log.e("HD",marketCapJson.toString());
         this.source = source;
         this.name = marketCapJson.name;
         this.currentPrice = marketCapJson.currentPrice;

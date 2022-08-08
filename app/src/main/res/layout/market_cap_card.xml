@@ -18,7 +18,7 @@
 				  app:layout_constraintTop_toTopOf="parent"
 				  app:layout_constraintBottom_toBottomOf="parent"
 				  app:layout_constraintLeft_toLeftOf="parent"
-				  style="@style/h6.white"
+				  style="@style/h6.reflect"
 				  android:textAlignment="viewStart"
 		/>
 		<ImageView android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
 				  android:text="BCT"
 				  app:layout_constraintTop_toTopOf="parent"
 				  app:layout_constraintLeft_toRightOf="@id/image"
-				  style="@style/h6.white"
+				  style="@style/h6.reflect"
 				  app:layout_constraintBottom_toTopOf="@id/name"
 				  android:layout_marginHorizontal="10dp"
 		/>
@@ -53,7 +53,7 @@
 				  app:layout_constraintTop_toTopOf="parent"
 				  app:layout_constraintRight_toRightOf="parent"
 				  android:id="@+id/price"
-				  style="@style/h6.white"
+				  style="@style/h6.reflect"
 		/>
 		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
 				  app:layout_constraintBottom_toBottomOf="parent"

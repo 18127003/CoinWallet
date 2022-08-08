@@ -11,7 +11,7 @@
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintRight_toRightOf="parent"
 			android:layout_marginTop="5dp"
-			style="@style/h6.black"/>
+			style="@style/h6.reflect"/>
 	<com.google.android.material.textfield.TextInputLayout
 			android:id="@+id/dialog_edit_text_layout"
 			android:layout_width="match_parent"
@@ -28,7 +28,7 @@
 				android:layout_height="wrap_content"
 				android:id="@+id/dialog_edit_text"
 				android:focusable="true"
-				style="@style/normal.black"/>
+				style="@style/normal"/>
 	</com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,19 +29,6 @@ public class HomeActivity extends BaseActivity {
         scanBtn.setOnClickListener(v -> moveTo(ScanQrActivity.class));
 
         materialToolbar=findViewById(R.id.top_app_bar);
-        materialToolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()){
-                case R.id.notification:
-//                    loadFragment(NotificationFragment().newInstance());
-                    break;
-                case R.id.profile:
-//                    loadFragment(PersonalFragment().newInstance());
-                    break;
-                default:
-                    return false;
-            }
-            return true;
-        });
         setSupportActionBar(materialToolbar);
         bottomAppBar = findViewById(R.id.bottom_navigation);
         bottomAppBar.setOnItemSelectedListener(item -> {

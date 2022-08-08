@@ -15,7 +15,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:id="@+id/address_label"
-				style="@style/h6.black"
+				style="@style/h6"
 				android:paddingHorizontal="10dp"
 				android:paddingVertical="5dp"/>
 	</com.google.android.material.card.MaterialCardView>

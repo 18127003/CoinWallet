@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.Button;
-import androidx.annotation.ColorRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.*;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
@@ -30,6 +29,8 @@ public class HistoryFragment extends Fragment {
     private Button fail;
     private Button pending;
     private Button all;
+    private int selectedColor;
+    private int remainColor;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -72,6 +73,8 @@ public class HistoryFragment extends Fragment {
         history.setAdapter(adapter);
         history.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         viewModel.getMonthlyReports().observe(this, adapter::update);
+        selectedColor = MaterialColors.getColor(view, R.attr.colorSecondaryVariant);
+        remainColor = MaterialColors.getColor(view, R.attr.colorSecondary);
         success.setOnClickListener(v->selectFilter(HomePageViewModel.Filter.SUCCESS));
         all.setOnClickListener(v->selectFilter(HomePageViewModel.Filter.ALL));
         fail.setOnClickListener(v->selectFilter(HomePageViewModel.Filter.FAIL));
@@ -79,30 +82,28 @@ public class HistoryFragment extends Fragment {
     }
 
     private void selectFilter(HomePageViewModel.Filter filter){
-        int selected = R.color.gold;
-        int remain = R.color.blue_black;
         switch (filter){
             case ALL:
-                colorFilter(remain, remain, remain, selected);
+                colorFilter(remainColor, remainColor, remainColor, selectedColor);
                 break;
             case FAIL:
-                colorFilter(remain,selected,remain,remain);
+                colorFilter(remainColor,selectedColor,remainColor,remainColor);
                 break;
             case PENDING:
-                colorFilter(remain,remain,selected,remain);
+                colorFilter(remainColor,remainColor,selectedColor,remainColor);
                 break;
             case SUCCESS:
-                colorFilter(selected,remain,remain,remain);
+                colorFilter(selectedColor,remainColor,remainColor,remainColor);
                 break;
         }
         viewModel.filter(filter);
     }
 
-    private void colorFilter(@ColorRes int success, @ColorRes int fail, @ColorRes int pending, @ColorRes int all){
+    private void colorFilter(@ColorInt int success, @ColorInt int fail, @ColorInt int pending, @ColorInt int all){
         Resources res = getResources();
-        this.success.setTextColor(res.getColor(success));
-        this.fail.setTextColor(res.getColor(fail));
-        this.pending.setTextColor(res.getColor(pending));
-        this.all.setTextColor(res.getColor(all));
+        this.success.setTextColor(success);
+        this.fail.setTextColor(fail);
+        this.pending.setTextColor(pending);
+        this.all.setTextColor(all);
     }
 }

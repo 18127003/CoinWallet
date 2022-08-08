@@ -17,15 +17,15 @@
                 android:layout_alignParentStart="true"
                 android:gravity="center"
                 android:text="@string/success"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/TextButton"
         />
         <View android:layout_width="1dp"
               android:layout_height="30dp"
-              android:padding="5dp"
               android:layout_toEndOf="@id/success"
               android:layout_centerVertical="true"
               android:id="@+id/divider_1"
-              android:background="@color/blue_black"
+              android:layout_marginHorizontal="5dp"
+              android:background="?attr/colorSecondary"
         />
         <Button
                 android:id="@+id/fail"
@@ -33,15 +33,15 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/divider_1"
                 android:text="@string/fail"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/TextButton"
         />
         <View android:layout_width="1dp"
               android:layout_height="30dp"
-              android:padding="5dp"
+              android:layout_marginHorizontal="5dp"
               android:layout_toEndOf="@id/fail"
               android:layout_centerVertical="true"
               android:id="@+id/divider_2"
-              android:background="@color/blue_black"
+              android:background="?attr/colorSecondary"
         />
         <Button
                 android:id="@+id/pending"
@@ -49,15 +49,15 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/divider_2"
                 android:text="@string/pending"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/TextButton"
         />
         <View android:layout_width="1dp"
               android:layout_height="30dp"
-              android:padding="5dp"
+              android:layout_marginHorizontal="5dp"
               android:layout_toEndOf="@id/pending"
               android:layout_centerVertical="true"
               android:id="@+id/divider_3"
-              android:background="@color/blue_black"
+              android:background="?attr/colorSecondary"
         />
 
         <Button android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
                      android:layout_alignParentEnd="true"
                      android:layout_centerVertical="true"
                 android:text="@string/all"
-                style="@style/Widget.AppCompat.Button.Borderless"
+                style="@style/TextButton"
 
 
         />

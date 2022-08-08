@@ -52,7 +52,7 @@ public class PaymentRequestFragment extends Fragment {
         generateBtn = view.findViewById(R.id.generate_qr_button);
         viewModel = new ViewModelProvider(requireActivity()).get(PaymentRequestViewModel.class);
         viewModel.getUri().observe(requireActivity(), s -> {
-            Intent intent = SingleFragmentActivity.newActivity(requireContext(), PaymentQrFragment.class, "Scan Qr");
+            Intent intent = SingleFragmentActivity.newActivity(requireContext(), PaymentQrFragment.class, R.string.scan_qr_page_label);
             intent.putExtra("uri", s);
             startActivity(intent);
         });

@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import me.app.coinwallet.Configuration;
 import me.app.coinwallet.Constants;
+import me.app.coinwallet.bitcoinj.LocalWallet;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.wallet.SendRequest;
@@ -22,7 +23,8 @@ public abstract class SendTask {
 
     public void send(SendRequest sendRequest, String password){
         configuration.executorService.execute(()-> {
-            org.bitcoinj.core.Context.propagate(Constants.BITCOIN_CONTEXT);
+            LocalWallet localWallet = LocalWallet.getInstance();
+            org.bitcoinj.core.Context.propagate(localWallet.getContext());
             onSend(sendRequest, password);
         });
     }
@@ -30,14 +32,4 @@ public abstract class SendTask {
     abstract void onSend(SendRequest sendRequest, String password);
 
     protected void onSuccess(Transaction transaction){}
-//
-//    void onInsufficientMoney(Coin missing);
-//
-//    void onInvalidEncryptionKey();
-//
-//    default void onEmptyWalletFailed() {
-//        onFailure(new Wallet.CouldNotAdjustDownwards());
-//    }
-//
-//    void onFailure(Exception exception);
 }

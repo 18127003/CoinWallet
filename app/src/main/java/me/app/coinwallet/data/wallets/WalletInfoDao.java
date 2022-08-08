@@ -13,6 +13,9 @@ public interface WalletInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrUpdate(WalletInfoEntry walletInfoEntry);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertOrUpdateMultiple(List<WalletInfoEntry> walletInfoEntries);
+
     @Query("DELETE FROM wallet_info WHERE account = :account")
     void delete(int account);
 

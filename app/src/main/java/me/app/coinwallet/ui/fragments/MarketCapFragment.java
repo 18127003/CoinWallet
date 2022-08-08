@@ -52,7 +52,7 @@ public class MarketCapFragment extends Fragment {
         marketCaps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         MarketCapAdapter adapter = new MarketCapAdapter(item -> {
             Intent i= SingleFragmentActivity.newActivity(requireContext(), MarketCapDetailFragment.class,
-                    "Market cap of "+item.getName());
+                    getString(R.string.market_cap_detail_page_label, item.getName()));
             i.putExtra("chart_detail", item);
             startActivity(i);
         }, getResources());

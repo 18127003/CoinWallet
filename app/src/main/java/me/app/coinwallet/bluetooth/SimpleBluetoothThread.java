@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 import me.app.coinwallet.Constants;
+import me.app.coinwallet.bitcoinj.LocalWallet;
 import org.bitcoinj.core.ProtocolException;
 import org.bitcoinj.core.Transaction;
 
@@ -27,7 +28,8 @@ public abstract class SimpleBluetoothThread extends Thread{
 
     @Override
     public void run() {
-        org.bitcoinj.core.Context.propagate(Constants.BITCOIN_CONTEXT);
+        final LocalWallet localWallet = LocalWallet.getInstance();
+        org.bitcoinj.core.Context.propagate(localWallet.getContext());
 
         while (running.get()) {
             try ( // start a blocking call, and return only on success or exception
@@ -46,7 +48,7 @@ public abstract class SimpleBluetoothThread extends Thread{
                     is.readFully(msg);
 
                     try {
-                        final Transaction tx = new Transaction(Constants.NETWORK_PARAMETERS, msg);
+                        final Transaction tx = new Transaction(localWallet.parameters(), msg);
 
                         if (!handleTx(tx))
                             ack = false;

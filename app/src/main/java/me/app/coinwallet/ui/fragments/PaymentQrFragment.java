@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
+import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.BaseActivity;
@@ -89,13 +90,14 @@ public class PaymentQrFragment extends Fragment {
             BitcoinURI uri = new BitcoinURI(uriString);
             Bitmap bm = QRUtil.createQRCodeBitmap(uriString);
             if (bm != null) {
+                qrCode.setColorFilter(MaterialColors.getColor(view, R.attr.colorOnSurface));
                 qrCode.setImageBitmap(Bitmap.createScaledBitmap(bm,
                         Constants.QR_BITMAP_SCALE_WIDTH, Constants.QR_BITMAP_SCALE_HEIGHT, false));
             }
             boolean useBluetooth = Boolean.parseBoolean((String) uri.getParameterByName(Constants.BT_ENABLED_PARAM));
             if(useBluetooth){
                 bluetoothHandler.enableBluetooth();
-                bluetoothNotify.setText("Please stay on this screen until you received the payment");
+                bluetoothNotify.setText(R.string.bluetooth_remain_screen_note);
             }
         } catch (BitcoinURIParseException e) {
             ((BaseActivity) requireActivity()).configuration.toastUtil.postToast("Unsupported bitcoin uri format", Toast.LENGTH_SHORT);

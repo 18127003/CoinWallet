@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.R;
 
 import me.app.coinwallet.data.marketcap.MarketCapEntity;
@@ -33,7 +34,9 @@ public class MarketCapTrendAdapter extends BaseAdapter<MarketCapEntity, MarketCa
         MarketCapEntity cap = data.get(position);
 
         holder.trendCard.setOnClickListener(view -> listener.onClick(cap));
-        new ChartUtil(cap, res).chart(holder.chart).disableTouch().description().visualize();
+        int color = MaterialColors.getColor(holder.itemView, R.attr.colorOnSurface);
+        new ChartUtil(cap, res).chart(holder.chart).axisColor(color).disableTouch().description()
+                .descriptionColor(color).visualize();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

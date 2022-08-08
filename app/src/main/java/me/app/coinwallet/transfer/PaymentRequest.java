@@ -5,9 +5,11 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import me.app.coinwallet.Constants;
+import me.app.coinwallet.bitcoinj.LocalWallet;
 import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.protocols.payments.PaymentProtocol;
 import org.bitcoinj.protocols.payments.PaymentProtocolException;
@@ -33,6 +35,8 @@ public class PaymentRequest implements Parcelable {
 
     public final Standard standard;
 
+    public final NetworkParameters parameters;
+
     @NonNull
     public final List<Output> outputs;
 
@@ -42,16 +46,17 @@ public class PaymentRequest implements Parcelable {
     @Nullable
     public final String memo;
 
-    public PaymentRequest(final Standard standard, @NonNull final List<Output> outputs,
+    public PaymentRequest(final Standard standard, NetworkParameters parameters, @NonNull final List<Output> outputs,
                          @Nullable final String memo, final boolean useBluetooth) {
         this.standard = standard;
         this.outputs = outputs;
         this.useBluetooth = useBluetooth;
         this.memo = memo;
+        this.parameters = parameters;
     }
 
     private PaymentRequest(final Address address, @Nullable final String addressLabel) {
-        this(Standard.NONE, buildSimplePayTo(Coin.ZERO, address), addressLabel, false);
+        this(Standard.NONE,address.getParameters(), buildSimplePayTo(Coin.ZERO, address), addressLabel, false);
     }
 
     public static PaymentRequest from(final Address address, @Nullable final String addressLabel) {
@@ -60,28 +65,27 @@ public class PaymentRequest implements Parcelable {
 
     public static PaymentRequest from(final Address address, @Nullable final String addressLabel, @Nullable final Coin amount,
                                       boolean useBluetooth) {
-        return new PaymentRequest(Standard.NONE, buildSimplePayTo(amount, address),addressLabel, useBluetooth);
+        return new PaymentRequest(Standard.NONE,address.getParameters(), buildSimplePayTo(amount, address),addressLabel, useBluetooth);
     }
 
-    public static PaymentRequest from(final String address, final String amount, boolean useBluetooth)
+    public static PaymentRequest from(final Address address, final String amount, boolean useBluetooth)
             throws IllegalArgumentException {
-        Address sendAddress = Address.fromString(Constants.NETWORK_PARAMETERS, address);
         Coin sendAmount = Coin.parseCoin(amount);
-        return PaymentRequest.from(sendAddress, "", sendAmount, useBluetooth);
+        return PaymentRequest.from(address, "", sendAmount, useBluetooth);
     }
 
-    public static PaymentRequest from(final String string) throws BitcoinURIParseException {
+    public static PaymentRequest from(final String string, NetworkParameters parameters) throws BitcoinURIParseException {
         if(string.startsWith("bitcoin")){
             return fromBitcoinUri(new BitcoinURI(string));
         }
-        return from(Address.fromString(Constants.NETWORK_PARAMETERS, string),null);
+        return from(Address.fromString(parameters, string),null);
     }
 
     public static PaymentRequest fromBitcoinUri(final BitcoinURI bitcoinUri) {
         final Address address = bitcoinUri.getAddress();
         final List<Output> outputs = address != null ? buildSimplePayTo(bitcoinUri.getAmount(), address) : null;
         final boolean useBluetooth = Boolean.parseBoolean((String) bitcoinUri.getParameterByName(Constants.BT_ENABLED_PARAM));
-        return new PaymentRequest(Standard.BIP21, outputs, bitcoinUri.getLabel(), useBluetooth);
+        return new PaymentRequest(Standard.BIP21, address.getParameters(), outputs, bitcoinUri.getLabel(), useBluetooth);
     }
 
     public PaymentRequest mergeWithEditedValues(final String editedAmount) throws IllegalArgumentException{
@@ -98,11 +102,11 @@ public class PaymentRequest implements Parcelable {
             throw new IllegalStateException();
         }
 
-        return new PaymentRequest(standard, Arrays.asList(outputs), memo, useBluetooth);
+        return new PaymentRequest(standard, parameters, Arrays.asList(outputs), memo, useBluetooth);
     }
 
     public SendRequest toSendRequest() {
-        final Transaction transaction = new Transaction(Constants.NETWORK_PARAMETERS);
+        final Transaction transaction = new Transaction(parameters);
         outputs.forEach(output -> transaction.addOutput(output.amount, output.script));
         return SendRequest.forTx(transaction);
     }
@@ -124,7 +128,7 @@ public class PaymentRequest implements Parcelable {
             throw new IllegalStateException();
 
         final Script script = outputs.get(0).script;
-        final Address address = WalletUtil.getToAddress(script);
+        final Address address = WalletUtil.getToAddress(script, parameters);
         if (address == null)
             throw new IllegalStateException();
 
@@ -182,6 +186,7 @@ public class PaymentRequest implements Parcelable {
         dest.writeInt(outputs.size());
         dest.writeTypedArray(outputs.toArray(new Output[0]), 0);
         dest.writeString(memo);
+        dest.writeString(parameters.getId());
         dest.writeInt(useBluetooth?1:0);
     }
 
@@ -208,6 +213,7 @@ public class PaymentRequest implements Parcelable {
             outputs = new ArrayList<>();
         }
         memo = in.readString();
+        parameters = NetworkParameters.fromID(in.readString());
         useBluetooth = in.readInt() == 1;
     }
 

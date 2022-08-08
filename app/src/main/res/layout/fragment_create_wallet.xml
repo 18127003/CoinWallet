@@ -17,13 +17,13 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:hint="@string/wallet_label"
-				style="@style/TextInputLayoutWhite"
+				style="@style/TextInputLayoutFilled"
 				android:paddingVertical="5dp">
 			<com.google.android.material.textfield.TextInputEditText
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:id="@+id/label_text_field"
-					style="@style/normal.black"
+					style="@style/normal"
 
 					android:inputType="text"/>
 		</com.google.android.material.textfield.TextInputLayout>
@@ -32,8 +32,7 @@
 				android:layout_marginHorizontal="30dp"
 				android:layout_marginVertical="15dp"
 				android:id="@+id/menu_blockchain"
-				app:boxBackgroundColor="@color/white"
-				style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+				style="@style/TextInputDropdown"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:hint="@string/blockchain_network">
@@ -42,7 +41,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:inputType="none"
-					style="@style/normal.black"
+					style="@style/normal"
 			/>
 
 		</com.google.android.material.textfield.TextInputLayout>

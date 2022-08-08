@@ -17,10 +17,10 @@
 			android:id="@+id/top_app_bar"
 			android:layout_width="match_parent"
 			android:layout_height="?attr/actionBarSize"
-			app:title="Scan Code"
+			app:title="@string/scan_qr_page_label"
 			app:menu="@menu/basic_top_app_bar"
 			app:navigationIcon="@drawable/ic_back"
-			style="@style/Widget.MaterialComponents.Toolbar.Primary"/>
+			style="@style/TopAppBar"/>
 	<com.google.android.material.bottomappbar.BottomAppBar
 			android:id="@+id/bottom_app_bar"
 			android:layout_width="match_parent"
@@ -33,7 +33,7 @@
 				android:id="@+id/bottom_navigation"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:background="@color/yellow"
+				style="@style/BottomNavigationTheme"
 				app:menu="@menu/qr_bottom_navigation_menu"
 				/>
 	</com.google.android.material.bottomappbar.BottomAppBar>

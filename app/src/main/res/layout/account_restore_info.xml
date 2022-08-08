@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:id="@+id/account_restore_info"
+		android:weightSum="3"
+		android:baselineAligned="false">
+	<com.google.android.material.textfield.TextInputLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:hint="@string/account_label"
+			style="@style/TextInputLayoutFilled"
+			android:layout_weight="2">
+		<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/account_label"
+				android:inputType="text"/>
+	</com.google.android.material.textfield.TextInputLayout>
+	<com.google.android.material.textfield.TextInputLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:hint="@string/account"
+			android:layout_marginStart="30dp"
+			style="@style/TextInputLayoutFilled"
+			android:layout_weight="1">
+		<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/account_index"
+				android:inputType="number"/>
+	</com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>

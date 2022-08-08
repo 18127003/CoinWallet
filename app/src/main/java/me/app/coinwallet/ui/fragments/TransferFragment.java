@@ -167,9 +167,7 @@ public class TransferFragment extends Fragment {
                 @NonNull
                 @Override
                 public Intent createIntent(@NonNull Context context, SendMethod input) {
-                    Intent intent = new Intent(context, SingleFragmentActivity.class);
-                    intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, SelectSendMethodFragment.class);
-                    intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Select Send Method");
+                    Intent intent = SingleFragmentActivity.newActivity(context, SelectSendMethodFragment.class, R.string.select_send_method_page_label);
                     intent.putExtra(Constants.SEND_METHOD_EXTRA_NAME, input);
                     return intent;
                 }

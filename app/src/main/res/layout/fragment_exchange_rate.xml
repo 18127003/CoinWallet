@@ -16,7 +16,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:strokeWidth="2dp"
-				app:strokeColor="@color/yellow"
+				app:strokeColor="?attr/colorPrimary"
 				app:cardElevation="0dp">
 			<RelativeLayout
 					android:layout_width="match_parent"
@@ -42,7 +42,7 @@
 						android:layout_centerVertical="true"
 						android:gravity="bottom|left"
 						android:text="@string/bitcoin"
-						style="@style/h6.black"
+						style="@style/h6"
 						android:paddingBottom="5dp"
 						android:id="@+id/card_from"/>
 				<include
@@ -77,8 +77,7 @@
 				<com.google.android.material.textfield.TextInputLayout
 						android:layout_height="wrap_content"
 						android:layout_width="match_parent"
-						app:boxBackgroundColor="@color/white"
-						style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+						style="@style/TextInputLayoutFilled"
 						android:layout_alignParentEnd="true"
 						android:layout_below="@id/text_amount"
 						app:hintEnabled="false"
@@ -109,14 +108,14 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="10dp"
 				android:indeterminate="true"
-				app:indicatorColor="@color/yellow"
+				app:indicatorColor="?attr/colorPrimary"
 				android:id="@+id/progress_circular"
 				android:visibility="gone"/>
 		<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/result"
-				style="@style/h6.white"
+				style="@style/h6.reflect"
 				android:layout_marginTop="10dp"
 				android:padding="10dp"
 		/>

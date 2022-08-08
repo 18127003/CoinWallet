@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             tools:context=".ui.fragments.RestoreWalletProgressFragment">
+
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+		<com.google.android.material.card.MaterialCardView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="20dp"
+				android:layout_marginTop="30dp"
+				style="@style/RoundedCard">
+			<TextView
+					android:layout_margin="20dp"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Your wallet will start to restore automatically. Please connect to the Internet and turn off Power saver mode.
+					You can observe restoring process in the notification bar. You may leave this screen as you wish."
+					style="@style/h6"/>
+		</com.google.android.material.card.MaterialCardView>
+		<com.google.android.material.progressindicator.LinearProgressIndicator
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:indeterminate="true"
+				android:layout_marginHorizontal="36dp"
+				app:indicatorColor="@color/gold"/>
+	</LinearLayout>
+
+</FrameLayout>

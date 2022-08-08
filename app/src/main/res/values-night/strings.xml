@@ -23,4 +23,10 @@
 	<string name="mnemonic">Mnemonic</string>
 	<string name="wallet_label">Wallet Label</string>
 	<string name="exchange">Exchange</string>
+	<string name="latest_tx_placeholder">No transaction yet. Spend some.</string>
+	<string name="account_path">Account Path</string>
+	<string name="upgrade_to_p2sh">Upgrade to P2SH</string>
+	<string name="bluetooth_remain_screen_note">Please stay on this screen until you received the payment</string>
+	<string name="transfer_money_page_label">Transfer money</string>
+	<string name="select_send_method_page_label">Select send method</string>
 </resources>

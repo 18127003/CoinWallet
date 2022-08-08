@@ -12,8 +12,12 @@ import org.bitcoinj.script.Script;
 import org.bitcoinj.wallet.CoinSelector;
 import org.bitcoinj.wallet.KeyChainGroupStructure;
 
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class Constants {
     public static final String NOTIFICATION_CHANNEL_ID_RECEIVE = "NOTIFICATION_CHANNEL_ID_RECEIVE";
@@ -42,11 +46,7 @@ public final class Constants {
 
     public static final CoinSelector DEFAULT_COIN_SELECTOR = SmallestCoinSelector.get();
 
-    public static final NetworkParameters NETWORK_PARAMETERS = TestNet3Params.get();
-
-    public static final KeyChainGroupStructure WALLET_STRUCTURE = Bip44KeyChainGroupStructure.get();
-
-    public static final Context BITCOIN_CONTEXT = new Context(NETWORK_PARAMETERS);
+    public static final Bip44KeyChainGroupStructure WALLET_STRUCTURE = Bip44KeyChainGroupStructure.get();
 
     public static final Script.ScriptType DEFAULT_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2WPKH;
 
@@ -57,6 +57,11 @@ public final class Constants {
     public static final String BLUETOOTH_PAYMENT_PROTOCOL_NAME = "Bitcoin classic payment protocol BIP21";
 
     public static final String BT_ENABLED_PARAM = "bt";
+
+    public static final Map<String, String> SUPPORTED_BLOCKCHAIN = Stream.of(
+            new AbstractMap.SimpleEntry<>("Bitcoin TestNet","org.bitcoin.test"),
+            new AbstractMap.SimpleEntry<>("Bitcoin MainNet","org.bitcoin.production")
+    ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     /** Number of confirmations until a transaction is fully confirmed. */
     public static final int MAX_NUM_CONFIRMATIONS = 7;

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import me.app.coinwallet.viewmodels.SettingViewModel;
 public class SettingFragment extends Fragment {
 
     private MaterialCardView walletManage;
+    private MaterialCardView mnemonic;
     private MaterialCardView changePassword;
     private SwitchMaterial fingerprintEnable;
     private MaterialCardView changeLanguage;
@@ -65,18 +67,20 @@ public class SettingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(SettingViewModel.class);
         walletManage = view.findViewById(R.id.wallet_manage_card);
+        mnemonic = view.findViewById(R.id.mnemonic_card);
         changePassword = view.findViewById(R.id.change_password_card);
         fingerprintEnable = view.findViewById(R.id.fingerprint);
         changeLanguage = view.findViewById(R.id.change_language_card);
         about = view.findViewById(R.id.about_card);
-        changePassword.setOnClickListener(v-> moveToSettingSection(ChangePasswordFragment.class, "Change Password"));
-        changeLanguage.setOnClickListener(v-> moveToSettingSection(ChangeLanguageFragment.class, "Change Language"));
+        changePassword.setOnClickListener(v-> moveToSettingSection(ChangePasswordFragment.class, R.string.change_password_page_label));
+        changeLanguage.setOnClickListener(v-> moveToSettingSection(ChangeLanguageFragment.class, R.string.change_language_page_label));
         fingerprintEnable.setChecked(((BaseActivity)requireActivity()).configuration.isFingerprintEnabled());
         fingerprintEnable.setOnCheckedChangeListener((v, isChecked)->
                 ((BaseActivity) requireActivity()).configuration.setFingerprintEnabled(isChecked));
         logout = view.findViewById(R.id.logout_card);
         logout.setOnClickListener(v -> logout());
-        walletManage.setOnClickListener(v->moveToSettingSection(MnemonicFragment.class, "Mnemonic"));
+        mnemonic.setOnClickListener(v->moveToSettingSection(MnemonicFragment.class, R.string.mnemonic));
+        walletManage.setOnClickListener(v->moveToSettingSection(WalletManageFragment.class, R.string.manage_wallet_page_label));
     }
 
     private void logout(){
@@ -86,7 +90,7 @@ public class SettingFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void moveToSettingSection(Class<? extends Fragment> fragment, String title){
+    private void moveToSettingSection(Class<? extends Fragment> fragment, @StringRes int title){
         ((BaseActivity) requireActivity()).loadFragmentOut(fragment, title);
     }
 }

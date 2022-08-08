@@ -5,38 +5,78 @@
              android:layout_height="match_parent"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              tools:context=".ui.fragments.MnemonicRestoreFragment">
-
-	<LinearLayout
+	<ScrollView
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:gravity="center_horizontal"
-			android:orientation="vertical">
-
-		<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/mnemonic_layout"
+			android:layout_height="match_parent">
+		<LinearLayout
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:hint="@string/mnemonic"
-				style="@style/TextInputLayoutWhite"
-				android:layout_margin="20dp">
-			<com.google.android.material.textfield.TextInputEditText
+				android:layout_height="match_parent"
+				android:gravity="center_horizontal"
+				android:orientation="vertical">
+
+			<com.google.android.material.textfield.TextInputLayout
+					android:id="@+id/mnemonic_layout"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:id="@+id/mnemonic_text_field"
-					android:inputType="textMultiLine"/>
-		</com.google.android.material.textfield.TextInputLayout>
-		<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/restore_mnemonic_list"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_margin="20dp"/>
-		<Button
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/restore_button"
-				android:text="@string/restore_btn_label"
-				android:layout_margin="20dp"
-				style="@style/ButtonStyle"/>
-	</LinearLayout>
+					android:hint="@string/mnemonic"
+					style="@style/TextInputLayoutFilled"
+					android:layout_margin="20dp">
+				<com.google.android.material.textfield.TextInputEditText
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:id="@+id/mnemonic_text_field"
+						android:inputType="textMultiLine"/>
+			</com.google.android.material.textfield.TextInputLayout>
+			<com.google.android.material.textfield.TextInputLayout
+					android:layout_marginHorizontal="20dp"
+					android:layout_marginVertical="15dp"
+					android:id="@+id/menu_blockchain"
+					style="@style/TextInputDropdown"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/blockchain_network">
+				<AutoCompleteTextView
+						android:id="@+id/select_option"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="none"
+						style="@style/normal"
+						/>
+
+			</com.google.android.material.textfield.TextInputLayout>
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical"
+					android:layout_marginHorizontal="20dp"
+					android:layout_marginTop="15dp"
+					android:id="@+id/accounts_layout">
+				<include layout="@layout/account_restore_info"/>
+			</LinearLayout>
+			<Button
+					android:id="@+id/more_account_btn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="end"
+					android:layout_marginEnd="20dp"
+					android:text="+"
+					android:textSize="32sp"
+					style="@style/TextButton.Light"
+					android:textAlignment="textEnd"/>
+			<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/restore_mnemonic_list"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_margin="20dp"/>
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/restore_button"
+					android:text="@string/restore_btn_label"
+					android:layout_margin="20dp"
+					style="@style/ButtonStyle"/>
+		</LinearLayout>
+	</ScrollView>
+
 
 </FrameLayout>

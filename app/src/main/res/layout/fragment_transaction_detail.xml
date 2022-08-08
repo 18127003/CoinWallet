@@ -35,7 +35,7 @@
 						app:layout_constraintTop_toTopOf="parent"
 						app:layout_constraintLeft_toRightOf="@id/tx_in_or_out"
 						app:layout_constraintBottom_toTopOf="@id/amount"
-						style="@style/h5.black"
+						style="@style/h5"
 						android:id="@+id/type"
 						android:layout_marginStart="10dp"
 						android:text="Sending"/>
@@ -47,7 +47,7 @@
 						app:layout_constraintBottom_toTopOf="@id/tx_id"
 						android:text="-200000"
 						android:id="@+id/amount"
-						style="@style/h6.black"/>
+						style="@style/h6"/>
 				<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
 							android:text="@string/tx_update_time"
 							android:layout_alignParentStart="true"
 							android:layout_centerVertical="true"
-							style="@style/h6.black"
+							style="@style/h6"
 							android:paddingBottom="5dp"/>
 					<TextView
 							android:layout_width="wrap_content"
@@ -117,7 +117,7 @@
 							android:text="@string/from"
 							android:layout_alignParentStart="true"
 							android:layout_centerVertical="true"
-							style="@style/h6.black"
+							style="@style/h6"
 							android:paddingBottom="5dp"/>
 					<TextView
 							android:layout_width="wrap_content"
@@ -147,7 +147,7 @@
 							android:text="@string/fee"
 							android:layout_alignParentStart="true"
 							android:layout_centerVertical="true"
-							style="@style/h6.black"
+							style="@style/h6"
 							android:paddingBottom="5dp"/>
 					<TextView
 							android:layout_width="wrap_content"
@@ -177,7 +177,7 @@
 							android:text="@string/confirmation"
 							android:layout_alignParentStart="true"
 							android:layout_centerVertical="true"
-							style="@style/h6.black"
+							style="@style/h6"
 							android:paddingBottom="5dp"/>
 					<TextView
 							android:layout_width="wrap_content"
@@ -208,7 +208,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/more_info"
-					style="@style/h5"/>
+					style="@style/h5.reflect"/>
 			<com.google.android.material.card.MaterialCardView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -227,7 +227,7 @@
 							android:text="@string/address"
 							android:layout_alignParentStart="true"
 							android:layout_centerVertical="true"
-							style="@style/h6.black"
+							style="@style/h6"
 							android:paddingBottom="5dp"/>
 					<TextView
 							android:layout_width="wrap_content"

@@ -19,14 +19,14 @@
 				app:layout_constraintRight_toRightOf="parent"
 				app:layout_constraintBottom_toTopOf="@id/bluetooth_line"
 				android:hint="@string/amount"
-				style="@style/TextInputLayoutWhite"
+				style="@style/TextInputLayoutFilled"
 				android:paddingVertical="5dp">
 			<com.google.android.material.textfield.TextInputEditText
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:id="@+id/amount_text_field"
 					android:inputType="numberDecimal"
-					style="@style/normal.black"/>
+					style="@style/normal"/>
 		</com.google.android.material.textfield.TextInputLayout>
 		<RelativeLayout
 				android:id="@+id/bluetooth_line"
@@ -37,7 +37,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/bluetooth"
-					style="@style/h6.white"
+					style="@style/h6.reflect"
 					android:layout_alignParentStart="true"
 					android:layout_centerInParent="true"/>
 			<com.google.android.material.switchmaterial.SwitchMaterial

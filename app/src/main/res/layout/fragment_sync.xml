@@ -17,7 +17,7 @@
 				app:layout_constraintLeft_toLeftOf="parent"
 				app:layout_constraintRight_toRightOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
-				style="@style/h6.white"/>
+				style="@style/h6.reflect"/>
 		<TextView
 				android:id="@+id/status"
 				android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
 				app:layout_constraintLeft_toLeftOf="parent"
 				app:layout_constraintRight_toRightOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/sync"
-				style="@style/h6.white"/>
+				style="@style/h6.reflect"/>
 		<com.google.android.material.progressindicator.CircularProgressIndicator
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

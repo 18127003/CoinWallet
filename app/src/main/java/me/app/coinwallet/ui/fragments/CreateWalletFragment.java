@@ -3,6 +3,7 @@ package me.app.coinwallet.ui.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -15,7 +16,9 @@ import android.view.ViewGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
+import me.app.coinwallet.data.wallets.WalletInfoEntry;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,15 +52,17 @@ public class CreateWalletFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         label = view.findViewById(R.id.label_text_field);
 
-        List<String> items = Arrays.asList(new String[]{"Bitcoin Mainnet", "Bitcoin Testnet", "Linecoin Testnet"});
-        ArrayAdapter adapter = new ArrayAdapter(requireContext(), R.layout.coin_select_item, items);
-        AutoCompleteTextView option= view.findViewById(R.id.select_option);
-        option.setAdapter(adapter);
+        List<String> items = new ArrayList<>(Constants.SUPPORTED_BLOCKCHAIN.keySet());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.coin_select_item, items);
+        AutoCompleteTextView network = view.findViewById(R.id.select_option);
+        network.setAdapter(adapter);
 
         createBtn = view.findViewById(R.id.create_wallet_btn);
         createBtn.setOnClickListener(v->{
             Intent result = new Intent();
-            result.putExtra(Constants.WALLET_LABEL_EXTRA_NAME, label.getText().toString());
+            String networkId = Constants.SUPPORTED_BLOCKCHAIN.get(network.getText().toString());
+            WalletInfoEntry info = new WalletInfoEntry(networkId, label.getText().toString());
+            result.putExtra(Constants.WALLET_LABEL_EXTRA_NAME, info);
             requireActivity().setResult(Activity.RESULT_OK, result);
             requireActivity().finish();
         });

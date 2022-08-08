@@ -49,12 +49,12 @@
 				<TextView
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:text="@string/available_balance_label"
-						style="@style/h6.black"/>
+						android:text="@string/address"
+						style="@style/h6"/>
 				<TextView
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:id="@+id/available_balance"/>
+						android:id="@+id/address"/>
 			</LinearLayout>
 		</com.google.android.material.card.MaterialCardView>
 	</androidx.constraintlayout.widget.ConstraintLayout>

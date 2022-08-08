@@ -1,6 +1,5 @@
 package me.app.coinwallet.data.marketcap;
 
-import java.util.List;
 
 public class MarketCapJson {
     public Long id;

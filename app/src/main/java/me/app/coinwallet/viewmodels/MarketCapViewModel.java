@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class MarketCapViewModel extends AndroidViewModel {
-    private final WalletApplication application;
     private final MarketCapDao marketCapDao;
     private final MediatorLiveData<List<MarketCapEntity>> marketCapLiveData = new MediatorLiveData<>();
     private LiveData<List<MarketCapEntity>> underlyingMarketCapLiveData;
@@ -22,8 +21,7 @@ public class MarketCapViewModel extends AndroidViewModel {
 
     public MarketCapViewModel(final Application application){
         super(application);
-        this.application = (WalletApplication) application;
-        marketCapDao = MarketCapRepository.get(this.application).marketCapDao();
+        marketCapDao = MarketCapRepository.get(application).marketCapDao();
         fetch(null);
     }
 

@@ -73,7 +73,6 @@ public class MarketCapRepository {
                 try {
                     if (response.isSuccessful()) {
                         List<MarketCapEntity> data = marketCapHost.parse(response.body().source());
-                        Log.e("HD",data.size()+"llll");
                         dao.insertOrUpdateAll(data);
 
                         MarketCapRepository.this.lastUpdated.set(now);
@@ -84,7 +83,6 @@ public class MarketCapRepository {
                                 response.message(), marketCapHost.url());
                     }
                 } catch (final IOException x) {
-                    Log.e("HD",x.getMessage());
                     log.warn("problem fetching market caps from " + marketCapHost.url(), x);
                 } catch (final JsonDataException j) {
                     Log.e("HD",j.getMessage());
@@ -137,6 +135,7 @@ public class MarketCapRepository {
             @Override
             public void onFailure(final Call call, final IOException x) {
                 Log.e("HD","Trend request failed");
+                queryTrends();
             }
         });
     }

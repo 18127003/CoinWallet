@@ -7,6 +7,7 @@ import android.content.res.AssetManager;
 import androidx.multidex.MultiDexApplication;
 import androidx.preference.PreferenceManager;
 import me.app.coinwallet.bitcoinj.LocalWallet;
+import me.app.coinwallet.data.livedata.BlockchainLiveData;
 import me.app.coinwallet.data.livedata.WalletLiveData;
 import me.app.coinwallet.utils.BiometricUtil;
 import me.app.coinwallet.utils.LocaleUtil;
@@ -35,8 +36,9 @@ public class WalletApplication extends MultiDexApplication {
 
         config.updateLastVersionCode(packageInfo.versionCode);
         final LocalWallet wallet = LocalWallet.getInstance();
-        wallet.registerWallet(config.parameters, config.directory);
+        wallet.registerWallet(config.directory);
         WalletLiveData.get();
+        BlockchainLiveData.get();
     }
 
     public synchronized Configuration getConfiguration() {

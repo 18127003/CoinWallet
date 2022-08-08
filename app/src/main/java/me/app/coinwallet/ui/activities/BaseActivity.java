@@ -2,8 +2,11 @@ package me.app.coinwallet.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import androidx.annotation.IdRes;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentFactory;
@@ -60,6 +63,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void loadFragmentOut(Class<? extends Fragment> fragment, String label){
+        Intent intent = SingleFragmentActivity.newActivity(this, fragment, label);
+        startActivity(intent);
+    }
+
+    public void loadFragmentOut(Class<? extends Fragment> fragment, @StringRes int label){
         Intent intent = SingleFragmentActivity.newActivity(this, fragment, label);
         startActivity(intent);
     }

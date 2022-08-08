@@ -2,6 +2,7 @@ package me.app.coinwallet.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,6 +21,7 @@ import com.google.android.material.card.MaterialCardView;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
+import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.adapters.MarketCapTrendAdapter;
 import me.app.coinwallet.utils.Utils;
@@ -39,6 +41,7 @@ public class HomeFragment extends Fragment {
     TextView time;
     TextView amount;
     TextView confirmNum;
+    TextView latestTxPlaceholder;
     ImageView status;
     View txView;
     ShimmerFrameLayout placeholder;
@@ -81,32 +84,22 @@ public class HomeFragment extends Fragment {
 
         exchangeRatesBtn = view.findViewById(R.id.exchange_rate_btn);
         exchangeRatesBtn.setOnClickListener(v->{
-            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
-            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, ExchangeRateFragment.class);
-            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Exchange rate");
-            startActivity(intent);
+            ((BaseActivity) requireActivity()).loadFragmentOut(ExchangeRateFragment.class, R.string.exchange_rate_page_label);
         });
 
         requestBtn = view.findViewById(R.id.request_button);
         requestBtn.setOnClickListener(v->{
-            Intent intent = new Intent(getContext(), SingleFragmentActivity.class);
-            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, PaymentRequestFragment.class);
-            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Payment Request");
-            startActivity(intent);
+            ((BaseActivity) requireActivity()).loadFragmentOut(PaymentRequestFragment.class, R.string.payment_request_page_label);
         });
 
         ImageButton coinMarketBtn=view.findViewById(R.id.coin_market_btn);
         coinMarketBtn.setOnClickListener(v ->{
-            Intent intent = new Intent(requireActivity(), SingleFragmentActivity.class);
-            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME, "Market Cap");
-            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, MarketCapFragment.class);
-            startActivity(intent);
+            ((BaseActivity) requireActivity()).loadFragmentOut(MarketCapFragment.class, R.string.market_cap_page_label);
         });
         marketCaps = view.findViewById(R.id.market_list);
         MarketCapTrendAdapter adapter = new MarketCapTrendAdapter(item -> {
-            Intent i= new Intent(requireContext(), SingleFragmentActivity.class);
-            i.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, MarketCapDetailFragment.class);
-            i.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME,"Chart Detail");
+            Intent i= SingleFragmentActivity.newActivity(requireContext(), MarketCapDetailFragment.class,
+                    getString(R.string.market_cap_detail_page_label, item.getName()));
             i.putExtra("chart_detail", item);
             startActivity(i);
         }, getResources());
@@ -125,8 +118,8 @@ public class HomeFragment extends Fragment {
         amount = txView.findViewById(R.id.tx_amount);
         confirmNum = txView.findViewById(R.id.tx_confirmation_number);
         status = txView.findViewById(R.id.tx_status);
+        latestTxPlaceholder = view.findViewById(R.id.latest_tx_placeholder);
         viewModel.getLatestTx().observe(this, this::renderLastTx);
-
     }
 
     @Override
@@ -158,6 +151,7 @@ public class HomeFragment extends Fragment {
         if(tx==null){
             return;
         }
+        latestTxPlaceholder.setVisibility(View.GONE);
         receiver.setText(tx.getReceiver().toString());
         time.setText(Utils.formatDate(tx.getTime()));
         confirmNum.setText(getResources().getText(R.string.confirmation)+": "+tx.getConfirmNum().toString());
@@ -177,11 +171,10 @@ public class HomeFragment extends Fragment {
                 amount.setTextColor(getResources().getColor(R.color.light_green));
         }
         txView.setOnClickListener(v-> {
-            Intent intent= new Intent(requireContext(), SingleFragmentActivity.class);
-            intent.putExtra(Constants.APP_BAR_TITLE_EXTRA_NAME,"Transaction Detail");
-            intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME,TransactionDetailFragment.class);
+            Intent intent= SingleFragmentActivity.newActivity(requireContext(), TransactionDetailFragment.class, R.string.transaction_detail_page_label);
             intent.putExtra("transaction",tx);
             startActivity(intent);
         });
+        txView.setVisibility(View.VISIBLE);
     }
 }

@@ -38,7 +38,7 @@
 	<string name="contact">Liên hệ</string>
 	<string name="new_password">Mật khẩu mới</string>
 	<string name="confirm_password">Mật khẩu xác nhận</string>
-	<string name="create_btn_label">Tạo ví</string>
+	<string name="create_btn_label">Tạo tài khoản</string>
 	<string name="restore_btn_label">Phục hồi ví</string>
 	<string name="Amount">Số dư</string>
 	<string name="from">Từ</string>
@@ -66,17 +66,38 @@
     <string name="market_capitalization">Vốn hóa thị trường</string>
 	<string name="market_cap_domination_index" translatable="false">Chỉ số thống trị vốn hóa thị trường</string>
 	<string name="volume_and_marketCap" translatable="false">Khối lượng vốn hóa thị trường</string>
-	<string name="low_high_24h" translatable="false">Thấp nhất/Cao nhất trên 24h</string>
+	<string name="low_high_24h" translatable="false">Thấp nhất / Cao nhất trên 24h</string>
     <string name="all">Tất cả</string>
     <string name="exchange_rate_button_label">Tỉ xuất chuyển đổi</string>
 	<string name="amount_label">Nhập số tiền</string>
 	<string name="save">Lưu</string>
 	<string name="mnemonic">Mnemonic</string>
-	<string name="wallet_label">Wallet Label</string>
-	<string name="low_high_week" translatable="false">Thấp nhất/Cao nhất trong tuần</string>
+	<string name="wallet_label">Nhãn ví</string>
+	<string name="low_high_week" translatable="false">Thấp nhất / Cao nhất trong tuần</string>
 	<string name="name_coin_list" translatable="false">Danh sách tiền</string>
 	<string name="data_coin_market">Dữ liệu thị trường</string>
 	<string name="market_cap_button_label">Vốn hóa thị trường</string>
 	<string name="market_cap_trend">Xu hướng thị trường</string>
 	<string name="exchange">Chuyển đổi</string>
+	<string name="latest_tx_placeholder">Chưa có giao dịch.</string>
+	<string name="account_path">Đường dẫn tài khoản</string>
+	<string name="upgrade_to_p2sh">Nâng cấp lên P2SH</string>
+	<string name="blockchain_network">Mạng blockchain</string>
+	<string name="account_label">Nhãn tài khoản</string>
+	<string name="account">Tài khoản</string>
+	<string name="mnemonic_note">Ghi chú ra giấy hoặc lưu tại máy</string>
+	<string name="restore_wallet_page_label">Phục hồi ví</string>
+	<string name="scan_qr_page_label">Quét mã QR</string>
+	<string name="payment_request_page_label">Yêu cầu thanh toán</string>
+	<string name="market_cap_page_label">Vốn hóa thị trường</string>
+	<string name="manage_wallet_page_label">Quản lý ví</string>
+	<string name="change_password_page_label">Thay đổi mật khẩu</string>
+	<string name="change_language_page_label">Thay đổi ngôn ngữ</string>
+	<string name="transaction_detail_page_label">Chi tiết giao dịch</string>
+	<string name="exchange_rate_page_label">Tỉ xuất chuyển đổi</string>
+	<string name="create_account_page_label">Tạo tài khoản mới</string>
+	<string name="bluetooth_remain_screen_note">Giữ thiết bị ở màn hình này đến khi nhận được tiền</string>
+	<string name="transfer_money_page_label">Chuyển tiền</string>
+	<string name="select_send_method_page_label">Chọn phương thức gửi</string>
+	<string name="market_cap_detail_page_label">Vốn hóa thị trường của %1$s</string>
 </resources>

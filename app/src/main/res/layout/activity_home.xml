@@ -24,7 +24,7 @@
 				android:layout_height="?attr/actionBarSize"
 				app:title="@string/app_name"
 				app:menu="@menu/top_app_bar"
-				style="@style/Widget.MaterialComponents.Toolbar.Primary"
+				style="@style/TopAppBar"
 				/>
 	</com.google.android.material.appbar.AppBarLayout>
 	<com.google.android.material.bottomappbar.BottomAppBar
@@ -39,7 +39,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:menu="@menu/bottom_navigation_menu"
-				android:background="@color/yellow"
+				style="@style/BottomNavigationTheme"
 				android:layout_gravity="bottom"/>
 	</com.google.android.material.bottomappbar.BottomAppBar>
 
@@ -49,6 +49,7 @@
 			android:layout_height="wrap_content"
 			android:src="@drawable/ic_qr_code_scanner"
 			app:layout_anchor="@id/bottom_app_bar"
+			style="@style/FAB"
 			/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

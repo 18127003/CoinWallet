@@ -18,7 +18,7 @@
 				app:layout_constraintTop_toTopOf="parent"
 				android:text="@string/welcome_text"
 				android:layout_marginTop="30dp"
-				style="@style/h5"/>
+				style="@style/h5.reflect"/>
 		<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/wallet_info_list"
 				android:layout_marginTop="64dp"

@@ -10,13 +10,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.os.PersistableBundle;
 import android.os.PowerManager;
 import android.util.Log;
 
 public class StartBlockchainSyncService extends JobService {
     private PowerManager pm;
 
-    public static void schedule(final Application application) {
+    public static void schedule(final Application application, String action) {
         final JobScheduler jobScheduler = (JobScheduler) application.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         final JobInfo.Builder jobInfo = new JobInfo.Builder(0, new ComponentName(application,
                 StartBlockchainSyncService.class));
@@ -26,6 +27,10 @@ public class StartBlockchainSyncService extends JobService {
             jobInfo.setRequiresBatteryNotLow(true);
             jobInfo.setRequiresStorageNotLow(true);
         }
+        PersistableBundle bundle = new PersistableBundle();
+        Log.e("HD", "Schedule with action "+action);
+        bundle.putString("action", action);
+        jobInfo.setExtras(bundle);
         jobScheduler.schedule(jobInfo.build());
     }
 
@@ -47,8 +52,15 @@ public class StartBlockchainSyncService extends JobService {
             Log.e("HD","battery low, not starting block chain sync");
         if (powerSaveMode)
             Log.e("HD","power save mode, not starting block chain sync");
-        if (!storageLow && !batteryLow && !powerSaveMode)
-            BlockchainSyncService.start(this);
+        if (!storageLow && !batteryLow && !powerSaveMode){
+            String action = params.getExtras().getString("action", BlockchainSyncService.ACTION_START_SYNC);
+            Log.e("HD", "Start with action "+action);
+            if(BlockchainSyncService.ACTION_START_SYNC.equals(action)){
+                BlockchainSyncService.start(this);
+            } else if (BlockchainSyncService.ACTION_RESTORE_MNEMONIC.equals(action)){
+                BlockchainSyncService.restoreMnemonic(this);
+            }
+        }
         return false;
     }
 

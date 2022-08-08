@@ -136,6 +136,14 @@ public class WalletLiveData implements LocalWallet.EventListener {
         return lastTx;
     }
 
+    public void clear(){
+        availableBalance.postValue(null);
+        expectedBalance.postValue(null);
+        currentReceivingAddress.postValue(null);
+        monthlyReports.postValue(null);
+        lastTx.postValue(null);
+    }
+
     @Override
     public void update(WalletNotificationType type, @Nullable LocalWallet.EventMessage<?> content) {
         switch (type){

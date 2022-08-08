@@ -25,9 +25,9 @@ public class WalletUtil {
      * Get send to address from a tx script
      */
     @Nullable
-    public static Address getToAddress(final Script script) {
+    public static Address getToAddress(final Script script, NetworkParameters parameters) {
         try {
-            return script.getToAddress(Constants.NETWORK_PARAMETERS, true);
+            return script.getToAddress(parameters, true);
         } catch (final ScriptException x) {
             return null;
         }
@@ -41,7 +41,7 @@ public class WalletUtil {
         for (final TransactionOutput output : tx.getOutputs()) {
             if (!output.isMine(wallet)) {
                 final Script script = output.getScriptPubKey();
-                final Address address = getToAddress(script);
+                final Address address = getToAddress(script, wallet.getNetworkParameters());
                 if (address != null)
                     return address;
             }
@@ -57,7 +57,7 @@ public class WalletUtil {
         for (final TransactionOutput output : tx.getOutputs()) {
             if (output.isMine(wallet)) {
                 final Script script = output.getScriptPubKey();
-                final Address address = getToAddress(script);
+                final Address address = getToAddress(script, wallet.getNetworkParameters());
                 if (address != null)
                     return address;
             }
@@ -82,6 +82,22 @@ public class WalletUtil {
         }
 
         return true;
+    }
+
+    public static boolean isTxRelated(final Transaction tx, final Wallet wallet) {
+        for (final TransactionInput input: tx.getInputs()){
+            final TransactionOutput connectedOutput = input.getConnectedOutput();
+            if (connectedOutput != null && connectedOutput.isMine(wallet)){
+                return true;
+            }
+        }
+
+        for (final TransactionOutput output: tx.getOutputs()) {
+            if(output.isMine(wallet)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /***
@@ -127,7 +143,7 @@ public class WalletUtil {
         }
     }
 
-    public static List<Integer> accounts(NetworkParameters params, File walletFile){
+    public static List<Integer> accounts(File walletFile){
         if(walletFile.exists()){
             try (FileInputStream walletStream = new FileInputStream(walletFile)) {
                 Protos.Wallet proto = WalletProtobufSerializer.parseToProto(walletStream);
@@ -135,12 +151,12 @@ public class WalletUtil {
                 if (proto.hasEncryptionParameters()) {
                     Protos.ScryptParameters encryptionParameters = proto.getEncryptionParameters();
                     KeyCrypterScrypt keyCrypter = new KeyCrypterScrypt(encryptionParameters);
-                    keyChainGroup = KeyChainGroup.fromProtobufEncrypted(params, proto.getKeyList(), keyCrypter);
+                    keyChainGroup = KeyChainGroup.fromProtobufEncrypted(proto.getKeyList(), keyCrypter);
                 } else {
-                    keyChainGroup = KeyChainGroup.fromProtobufUnencrypted(params, proto.getKeyList());
+                    keyChainGroup = KeyChainGroup.fromProtobufUnencrypted(proto.getKeyList());
                 }
                 List<HDPath> accounts = keyChainGroup.accounts();
-                return accounts.stream().map(path->path.get(path.size()-1).num()).collect(Collectors.toList());
+                return accounts.stream().map(Constants.WALLET_STRUCTURE::accountIndexOf).collect(Collectors.toList());
             } catch (IOException | UnreadableWalletException ioException) {
                 ioException.printStackTrace();
             }

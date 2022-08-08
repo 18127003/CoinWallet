@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import me.app.coinwallet.Configuration;
 import me.app.coinwallet.WalletApplication;
+import me.app.coinwallet.bitcoinj.LocalWallet;
 import me.app.coinwallet.bluetooth.BluetoothPaymentRequest;
 import me.app.coinwallet.bluetooth.DirectPaymentRequest;
 import me.app.coinwallet.data.addressbook.AddressBookDao;
@@ -16,6 +17,7 @@ import me.app.coinwallet.data.addressbook.AddressBookEntry;
 import me.app.coinwallet.transfer.*;
 import me.app.coinwallet.utils.Utils;
 import org.bitcoin.protocols.payments.Protos;
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.protocols.payments.PaymentProtocol;
@@ -28,6 +30,7 @@ public class TransferPageViewModel extends AndroidViewModel {
     public PaymentRequest paymentRequest;
     private final Configuration configuration;
     public final MutableLiveData<SendMethod> sendMethod = new MutableLiveData<>(SendMethod.getDefault());
+    private final LocalWallet localWallet = LocalWallet.getInstance();
 
     public TransferPageViewModel(@NonNull Application application) {
         super(application);
@@ -41,7 +44,8 @@ public class TransferPageViewModel extends AndroidViewModel {
 
     public void send(String sendAddress, String value, String password){
         try{
-            paymentRequest = PaymentRequest.from(sendAddress, value, false);
+            Address sendTo = Address.fromString(localWallet.parameters(), sendAddress);
+            paymentRequest = PaymentRequest.from(sendTo, value, false);
             send(password);
         } catch (AddressFormatException addressFormatException){
             configuration.toastUtil.postToast("Wrong address format", Toast.LENGTH_SHORT);

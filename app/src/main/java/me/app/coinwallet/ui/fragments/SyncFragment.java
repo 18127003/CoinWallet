@@ -11,10 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import me.app.coinwallet.Configuration;
 import me.app.coinwallet.R;
 import me.app.coinwallet.blockchain.BlockchainSyncService;
+import me.app.coinwallet.data.livedata.BlockchainLiveData;
+import me.app.coinwallet.data.wallets.WalletInfoEntry;
 import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.activities.HomeActivity;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
@@ -23,11 +27,12 @@ import java.io.InputStream;
 
 public class SyncFragment extends Fragment {
 
-    private TextView sync;
     private TextView status;
     private Configuration configuration;
     private InitPageViewModel viewModel;
     private AuthenticateHandler authenticateHandler;
+    boolean createWallet = false;
+    WalletInfoEntry walletInfoEntry;
 
     public SyncFragment() {
         // Required empty public constructor
@@ -49,16 +54,15 @@ public class SyncFragment extends Fragment {
         authenticateHandler = new AuthenticateHandler(this, new AuthenticateHandler.AuthenticateResultCallback() {
             @Override
             public void onPasswordVerified(String password) {
-                if(viewModel.createNewAccount){
-                    viewModel.addAccount(password);
+                if(createWallet){
+                    viewModel.addAccount(walletInfoEntry.getAccountIndex(), password);
                 }
                 toHomePage();
             }
 
             @Override
             public void onPasswordDenied() {
-                Log.e("HD","Pwd denied");
-                ((BaseActivity) requireActivity()).loadFragment(SelectWalletFragment.class);
+                requireActivity().finish();
                 BlockchainSyncService.SHOULD_RESTART.set(false);
                 BlockchainSyncService.stop();
             }
@@ -80,20 +84,23 @@ public class SyncFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        sync = view.findViewById(R.id.sync);
         status = view.findViewById(R.id.status);
         viewModel = new ViewModelProvider(requireActivity()).get(InitPageViewModel.class);
         InputStream checkpoints = configuration.getBlockchainCheckpointFile();
-        viewModel.initWallet(checkpoints);
-        viewModel.getSyncProgress().observe(this, s -> sync.setText(s));
+        Intent intent = requireActivity().getIntent();
+        createWallet = intent.getBooleanExtra("create_wallet", false);
+        walletInfoEntry = (WalletInfoEntry) intent.getSerializableExtra("wallet_info");
+        viewModel.initWallet(walletInfoEntry, checkpoints);
         viewModel.getStatus().observe(this, (i)->{
-            status.setText(i);
-            if(i.equals(R.string.app_setup_completed)){
-                if(viewModel.createNewAccount){
+            status.setText(i.toString());
+            if(i.equals(BlockchainLiveData.BlockchainStatus.SYNC_START)){
+                if(createWallet){
                     authenticateHandler.accessPasswordDialog();
                 }
                 else if(viewModel.isEncrypted()){
                     authenticateHandler.authenticateAccess();
+                } else {
+                    authenticateHandler.accessPasswordDialog();
                 }
             }
         });
@@ -101,7 +108,6 @@ public class SyncFragment extends Fragment {
     }
 
     private void toHomePage(){
-
         Intent intent = new Intent(getContext(), HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

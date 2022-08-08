@@ -17,7 +17,7 @@
 			<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					style="@style/h6.black"
+					style="@style/h6"
 					android:layout_margin="15dp"
 					android:id="@+id/mnemonic"/>
 		</com.google.android.material.card.MaterialCardView>
@@ -26,8 +26,8 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="15dp"
 				android:layout_marginHorizontal="20dp"
-				style="@style/h6.white"
-				android:text="Write down or save as you wish"
+				style="@style/h6.reflect"
+				android:text="@string/mnemonic_note"
 				android:id="@+id/notice_text"
 				app:layout_constraintTop_toBottomOf="@id/mnemonic_card"/>
 		<Button

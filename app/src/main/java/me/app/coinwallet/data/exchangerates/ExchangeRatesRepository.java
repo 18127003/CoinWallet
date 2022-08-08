@@ -134,7 +134,6 @@ public class ExchangeRatesRepository {
                     if (response.isSuccessful()) {
 
                         ExchangeRatesJson data = exchangeRatesHost.parseExchange(response.body().source());
-                        Log.e("MN","finish");
                         listener.onSucceed();
                         exchangeRatesJsonMutableLiveData.postValue(data);
                     } else {

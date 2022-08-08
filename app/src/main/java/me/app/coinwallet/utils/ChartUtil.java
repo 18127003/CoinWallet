@@ -1,11 +1,13 @@
 package me.app.coinwallet.utils;
 
 import android.content.res.Resources;
+import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.marketcap.MarketCapEntity;
 
@@ -30,8 +32,8 @@ public class ChartUtil {
         return this;
     }
 
-    public ChartUtil axisColor(@ColorRes int color){
-        chart.getAxisLeft().setTextColor(res.getColor(color));
+    public ChartUtil axisColor(@ColorInt int color){
+        chart.getAxisLeft().setTextColor(color);
         return this;
     }
 
@@ -69,8 +71,8 @@ public class ChartUtil {
         return this;
     }
 
-    public ChartUtil descriptionColor(@ColorRes int color){
-        description.setTextColor(res.getColor(color));
+    public ChartUtil descriptionColor(@ColorInt int color){
+        description.setTextColor(color);
         return this;
     }
 

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
+import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.utils.QRUtil;
@@ -19,7 +20,7 @@ import me.app.coinwallet.viewmodels.ScanQrPageViewModel;
 public class ShowQrFragment extends Fragment {
 
     ImageView qrCodeImg;
-    TextView availableBalance;
+    TextView address;
     ScanQrPageViewModel viewModel;
 
     public ShowQrFragment() {
@@ -50,14 +51,15 @@ public class ShowQrFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(ScanQrPageViewModel.class);
         qrCodeImg = view.findViewById(R.id.qr_code_img);
-        availableBalance = view.findViewById(R.id.available_balance);
+        address = view.findViewById(R.id.address);
         viewModel.getAddress().observe(requireActivity(), s -> {
             Bitmap bm = QRUtil.createQRCodeBitmap(s);
             if (bm != null) {
+                qrCodeImg.setColorFilter(MaterialColors.getColor(view, R.attr.colorOnSurface));
                 qrCodeImg.setImageBitmap(Bitmap.createScaledBitmap(bm,
                         Constants.QR_BITMAP_SCALE_WIDTH, Constants.QR_BITMAP_SCALE_HEIGHT, false));
             }
         });
-        viewModel.getBalance().observe(this, s->availableBalance.setText(s));
+        viewModel.getAddress().observe(this, s->address.setText(s));
     }
 }

@@ -11,8 +11,11 @@ import me.app.coinwallet.bitcoinj.LocalWallet;
 import me.app.coinwallet.R;
 import me.app.coinwallet.blockchain.BlockchainSyncService;
 import me.app.coinwallet.data.language.LanguageOption;
+import me.app.coinwallet.data.livedata.BlockchainLiveData;
+import me.app.coinwallet.data.livedata.WalletLiveData;
 import me.app.coinwallet.utils.LocaleUtil;
 import me.app.coinwallet.utils.WalletUtil;
+import org.bitcoinj.crypto.HDPath;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.Wallet;
 
@@ -23,6 +26,7 @@ public class SettingViewModel extends AndroidViewModel {
     private final LocalWallet localWallet = LocalWallet.getInstance();
     private final List<LanguageOption> languages;
     private final MutableLiveData<String> mnemonic = new MutableLiveData<>();
+    private final WalletLiveData walletLiveData = WalletLiveData.get();
     private DeterministicSeed seed;
 
     public SettingViewModel(@NonNull Application application) {
@@ -30,6 +34,16 @@ public class SettingViewModel extends AndroidViewModel {
         languages = new ArrayList<>();
         languages.add(new LanguageOption(1, "English", "en"));
         languages.add(new LanguageOption(2, "Vietnam", "vi"));
+    }
+
+    public LiveData<String> getAddress(){return walletLiveData.getCurrentReceivingAddress();}
+
+    public String getAccountPath(){
+        HDPath accountPath = localWallet.getCurrentAccountPath();
+        if(accountPath == null){
+            return "";
+        }
+        return accountPath.toString();
     }
 
     public List<LanguageOption> getLanguages() {
@@ -85,6 +99,8 @@ public class SettingViewModel extends AndroidViewModel {
     }
 
     public void logout(){
+        WalletLiveData.get().clear();
+        BlockchainLiveData.get().clear();
         BlockchainSyncService.SHOULD_RESTART.set(false);
         BlockchainSyncService.stop();
     }

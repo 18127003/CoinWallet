@@ -27,18 +27,20 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
 
     private Configuration config;
     private static final LocalWallet wallet = LocalWallet.getInstance();
-    private final BlockchainLiveData blockchainLiveData = new BlockchainLiveData();
 
     private Stopwatch serviceUpTime;
+    private boolean shutdownOnSynced = false;
     private boolean resetBlockchainOnShutdown = false;
     private final AtomicBoolean isBound = new AtomicBoolean(false);
     private static final AtomicBoolean IS_RUNNING = new AtomicBoolean(false);
     public static final AtomicBoolean SHOULD_RESTART = new AtomicBoolean(true);
 
-    private static final String ACTION_START_SYNC = BlockchainSyncService.class.getPackage().getName()
+    public static final String ACTION_START_SYNC = BlockchainSyncService.class.getPackage().getName()
             + ".sync_blockchain";
-    private static final String ACTION_RESET_BLOCKCHAIN = BlockchainSyncService.class.getPackage().getName()
+    public static final String ACTION_RESET_BLOCKCHAIN = BlockchainSyncService.class.getPackage().getName()
             + ".reset_blockchain";
+    public static final String ACTION_RESTORE_MNEMONIC = BlockchainSyncService.class.getPackage().getName()
+            + ".restore_mnemonic";
 
     public static void start(final Context context){
         Intent intent = new Intent(ACTION_START_SYNC, null, context, BlockchainSyncService.class);
@@ -56,6 +58,11 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 new Intent(ACTION_RESET_BLOCKCHAIN, null, context, BlockchainSyncService.class));
     }
 
+    public static void restoreMnemonic(final Context context) {
+        ContextCompat.startForegroundService(context,
+                new Intent(ACTION_RESTORE_MNEMONIC, null, context, BlockchainSyncService.class));
+    }
+
     @Override
     public void update(WalletNotificationType type, LocalWallet.EventMessage<?> content) {
         switch (type){
@@ -68,22 +75,22 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
             case SYNC_STARTED:
                 Log.e("HD","Sync started");
                 updateForegroundNotification("Started downloading blockchain");
-                blockchainLiveData.setSyncStatus(false);
                 break;
             case SYNC_PROGRESS:
                 Log.e("HD","Sync progress");
                 double progress = (double) content.getContent();
                 updateForegroundNotification(String.valueOf(progress));
-                blockchainLiveData.updateProgress(progress);
                 break;
             case SYNC_COMPLETED:
                 Log.e("HD","Sync complete");
                 updateForegroundNotification("Blockchain up to date");
-                blockchainLiveData.setSyncStatus(true);
+                if(shutdownOnSynced){
+                    SHOULD_RESTART.set(false);
+                    stopSelf();
+                }
                 break;
             case SYNC_STOPPED:
                 IS_RUNNING.set(false);
-                stopSelf();
                 break;
         }
     }
@@ -129,7 +136,6 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
         serviceUpTime = Stopwatch.createStarted();
         super.onCreate();
         config = ((WalletApplication) getApplication()).getConfiguration();
-//        wallet = LocalWallet.getInstance();
 
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
@@ -152,6 +158,7 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
             Log.e("HD","service start command: "+ action);
 
             if (ACTION_START_SYNC.equals(action)) {
+                shutdownOnSynced = false;
                 BriefLogFormatter.init();
                 Threading.USER_THREAD = config.executorService;
                 wallet.subscribe(this);
@@ -162,6 +169,12 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 stopSelf();
                 if (isBound.get())
                     Log.i("HD","stop is deferred because service still bound");
+            } else if (ACTION_RESTORE_MNEMONIC.equals(action)) {
+                BriefLogFormatter.init();
+                Threading.USER_THREAD = config.executorService;
+                wallet.subscribe(this);
+                shutdownOnSynced = true;
+                wallet.initWallet();
             }
         } else {
             Log.e("HD","service restart, although it was started as non-sticky");
@@ -187,7 +200,7 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
         }
         unregisterReceiver(deviceIdleModeReceiver);
         if(SHOULD_RESTART.get()){
-            StartBlockchainSyncService.schedule(getApplication());
+            StartBlockchainSyncService.schedule(getApplication(), ACTION_START_SYNC);
         }
         super.onDestroy();
         Log.i("HD","service was up for "+ serviceUpTime.stop());

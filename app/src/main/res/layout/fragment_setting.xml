@@ -21,7 +21,7 @@
 				<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						style="@style/h6.white"
+						style="@style/h6.reflect"
 						android:text="@string/manage_wallet_label"
 						android:padding="10dp"/>
 				<ImageButton
@@ -43,6 +43,36 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				style="@style/TransparentCardView"
+				android:id="@+id/mnemonic_card">
+			<RelativeLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal">
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						style="@style/h6.reflect"
+						android:text="@string/mnemonic"
+						android:padding="10dp"/>
+				<ImageButton
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:background="@drawable/ic_navigate_next_white"
+						android:layout_alignParentEnd="true"
+						android:layout_centerVertical="true"
+						android:layout_marginEnd="5dp"
+						android:id="@+id/mnemonic"/>
+			</RelativeLayout>
+		</com.google.android.material.card.MaterialCardView>
+		<View
+				android:layout_marginHorizontal="5dp"
+				android:layout_width="fill_parent"
+				android:layout_height="1dp"
+				android:background="@android:color/darker_gray" />
+		<com.google.android.material.card.MaterialCardView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				style="@style/TransparentCardView"
 				android:id="@+id/change_password_card">
 			<RelativeLayout
 					android:layout_width="match_parent"
@@ -51,7 +81,7 @@
 				<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						style="@style/h6.white"
+						style="@style/h6.reflect"
 						android:text="@string/change_password"
 						android:padding="10dp"/>
 				<ImageButton
@@ -81,7 +111,7 @@
 				<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						style="@style/h6.white"
+						style="@style/h6.reflect"
 						android:text="@string/fingerprint"
 						android:padding="10dp"/>
 				<com.google.android.material.switchmaterial.SwitchMaterial
@@ -111,7 +141,7 @@
 				<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						style="@style/h6.white"
+						style="@style/h6.reflect"
 						android:text="@string/language"
 						android:padding="10dp"/>
 				<ImageButton
@@ -141,7 +171,7 @@
 				<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						style="@style/h6.white"
+						style="@style/h6.reflect"
 						android:text="@string/about"
 						android:padding="10dp"/>
 				<ImageButton
@@ -171,7 +201,7 @@
 				<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						style="@style/h6.white"
+						style="@style/h6.reflect"
 						android:text="@string/log_out"
 						android:padding="10dp"/>
 				<ImageButton

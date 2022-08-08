@@ -31,60 +31,27 @@ public class SelectWalletFragment extends Fragment{
     private InitPageViewModel viewModel;
     private Button createBtn;
     private Button restoreBtn;
-    private final ActivityResultLauncher<String> askLabel = registerForActivityResult(
-            new ActivityResultContract<String, String>() {
+    private final ActivityResultLauncher<WalletInfoEntry> askLabel = registerForActivityResult(
+            new ActivityResultContract<WalletInfoEntry, WalletInfoEntry>() {
                 @NonNull
                 @Override
-                public Intent createIntent(@NonNull Context context, String input) {
+                public Intent createIntent(@NonNull Context context, WalletInfoEntry input) {
                     return SingleFragmentActivity.newActivity(context, CreateWalletFragment.class, "Create new wallet");
                 }
                 @Override
-                public String parseResult(int resultCode, @Nullable Intent intent) {
+                public WalletInfoEntry parseResult(int resultCode, @Nullable Intent intent) {
                     if(resultCode == Activity.RESULT_OK && intent!=null){
-                        return intent.getStringExtra(Constants.WALLET_LABEL_EXTRA_NAME);
+                        return (WalletInfoEntry) intent.getSerializableExtra(Constants.WALLET_LABEL_EXTRA_NAME);
                     }
                     return null;
                 }
             },
-            new ActivityResultCallback<String>() {
+            new ActivityResultCallback<WalletInfoEntry>() {
                 @Override
-                public void onActivityResult(String result) {
+                public void onActivityResult(WalletInfoEntry result) {
                     if(result!=null){
                         WalletInfoEntry entry = viewModel.saveWalletInfo(result);
                         viewModel.setSelectedWallet(entry);
-                    }
-                }
-            }
-    );
-
-    private final ActivityResultLauncher<Intent> askMnemonic = registerForActivityResult(
-            new ActivityResultContract<Intent, Intent>() {
-                @NonNull
-                @Override
-                public Intent createIntent(@NonNull Context context, Intent input) {
-                    return SingleFragmentActivity.newActivity(context, MnemonicRestoreFragment.class, "Restore wallet");
-                }
-
-                @Override
-                public Intent parseResult(int resultCode, @Nullable Intent intent) {
-                    if(resultCode == Activity.RESULT_OK && intent!=null){
-                        return intent;
-                    }
-                    return new Intent();
-                }
-            },
-            new ActivityResultCallback<Intent>() {
-                @Override
-                public void onActivityResult(Intent result) {
-                    String label = result.getStringExtra(Constants.WALLET_LABEL_EXTRA_NAME);
-                    String mnemonic = result.getStringExtra(Constants.MNEMONIC_EXTRA_NAME);
-                    if(label != null && mnemonic != null){
-                        try {
-                            viewModel.restoreWallet(mnemonic);
-                            viewModel.setSelectedWallet(new WalletInfoEntry( 0,"wallet 0", "BITCOIN"));
-                        } catch (UnreadableWalletException e) {
-                            ((BaseActivity) requireActivity()).configuration.toastUtil.postToast("Mnemonic unacceptable", Toast.LENGTH_SHORT);
-                        }
                     }
                 }
             }
@@ -121,11 +88,16 @@ public class SelectWalletFragment extends Fragment{
         walletInfoList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         walletInfoList.setAdapter(adapter);
         viewModel.getWalletInfos().observe(this, adapter::update);
-        restoreBtn.setOnClickListener((v)-> askMnemonic.launch(null));
+        restoreBtn.setOnClickListener((v)-> {
+            ((BaseActivity) requireActivity()).loadFragmentOut(MnemonicRestoreFragment.class, R.string.restore_wallet_page_label);
+        });
         createBtn.setOnClickListener((v)-> askLabel.launch(null));
-        viewModel.getSelectedWallet().observe(this, label->{
-            if(label!=null){
-                ((BaseActivity) requireActivity()).loadFragment(SyncFragment.class);
+        viewModel.getSelectedWallet().observe(this, walletInfo->{
+            if(walletInfo!=null){
+                Intent intent = SingleFragmentActivity.newActivity(requireContext(), SyncFragment.class, "");
+                intent.putExtra("create_wallet", viewModel.createNewAccount);
+                intent.putExtra("wallet_info", walletInfo);
+                startActivity(intent);
             }
         });
     }

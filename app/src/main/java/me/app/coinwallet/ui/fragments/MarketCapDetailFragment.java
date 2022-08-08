@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.github.mikephil.charting.charts.LineChart;
+import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.marketcap.MarketCapEntity;
 import me.app.coinwallet.utils.ChartUtil;
@@ -47,10 +48,11 @@ public class MarketCapDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         chart = view.findViewById(R.id.chart);
+        int color = MaterialColors.getColor(view, R.attr.colorOnSurface);
         new ChartUtil(marketCapEntity, getResources()).chart(chart)
-                .axisColor(R.color.white)
+                .axisColor(color)
                 .description()
-                .descriptionColor(R.color.white)
+                .descriptionColor(color)
                 .visualize();
 
         TextView price=view.findViewById(R.id.price);

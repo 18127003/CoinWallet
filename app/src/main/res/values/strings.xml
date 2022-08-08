@@ -94,11 +94,11 @@
 	<string name="year" translatable="false">a year</string>
 	<string name="data_coin_market">Data about Coin Market</string>
 	<string name="price">Price</string>
-	<string name="market_capitalization">Market Capitalization</string>
-	<string name="market_cap_domination_index">Market Cap Domination Index</string>
-	<string name="volume_and_marketCap">Volume/MarketCap</string>
-	<string name="low_high_24h">Low for 24h/High for 24h</string>
-	<string name="low_high_week">"Low/High for a week "</string>
+	<string name="market_capitalization">Market capitalization</string>
+	<string name="market_cap_domination_index">Market cap domination index</string>
+	<string name="volume_and_marketCap">Volume / Market cap</string>
+	<string name="low_high_24h">Low for 24h / High for 24h</string>
+	<string name="low_high_week">"Low / High for a week "</string>
 	<string name="ranking">Ranking</string>
 	<string name="name_coin_list">Name Coin List</string>
 	<string name="exchange_rate_button_label">Exchange Rates</string>
@@ -110,5 +110,25 @@
 	<string name="wallet_label">Wallet Label</string>
 	<string name="market_cap_trend">Market cap trend</string>
 	<string name="exchange">Exchange</string>
-	<string name="blockchain_network">Blockchain Network</string>
+	<string name="blockchain_network">Blockchain network</string>
+	<string name="account_label">Account label</string>
+	<string name="account">Account</string>
+	<string name="latest_tx_placeholder">No transaction yet. Spend some.</string>
+	<string name="account_path">Account Path</string>
+	<string name="upgrade_to_p2sh">Upgrade to P2SH</string>
+	<string name="mnemonic_note">Write down or save as you wish</string>
+	<string name="restore_wallet_page_label">Restore wallet</string>
+	<string name="scan_qr_page_label">Scan QR</string>
+	<string name="payment_request_page_label">Payment request</string>
+	<string name="market_cap_page_label">Market cap</string>
+	<string name="manage_wallet_page_label">Manage wallet</string>
+	<string name="change_password_page_label">Change password</string>
+	<string name="change_language_page_label">Change language</string>
+	<string name="transaction_detail_page_label">Transaction detail</string>
+	<string name="exchange_rate_page_label">Exchange rate</string>
+	<string name="create_account_page_label">Create account</string>
+	<string name="bluetooth_remain_screen_note">Please stay on this screen until you received the payment</string>
+	<string name="transfer_money_page_label">Transfer money</string>
+	<string name="select_send_method_page_label">Select send method</string>
+	<string name="market_cap_detail_page_label">Market cap detail of %1$s</string>
 </resources>
