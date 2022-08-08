@@ -70,16 +70,19 @@ public class TransactionDetailFragment extends Fragment {
         switch (transactionWrapper.getStatus()){
             case PENDING:
                 status.setText(R.string.pending);
+                status.setTextColor(getResources().getColor(R.color.black));
                 status.setBackgroundColor(getResources().getColor(R.color.grey));
                 status.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_pending,0,0,0);
                 break;
             case DEAD:
                 status.setText(R.string.fail);
+                status.setTextColor(getResources().getColor(R.color.black));
                 status.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_cancel_24,0,0,0);
                 status.setBackgroundColor(getResources().getColor(R.color.red));
                 break;
             case BUILDING:
                 status.setText(R.string.success);
+                status.setTextColor(getResources().getColor(R.color.black));
                 status.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_done,0,0,0);
                 status.setBackgroundColor(getResources().getColor(R.color.light_green));
                 break;

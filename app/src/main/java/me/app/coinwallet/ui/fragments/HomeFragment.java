@@ -168,7 +168,7 @@ public class HomeFragment extends Fragment {
                 break;
             case BUILDING:
                 status.setBackgroundResource(R.drawable.ic_done);
-                amount.setTextColor(getResources().getColor(R.color.light_green));
+                amount.setTextColor(getResources().getColor(R.color.old_green));
         }
         txView.setOnClickListener(v-> {
             Intent intent= SingleFragmentActivity.newActivity(requireContext(), TransactionDetailFragment.class, R.string.transaction_detail_page_label);

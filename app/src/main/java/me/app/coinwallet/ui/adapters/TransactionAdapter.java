@@ -49,7 +49,7 @@ public class TransactionAdapter extends BaseAdapter<TransactionWrapper, Transact
                 break;
             case BUILDING:
                 holder.status.setBackgroundResource(R.drawable.ic_done);
-                holder.amount.setTextColor(res.getColor(R.color.light_green));
+                holder.amount.setTextColor(res.getColor(R.color.old_green));
         }
         holder.txCard.setOnClickListener(v->listener.onClick(tx));
     }

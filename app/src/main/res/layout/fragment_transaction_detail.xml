@@ -38,14 +38,14 @@
 						style="@style/h5"
 						android:id="@+id/type"
 						android:layout_marginStart="10dp"
-						android:text="Sending"/>
+						/>
 				<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						app:layout_constraintTop_toBottomOf="@id/type"
 						app:layout_constraintLeft_toLeftOf="@id/type"
 						app:layout_constraintBottom_toTopOf="@id/tx_id"
-						android:text="-200000"
+
 						android:id="@+id/amount"
 						style="@style/h6"/>
 				<TextView
@@ -55,23 +55,23 @@
 						app:layout_constraintLeft_toLeftOf="@id/type"
 						app:layout_constraintBottom_toTopOf="@id/tx_status_text"
 						android:id="@+id/tx_id"
-						android:text="fdgdfd"/>
+						/>
 				<androidx.appcompat.widget.AppCompatButton
 						android:layout_width="match_parent"
-				        android:layout_height="wrap_content"
-				        app:layout_constraintTop_toBottomOf="@id/tx_id"
-				        app:layout_constraintLeft_toLeftOf="parent"
-				        app:layout_constraintRight_toRightOf="parent"
-				        android:id="@+id/tx_status_text"
-				        android:clickable="false"
-				        android:text="transaction successfully"
-				        android:drawableStart="@drawable/ic_done"
+						android:layout_height="wrap_content"
+						app:layout_constraintTop_toBottomOf="@id/tx_id"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintRight_toRightOf="parent"
+						android:id="@+id/tx_status_text"
+						android:clickable="false"
+
+						android:drawableStart="@drawable/ic_done"
 						android:drawablePadding="5dp"
-				        android:gravity="left|center_vertical"
+						android:gravity="left|center_vertical"
 						android:paddingHorizontal="10dp"
 						android:paddingVertical="0dp"
 						android:layout_marginVertical="10dp"
-				/>
+						android:layout_marginTop="8dp"/>
 				<RelativeLayout
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
 							android:layout_alignParentEnd="true"
 							android:layout_centerVertical="true"
 							android:paddingBottom="5dp"
-							android:text="3432"/>
+							/>
 					<View
 							android:layout_marginHorizontal="5dp"
 							android:layout_width="match_parent"
@@ -126,7 +126,7 @@
 							android:layout_alignParentEnd="true"
 							android:layout_centerVertical="true"
 							android:paddingBottom="5dp"
-							android:text="3432"/>
+							/>
 					<View
 							android:layout_marginHorizontal="5dp"
 							android:layout_width="match_parent"
@@ -156,7 +156,7 @@
 							android:layout_alignParentEnd="true"
 							android:layout_centerVertical="true"
 							android:paddingBottom="5dp"
-							android:text="3432"/>
+							/>
 					<View
 							android:layout_marginHorizontal="5dp"
 							android:layout_width="match_parent"
@@ -186,7 +186,7 @@
 							android:layout_alignParentEnd="true"
 							android:layout_centerVertical="true"
 							android:paddingBottom="5dp"
-							android:text="3432"/>
+							/>
 					<View
 							android:layout_marginHorizontal="5dp"
 							android:layout_width="match_parent"
@@ -236,7 +236,7 @@
 							android:layout_alignParentEnd="true"
 							android:layout_centerVertical="true"
 							android:paddingBottom="5dp"
-							android:text="3432"/>
+							/>
 				</RelativeLayout>
 			</com.google.android.material.card.MaterialCardView>
 		</LinearLayout>
