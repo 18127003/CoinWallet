@@ -76,7 +76,7 @@ public class InitPageViewModel extends AndroidViewModel {
         walletInfo.label = walletInfoEntry.getLabel();
         walletInfo.accountIndex = walletInfoEntry.getAccountIndex();
         walletInfo.parameters = NetworkParameters.fromID(walletInfoEntry.getNetworkId());
-        localWallet.configWalletAppKit(walletInfo);
+        localWallet.registerAccount(walletInfo);
     }
 
     public void startSync(){

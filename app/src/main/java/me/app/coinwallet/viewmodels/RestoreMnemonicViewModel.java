@@ -60,7 +60,7 @@ public class RestoreMnemonicViewModel extends AndroidViewModel {
         walletInfo.restoreAccounts = accounts;
         walletInfo.restoreSeed = restoreSeed;
         walletInfo.accountIndex = Integer.MAX_VALUE;
-        localWallet.configWalletAppKit(walletInfo);
+        localWallet.registerAccount(walletInfo);
     }
 
     public void saveWalletInfos(List<WalletInfoEntry> infos){

@@ -212,12 +212,18 @@ public class LocalWallet {
         return chainFile.exists();
     }
 
-    public void registerWallet(File directory){
+    public void registerDirectory(File directory){
         this.directory = directory;
     }
 
-    public void configWalletAppKit(WalletInfo walletInfo){
+    public void registerAccount(WalletInfo walletInfo){
         this.walletInfo = walletInfo;
+    }
+
+    public void configWalletAppKit(){
+        if(this.walletInfo == null){
+            throw new IllegalArgumentException();
+        }
         context = new Context(walletInfo.parameters);
         walletAppKit = new WalletAppKit(walletInfo.parameters, Script.ScriptType.P2PKH, Constants.WALLET_STRUCTURE,
                 directory, WALLET_FILE, walletInfo.accountIndex) {
@@ -266,6 +272,10 @@ public class LocalWallet {
         walletAppKit.startAsync();
         walletAppKit.awaitRunning();
         addListeners();
+    }
+
+    public boolean isOnline(){
+        return walletAppKit.isRunning();
     }
 
     public void initWalletOffline(){
