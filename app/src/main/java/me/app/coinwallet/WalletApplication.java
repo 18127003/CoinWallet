@@ -36,7 +36,7 @@ public class WalletApplication extends MultiDexApplication {
 
         config.updateLastVersionCode(packageInfo.versionCode);
         final LocalWallet wallet = LocalWallet.getInstance();
-        wallet.registerWallet(config.directory);
+        wallet.registerDirectory(config.directory);
         WalletLiveData.get();
         BlockchainLiveData.get();
     }

@@ -43,6 +43,7 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
             + ".restore_mnemonic";
 
     public static void start(final Context context){
+        Log.e("HD","Start with command");
         Intent intent = new Intent(ACTION_START_SYNC, null, context, BlockchainSyncService.class);
         ContextCompat.startForegroundService(context, intent);
     }
@@ -74,6 +75,7 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 break;
             case SYNC_STARTED:
                 Log.e("HD","Sync started");
+                IS_RUNNING.set(true);
                 updateForegroundNotification("Started downloading blockchain");
                 break;
             case SYNC_PROGRESS:
@@ -86,13 +88,18 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 updateForegroundNotification("Blockchain up to date");
                 if(shutdownOnSynced){
                     SHOULD_RESTART.set(false);
-                    stopSelf();
+                    innerStop();
                 }
                 break;
             case SYNC_STOPPED:
-                IS_RUNNING.set(false);
+                innerStop();
                 break;
         }
+    }
+
+    private void innerStop(){
+        IS_RUNNING.set(false);
+        stopSelf();
     }
 
     private void updateForegroundNotification(String body){
@@ -162,6 +169,7 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 BriefLogFormatter.init();
                 Threading.USER_THREAD = config.executorService;
                 wallet.subscribe(this);
+                wallet.configWalletAppKit();
                 wallet.initWallet();
             } else if (ACTION_RESET_BLOCKCHAIN.equals(action)) {
                 Log.d("HD","will remove blockchain on service shutdown");
@@ -174,6 +182,7 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 Threading.USER_THREAD = config.executorService;
                 wallet.subscribe(this);
                 shutdownOnSynced = true;
+                wallet.configWalletAppKit();
                 wallet.initWallet();
             }
         } else {
@@ -187,7 +196,7 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
     @Override
     public void onDestroy() {
 
-        if(IS_RUNNING.get()){
+        if(wallet.isOnline()){
             wallet.stopWallet();
         }
         if(resetBlockchainOnShutdown){
@@ -199,12 +208,12 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
             }
         }
         unregisterReceiver(deviceIdleModeReceiver);
+
+        super.onDestroy();
+        Log.i("HD","service was up for "+ serviceUpTime.stop());
         if(SHOULD_RESTART.get()){
             StartBlockchainSyncService.schedule(getApplication(), ACTION_START_SYNC);
         }
-        super.onDestroy();
-        Log.i("HD","service was up for "+ serviceUpTime.stop());
-
     }
 
     @Override
