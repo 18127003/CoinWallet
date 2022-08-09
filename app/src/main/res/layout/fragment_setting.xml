@@ -163,7 +163,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				style="@style/TransparentCardView"
-				android:id="@+id/about_card">
+				android:id="@+id/theme_card">
 			<RelativeLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -172,7 +172,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						style="@style/h6.reflect"
-						android:text="@string/about"
+						android:text="@string/theme"
 						android:padding="10dp"/>
 				<ImageButton
 						android:layout_width="wrap_content"
@@ -181,7 +181,7 @@
 						android:layout_alignParentEnd="true"
 						android:layout_centerVertical="true"
 						android:layout_marginEnd="5dp"
-						android:id="@+id/about"/>
+						android:id="@+id/theme"/>
 			</RelativeLayout>
 		</com.google.android.material.card.MaterialCardView>
 		<View

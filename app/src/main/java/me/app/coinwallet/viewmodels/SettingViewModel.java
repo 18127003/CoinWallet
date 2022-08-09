@@ -4,13 +4,15 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.preference.PreferenceManager;
 import me.app.coinwallet.bitcoinj.LocalWallet;
 import me.app.coinwallet.R;
 import me.app.coinwallet.blockchain.BlockchainSyncService;
-import me.app.coinwallet.data.language.LanguageOption;
+import me.app.coinwallet.data.configuration.ConfigurationOption;
 import me.app.coinwallet.data.livedata.BlockchainLiveData;
 import me.app.coinwallet.data.livedata.WalletLiveData;
 import me.app.coinwallet.utils.LocaleUtil;
@@ -21,19 +23,18 @@ import org.bitcoinj.wallet.Wallet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SettingViewModel extends AndroidViewModel {
     private final LocalWallet localWallet = LocalWallet.getInstance();
-    private final List<LanguageOption> languages;
+
     private final MutableLiveData<String> mnemonic = new MutableLiveData<>();
     private final WalletLiveData walletLiveData = WalletLiveData.get();
     private DeterministicSeed seed;
 
     public SettingViewModel(@NonNull Application application) {
         super(application);
-        languages = new ArrayList<>();
-        languages.add(new LanguageOption(1, "English", "en"));
-        languages.add(new LanguageOption(2, "Vietnam", "vi"));
     }
 
     public LiveData<String> getAddress(){return walletLiveData.getCurrentReceivingAddress();}
@@ -46,15 +47,6 @@ public class SettingViewModel extends AndroidViewModel {
         return accountPath.toString();
     }
 
-    public List<LanguageOption> getLanguages() {
-        return languages;
-    }
-
-    public void changeLanguage(String languageCode, OnConfigurationChange callback){
-        LocaleUtil.setLocale(getApplication().getApplicationContext(), languageCode);
-        callback.onLocaleChange();
-    }
-
     public boolean changePassword(String currentPassword, String newPassword, String confirmPassword){
         if(newPassword.equals(confirmPassword)){
             try {
@@ -65,10 +57,6 @@ public class SettingViewModel extends AndroidViewModel {
             }
         }
         return false;
-    }
-
-    public String getSelectedLanguage(Context context){
-        return LocaleUtil.getLanguage(context);
     }
 
     public void decryptMnemonic(String password){
@@ -92,10 +80,6 @@ public class SettingViewModel extends AndroidViewModel {
         editor.putString(label, encrypted);
         editor.apply();
         return true;
-    }
-
-    public interface OnConfigurationChange{
-        void onLocaleChange();
     }
 
     public void logout(){

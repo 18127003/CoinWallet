@@ -44,8 +44,10 @@ public class WalletLiveData implements LocalWallet.EventListener {
     }
 
     public void filterTx(TransactionConfidence.ConfidenceType type){
-        filter = type;
-        refreshTxHistory(type);
+        if(filter != type){
+            filter = type;
+            refreshTxHistory(type);
+        }
     }
 
     public void refreshAvailableBalance(){ availableBalance.postValue(wallet.getPlainBalance()); wallet.check();}
@@ -157,7 +159,6 @@ public class WalletLiveData implements LocalWallet.EventListener {
                 refreshTxHistory((Transaction) content.getContent(),filter);
                 break;
             case SETUP_COMPLETED:
-                Log.e("HD","refresh wallet");
                 refreshAvailableBalance();
                 refreshTxHistory(filter);
                 refreshExpectedBalance();

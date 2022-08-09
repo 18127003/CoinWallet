@@ -48,8 +48,14 @@ public class WalletApplication extends MultiDexApplication {
             SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(this);
             NotificationHandler notificationHandler = new NotificationHandler(this);
             ToastUtil toastUtil = new ToastUtil(this);
-            config = new Configuration(preferenceManager, getFilesDir(), biometricUtil, notificationHandler, assetManager,
-                    toastUtil);
+            new Configuration.Builder().biometric(biometricUtil)
+                    .prefs(preferenceManager)
+                    .notification(notificationHandler)
+                    .toast(toastUtil)
+                    .asset(assetManager)
+                    .directory(getFilesDir())
+                    .build();
+            config = Configuration.get();
         }
         return config;
     }

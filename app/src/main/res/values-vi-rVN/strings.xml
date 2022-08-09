@@ -100,4 +100,6 @@
 	<string name="transfer_money_page_label">Chuyển tiền</string>
 	<string name="select_send_method_page_label">Chọn phương thức gửi</string>
 	<string name="market_cap_detail_page_label">Vốn hóa thị trường của %1$s</string>
+	<string name="theme">Giao diện</string>
+	<string name="change_theme">Thay đổi giao diện</string>
 </resources>

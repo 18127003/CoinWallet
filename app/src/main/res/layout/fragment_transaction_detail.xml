@@ -21,45 +21,48 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:padding="10dp">
-				<ImageView
-						android:layout_width="wrap_content"
+				<LinearLayout
+						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:background="@drawable/ic_send"
-						android:id="@+id/tx_in_or_out"
-						app:layout_constraintLeft_toLeftOf="parent"
+						android:orientation="horizontal"
 						app:layout_constraintTop_toTopOf="parent"
-						app:layout_constraintBottom_toTopOf="@id/tx_status_text"/>
-				<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						app:layout_constraintTop_toTopOf="parent"
-						app:layout_constraintLeft_toRightOf="@id/tx_in_or_out"
-						app:layout_constraintBottom_toTopOf="@id/amount"
-						style="@style/h5"
-						android:id="@+id/type"
-						android:layout_marginStart="10dp"
-						/>
-				<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						app:layout_constraintTop_toBottomOf="@id/type"
-						app:layout_constraintLeft_toLeftOf="@id/type"
-						app:layout_constraintBottom_toTopOf="@id/tx_id"
+						android:id="@+id/tx_id_info">
+					<ImageView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:background="@drawable/ic_send"
+							android:id="@+id/tx_in_or_out"
+							android:layout_marginEnd="15dp"
+							android:layout_gravity="center_vertical"/>
+					<LinearLayout
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:orientation="vertical"
+							>
+						<TextView
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								style="@style/h5"
+								android:id="@+id/type"
+								/>
+						<TextView
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:id="@+id/amount"
+								style="@style/h6"/>
+						<TextView
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:id="@+id/tx_id"
+								/>
+					</LinearLayout>
+				</LinearLayout>
 
-						android:id="@+id/amount"
-						style="@style/h6"/>
-				<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						app:layout_constraintTop_toBottomOf="@id/amount"
-						app:layout_constraintLeft_toLeftOf="@id/type"
-						app:layout_constraintBottom_toTopOf="@id/tx_status_text"
-						android:id="@+id/tx_id"
-						/>
+
 				<androidx.appcompat.widget.AppCompatButton
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						app:layout_constraintTop_toBottomOf="@id/tx_id"
+						app:layout_constraintTop_toBottomOf="@id/tx_id_info"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintRight_toRightOf="parent"
 						android:id="@+id/tx_status_text"

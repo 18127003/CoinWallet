@@ -79,6 +79,7 @@ public class HistoryFragment extends Fragment {
         all.setOnClickListener(v->selectFilter(HomePageViewModel.Filter.ALL));
         fail.setOnClickListener(v->selectFilter(HomePageViewModel.Filter.FAIL));
         pending.setOnClickListener(v->selectFilter(HomePageViewModel.Filter.PENDING));
+        selectFilter(HomePageViewModel.Filter.ALL);
     }
 
     private void selectFilter(HomePageViewModel.Filter filter){

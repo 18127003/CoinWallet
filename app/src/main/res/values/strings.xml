@@ -131,4 +131,6 @@
 	<string name="transfer_money_page_label">Transfer money</string>
 	<string name="select_send_method_page_label">Select send method</string>
 	<string name="market_cap_detail_page_label">Market cap detail of %1$s</string>
+	<string name="theme">Theme</string>
+	<string name="change_theme">Change theme</string>
 </resources>

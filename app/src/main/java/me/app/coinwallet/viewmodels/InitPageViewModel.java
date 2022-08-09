@@ -37,7 +37,7 @@ public class InitPageViewModel extends AndroidViewModel {
     private final LocalWallet localWallet = LocalWallet.getInstance();
     private final BlockchainLiveData blockchainLiveData = BlockchainLiveData.get();
     private final MutableLiveData<WalletInfoEntry> selectedWallet = new MutableLiveData<>();
-    private final List<Integer> accounts;
+    private List<Integer> accounts;
 
     public boolean createNewAccount = false;
 
@@ -45,7 +45,6 @@ public class InitPageViewModel extends AndroidViewModel {
         super(application);
         this.application = (WalletApplication) application;
         walletInfoDao = WalletInfoDatabase.getDatabase(application.getApplicationContext()).walletInfoDao();
-        accounts = localWallet.allAccounts();
     }
 
     public void setSelectedWallet(WalletInfoEntry entry) {
@@ -55,6 +54,7 @@ public class InitPageViewModel extends AndroidViewModel {
     public LiveData<WalletInfoEntry> getSelectedWallet(){ return selectedWallet; }
 
     public LiveData<List<WalletInfoEntry>> getWalletInfos() {
+        accounts = localWallet.allAccounts();
         return walletInfoDao.getByAccounts(accounts);
     }
 

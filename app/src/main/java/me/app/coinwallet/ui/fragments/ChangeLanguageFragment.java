@@ -1,5 +1,6 @@
 package me.app.coinwallet.ui.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -11,17 +12,18 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.app.coinwallet.Configuration;
 import me.app.coinwallet.R;
-import me.app.coinwallet.data.language.LanguageOption;
+import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.activities.HomeActivity;
-import me.app.coinwallet.ui.adapters.BaseAdapter;
-import me.app.coinwallet.ui.adapters.LanguageOptionAdapter;
+import me.app.coinwallet.ui.adapters.ConfigurationOptionAdapter;
+import me.app.coinwallet.utils.LocaleUtil;
 import me.app.coinwallet.viewmodels.SettingViewModel;
 
 public class ChangeLanguageFragment extends Fragment {
 
     private RecyclerView languageOptions;
-    private SettingViewModel viewModel;
+    private Configuration configuration;
 
     public ChangeLanguageFragment() {
         // Required empty public constructor
@@ -44,19 +46,23 @@ public class ChangeLanguageFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        configuration = ((BaseActivity) requireActivity()).configuration;
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(SettingViewModel.class);
         languageOptions = view.findViewById(R.id.language_option_list);
-        String selected = viewModel.getSelectedLanguage(requireActivity().getApplicationContext());
-        LanguageOptionAdapter adapter = new LanguageOptionAdapter(item -> viewModel.changeLanguage(item.getCode(),
-            () -> {
-                Intent intent = new Intent(getContext(), HomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        ), selected);
-        adapter.update(viewModel.getLanguages());
+        ConfigurationOptionAdapter<String> adapter = new ConfigurationOptionAdapter<>(item -> {
+            configuration.changeLanguage(item.code);
+            LocaleUtil.setLocale(requireContext(), item.code);
+            Intent intent = new Intent(getContext(), HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }, configuration.getSelectedLanguage());
+        adapter.update(configuration.getLanguages());
         languageOptions.setAdapter(adapter);
         languageOptions.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }

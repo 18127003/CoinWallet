@@ -3,7 +3,6 @@ package me.app.coinwallet.ui.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -14,13 +13,9 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.BaseActivity;
 import me.app.coinwallet.ui.activities.InitActivity;
-import me.app.coinwallet.ui.activities.SingleFragmentActivity;
-import me.app.coinwallet.ui.dialogs.ConfirmDialog;
-import me.app.coinwallet.ui.dialogs.SingleTextFieldDialog;
 import me.app.coinwallet.viewmodels.SettingViewModel;
 
 /***
@@ -33,7 +28,7 @@ public class SettingFragment extends Fragment {
     private MaterialCardView changePassword;
     private SwitchMaterial fingerprintEnable;
     private MaterialCardView changeLanguage;
-    private MaterialCardView about;
+    private MaterialCardView theme;
     private MaterialCardView logout;
     private SettingViewModel viewModel;
 
@@ -71,7 +66,7 @@ public class SettingFragment extends Fragment {
         changePassword = view.findViewById(R.id.change_password_card);
         fingerprintEnable = view.findViewById(R.id.fingerprint);
         changeLanguage = view.findViewById(R.id.change_language_card);
-        about = view.findViewById(R.id.about_card);
+        theme = view.findViewById(R.id.theme_card);
         changePassword.setOnClickListener(v-> moveToSettingSection(ChangePasswordFragment.class, R.string.change_password_page_label));
         changeLanguage.setOnClickListener(v-> moveToSettingSection(ChangeLanguageFragment.class, R.string.change_language_page_label));
         fingerprintEnable.setChecked(((BaseActivity)requireActivity()).configuration.isFingerprintEnabled());
@@ -81,6 +76,7 @@ public class SettingFragment extends Fragment {
         logout.setOnClickListener(v -> logout());
         mnemonic.setOnClickListener(v->moveToSettingSection(MnemonicFragment.class, R.string.mnemonic));
         walletManage.setOnClickListener(v->moveToSettingSection(WalletManageFragment.class, R.string.manage_wallet_page_label));
+        theme.setOnClickListener(v->moveToSettingSection(ChangeThemeFragment.class, R.string.change_theme));
     }
 
     private void logout(){

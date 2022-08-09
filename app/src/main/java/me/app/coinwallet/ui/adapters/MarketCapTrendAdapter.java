@@ -34,7 +34,7 @@ public class MarketCapTrendAdapter extends BaseAdapter<MarketCapEntity, MarketCa
         MarketCapEntity cap = data.get(position);
 
         holder.trendCard.setOnClickListener(view -> listener.onClick(cap));
-        int color = MaterialColors.getColor(holder.itemView, R.attr.colorOnSurface);
+        int color = MaterialColors.getColor(holder.itemView, R.attr.colorSecondary);
         new ChartUtil(cap, res).chart(holder.chart).axisColor(color).disableTouch().description()
                 .descriptionColor(color).visualize();
     }

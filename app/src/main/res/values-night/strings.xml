@@ -29,4 +29,6 @@
 	<string name="bluetooth_remain_screen_note">Please stay on this screen until you received the payment</string>
 	<string name="transfer_money_page_label">Transfer money</string>
 	<string name="select_send_method_page_label">Select send method</string>
+	<string name="theme">Theme</string>
+	<string name="change_theme">Change theme</string>
 </resources>
