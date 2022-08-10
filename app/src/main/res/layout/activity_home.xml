@@ -25,7 +25,7 @@
 				app:title="@string/app_name"
 				app:menu="@menu/top_app_bar"
 				style="@style/TopAppBar"
-				app:logo="@mipmap/ic_logo_light"
+				app:logo="@drawable/ic_logo_light"
 				app:titleMarginStart="30dp"
 				app:titleTextAppearance="@style/h5"
 				/>
