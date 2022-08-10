@@ -102,4 +102,7 @@
 	<string name="market_cap_detail_page_label">Vốn hóa thị trường của %1$s</string>
 	<string name="theme">Giao diện</string>
 	<string name="change_theme">Thay đổi giao diện</string>
+	<string name="network_note">*testnet: mạng thử nghiệm, tiền không có giá trị thực. *mainnet: mạng blockchain thât, tiền có giá trị có thể quy đổi sang tiền pháp định.</string>
+	<string name="account_path_note">*đường dẫn khóa có thể giúp ích khi phục hồi ví với mã mnemonic.</string>
+	<string name="account_index_note">*chỉ số tài khoản là số thứ 3 trên đường dẫn khóa kể từ gốc (M), theo thiết kế BIP44.</string>
 </resources>

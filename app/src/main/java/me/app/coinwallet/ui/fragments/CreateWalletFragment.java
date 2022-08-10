@@ -61,6 +61,9 @@ public class CreateWalletFragment extends Fragment {
         createBtn.setOnClickListener(v->{
             Intent result = new Intent();
             String networkId = Constants.SUPPORTED_BLOCKCHAIN.get(network.getText().toString());
+            if(networkId==null || label.getText() == null){
+                return;
+            }
             WalletInfoEntry info = new WalletInfoEntry(networkId, label.getText().toString());
             result.putExtra(Constants.WALLET_LABEL_EXTRA_NAME, info);
             requireActivity().setResult(Activity.RESULT_OK, result);

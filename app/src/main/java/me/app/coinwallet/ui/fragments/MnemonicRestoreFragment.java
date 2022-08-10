@@ -125,6 +125,9 @@ public class MnemonicRestoreFragment extends Fragment {
 
         restoreBtn.setOnClickListener(v->{
             String networkId = Constants.SUPPORTED_BLOCKCHAIN.get(network.getText().toString());
+            if(networkId == null || mnemonicText.getText() == null){
+                return;
+            }
             NetworkParameters parameters = NetworkParameters.fromID(networkId);
             String mnemonic = mnemonicText.getText().toString();
             InputStream checkpoints = configuration.getBlockchainCheckpointFile();

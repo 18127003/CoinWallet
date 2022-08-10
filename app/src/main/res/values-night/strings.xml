@@ -31,4 +31,7 @@
 	<string name="select_send_method_page_label">Select send method</string>
 	<string name="theme">Theme</string>
 	<string name="change_theme">Change theme</string>
+	<string name="network_note">*testnet: network for testing, coin has no real value.\n*mainnet: real blockchain network, coin can be exchanged to fiat.</string>
+	<string name="account_path_note">*this may help when you restore the wallet by mnemonic code.</string>
+	<string name="account_index_note">*account is the third number in your key path ,starting from root (M), following BIP44 design.</string>
 </resources>

@@ -75,6 +75,12 @@
 					android:text="@string/restore_btn_label"
 					android:layout_margin="20dp"
 					style="@style/ButtonStyle"/>
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_margin="20dp"
+					style="@style/normal"
+					android:text="@string/account_index_note"/>
 		</LinearLayout>
 	</ScrollView>
 

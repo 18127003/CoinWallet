@@ -32,6 +32,13 @@
 						style="@style/h6"
 						android:layout_marginTop="10dp"
 						android:id="@+id/account_path"/>
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="10dp"
+						style="@style/normal"
+						android:text="@string/account_path_note"
+						/>
 			</LinearLayout>
 		</com.google.android.material.card.MaterialCardView>
 		<com.google.android.material.card.MaterialCardView
