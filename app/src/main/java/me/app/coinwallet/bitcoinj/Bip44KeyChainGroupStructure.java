@@ -35,16 +35,6 @@ public class Bip44KeyChainGroupStructure implements KeyChainGroupStructure {
     public int getNetworkOf(HDPath accountPath) {
         return accountPath.get(accountPath.size()-2).num();
     }
-//
-//    public int nextAvailableAccount(String networkId, List<HDPath> accounts){
-//        Integer network = NETWORKS.get(networkId);
-//        Multimap<Integer, Integer> mapByNetwork = HashMultimap.create();
-//        for(HDPath path: accounts){
-//            mapByNetwork.put(getNetworkOf(path), accountIndexOf(path));
-//        }
-//        Collection<Integer> accountsOfNetwork = mapByNetwork.get(network);
-//        return accountsOfNetwork.size();
-//    }
 
     private static final Map<String, Integer> NETWORKS = Stream.of(
             new AbstractMap.SimpleEntry<>("org.bitcoin.production", 0),

@@ -30,12 +30,15 @@ import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.adapters.BaseAdapter;
 import me.app.coinwallet.ui.adapters.RestoreMnemonicAdapter;
 import me.app.coinwallet.utils.BiometricUtil;
+import me.app.coinwallet.utils.Utils;
 import me.app.coinwallet.viewmodels.InitPageViewModel;
 import me.app.coinwallet.viewmodels.RestoreMnemonicViewModel;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.HDPath;
+import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.UnreadableWalletException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,6 +135,9 @@ public class MnemonicRestoreFragment extends Fragment {
             String mnemonic = mnemonicText.getText().toString();
             InputStream checkpoints = configuration.getBlockchainCheckpointFile();
             List<WalletInfoEntry> accounts = accounts(parameters);
+            if(accounts.isEmpty()){
+                accounts.add(new WalletInfoEntry(0, networkId, "account 0"));
+            }
             List<HDPath> paths = accountPaths(parameters, accounts);
             try {
                 // config wallet info
@@ -140,7 +146,7 @@ public class MnemonicRestoreFragment extends Fragment {
                 viewModel.saveWalletInfos(accounts);
                 // restore commence
                 ((BaseActivity) requireActivity()).loadFragment(RestoreWalletProgressFragment.class);
-            } catch (UnreadableWalletException e) {
+            } catch (UnreadableWalletException | IOException | MnemonicException e) {
                 configuration.toastUtil.postToast("Fail to construct seed from mnemonic", Toast.LENGTH_SHORT);
             }
         });
@@ -153,12 +159,21 @@ public class MnemonicRestoreFragment extends Fragment {
 
     List<WalletInfoEntry> accounts(NetworkParameters parameters){
         List<WalletInfoEntry> entries = new ArrayList<>();
+        String labelStr;
         for (int i = 0; i<accountInfosLayout.getChildCount(); i++){
             View accountInfoView = accountInfosLayout.getChildAt(i);
             TextInputEditText label = accountInfoView.findViewById(R.id.account_label);
             TextInputEditText index = accountInfoView.findViewById(R.id.account_index);
+            if(index.getText() == null || index.getText().toString().isEmpty()){
+                continue;
+            }
+            if(label.getText() == null || label.getText().toString().isEmpty()){
+                labelStr = "account "+i;
+            } else {
+                labelStr = label.getText().toString();
+            }
             int accountIndex = Integer.parseInt(index.getText().toString());
-            entries.add(new WalletInfoEntry(accountIndex, parameters.getId(), label.getText().toString()));
+            entries.add(new WalletInfoEntry(accountIndex, parameters.getId(), labelStr));
         }
         return entries;
     }

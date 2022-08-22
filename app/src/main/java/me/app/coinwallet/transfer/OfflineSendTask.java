@@ -22,7 +22,6 @@ public abstract class OfflineSendTask extends SendTask {
     void onSend(SendRequest sendRequest, String password) {
 
         try{
-            Log.e("MN",sendRequest.tx.getOutput(0).getValue().toFriendlyString());
             Transaction tx = localWallet.sendOffline(sendRequest, password);
             callbackHandler.post(()->onSuccess(tx));
         } catch (InsufficientMoneyException e){
@@ -30,7 +29,6 @@ public abstract class OfflineSendTask extends SendTask {
             String m = missing==null?"coins": missing.toFriendlyString();
             configuration.toastUtil.postToast("Insufficient money, missing "+m, Toast.LENGTH_SHORT);
         } catch (Wallet.DustySendRequested | Wallet.ExceededMaxTransactionSize d){
-            Log.e("MN",d.toString());
             configuration.toastUtil.postToast("Send failed due to invalid request", Toast.LENGTH_SHORT);
         } catch (Wallet.CouldNotAdjustDownwards n) {
             configuration.toastUtil.postToast("Attempt to send on empty wallet", Toast.LENGTH_SHORT);

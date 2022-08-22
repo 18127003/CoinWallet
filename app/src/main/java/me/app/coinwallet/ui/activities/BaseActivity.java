@@ -33,13 +33,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        configuration = ((WalletApplication) getApplication()).getConfiguration();
         AppCompatDelegate.setDefaultNightMode(configuration.uiMode);
     }
 
     @Override
     protected void attachBaseContext(Context base) {
-//        super.attachBaseContext(base);
         super.attachBaseContext(LocaleUtil.onAttach(base,configuration.getSelectedLanguage()));
     }
 

@@ -77,13 +77,10 @@ public class ExchangeRatesRepository {
             return;
         }
 
-        Log.e("HD","Name list request");
-
         final Call call = httpClient().newCall(httpRequest(url));
         call.enqueue(new Callback() {
             @Override
             public void onResponse(final Call call, final Response response) {
-                Log.e("HD","Name list request success");
                 try {
                     if (response.isSuccessful()) {
                         List<String> data = exchangeRatesHost.parseNameList(response.body().source());
@@ -96,16 +93,14 @@ public class ExchangeRatesRepository {
 
                         ExchangeRatesRepository.this.lastUpdatedNameList.set(now);
                         watch.stop();
-                        log.info("fetched name list from {}, took {}", url, watch);
                     } else {
                         log.warn("http status {} {} when fetching name list from {}", response.code(),
                                 response.message(), url);
                     }
                 } catch (final IOException x) {
-                    Log.e("HD",x.getMessage());
                     log.warn("problem fetching name list from " + url, x);
                 } catch (final JsonDataException j) {
-                    Log.e("HD",j.getMessage());
+                    Log.e("data exception ",j.getMessage());
                 }
             }
 
@@ -123,13 +118,10 @@ public class ExchangeRatesRepository {
 
     private void maybeRequestExchangeRates(HttpUrl url, RepositoryQueryListener listener) {
 
-        Log.e("HD","Exchange Rates request");
-
         final Call call = httpClient().newCall(httpRequest(url));
         call.enqueue(new Callback() {
             @Override
             public void onResponse(final Call call, final Response response) {
-                Log.e("HD","Exchange Rates request success");
                 try {
                     if (response.isSuccessful()) {
 
@@ -141,18 +133,15 @@ public class ExchangeRatesRepository {
                                 response.message(), url);
                     }
                 } catch (final IOException x) {
-                    Log.e("HD",x.getMessage());
                     log.warn("problem fetching exchange rates from " + url, x);
                     listener.onFailed();
                 } catch (final JsonDataException j) {
-                    Log.e("HD",j.getMessage());
                     listener.onFailed();
                 }
             }
 
             @Override
             public void onFailure(final Call call, final IOException x) {
-                Log.e("HD","Exchange Rates request failed");
                 listener.onFailed();
             }
         });

@@ -43,13 +43,11 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
             + ".restore_mnemonic";
 
     public static void start(final Context context){
-        Log.e("HD","Start with command");
         Intent intent = new Intent(ACTION_START_SYNC, null, context, BlockchainSyncService.class);
         ContextCompat.startForegroundService(context, intent);
     }
 
     public static void stop(){
-//        context.stopService(new Intent(context, BlockchainSyncService.class));
         wallet.stopWallet();
     }
 
@@ -74,17 +72,14 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 config.notificationHandler.sendNotification(Constants.NOTIFICATION_TX_RECEIVE_ID, notification);
                 break;
             case SYNC_STARTED:
-                Log.e("HD","Sync started");
                 IS_RUNNING.set(true);
                 updateForegroundNotification("Started downloading blockchain");
                 break;
             case SYNC_PROGRESS:
-                Log.e("HD","Sync progress");
                 double progress = (double) content.getContent();
                 updateForegroundNotification(String.valueOf(progress));
                 break;
             case SYNC_COMPLETED:
-                Log.e("HD","Sync complete");
                 updateForegroundNotification("Blockchain up to date");
                 if(shutdownOnSynced){
                     SHOULD_RESTART.set(false);
@@ -125,7 +120,6 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
 
     @Override
     public IBinder onBind(@NonNull final Intent intent) {
-        Log.e("HD", "onBind: {}");
         super.onBind(intent);
         isBound.set(true);
         return mBinder;
@@ -133,7 +127,6 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
 
     @Override
     public boolean onUnbind(final Intent intent) {
-        Log.e("HD", "onUnbind: "+ intent);
         isBound.set(false);
         return super.onUnbind(intent);
     }
@@ -162,7 +155,6 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
         }
         if (intent != null) {
             final String action = intent.getAction();
-            Log.e("HD","service start command: "+ action);
 
             if (ACTION_START_SYNC.equals(action)) {
                 shutdownOnSynced = false;
@@ -172,11 +164,8 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 wallet.configWalletAppKit();
                 wallet.initWallet();
             } else if (ACTION_RESET_BLOCKCHAIN.equals(action)) {
-                Log.d("HD","will remove blockchain on service shutdown");
                 resetBlockchainOnShutdown = true;
                 stopSelf();
-                if (isBound.get())
-                    Log.i("HD","stop is deferred because service still bound");
             } else if (ACTION_RESTORE_MNEMONIC.equals(action)) {
                 BriefLogFormatter.init();
                 Threading.USER_THREAD = config.executorService;
@@ -185,8 +174,6 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
                 wallet.configWalletAppKit();
                 wallet.initWallet();
             }
-        } else {
-            Log.e("HD","service restart, although it was started as non-sticky");
         }
         IS_RUNNING.set(true);
         SHOULD_RESTART.set(true);
@@ -210,7 +197,6 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
         unregisterReceiver(deviceIdleModeReceiver);
 
         super.onDestroy();
-        Log.i("HD","service was up for "+ serviceUpTime.stop());
         if(SHOULD_RESTART.get()){
             StartBlockchainSyncService.schedule(getApplication(), ACTION_START_SYNC);
         }
@@ -218,12 +204,8 @@ public class BlockchainSyncService extends LifecycleService implements LocalWall
 
     @Override
     public void onTrimMemory(final int level) {
-        Log.i("HD","on trim memory level "+ level);
         if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND) {
-            Log.e("HD","low memory detected, trying to stop");
             stopSelf();
-            if (isBound.get())
-                Log.e("HD","stop is deferred because service still bound");
         }
     }
 

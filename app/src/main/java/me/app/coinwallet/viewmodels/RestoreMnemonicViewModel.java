@@ -18,11 +18,15 @@ import me.app.coinwallet.data.wallets.WalletInfoEntry;
 import me.app.coinwallet.utils.WalletUtil;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.HDPath;
+import org.bitcoinj.crypto.MnemonicCode;
+import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.UnreadableWalletException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RestoreMnemonicViewModel extends AndroidViewModel {
@@ -50,8 +54,11 @@ public class RestoreMnemonicViewModel extends AndroidViewModel {
     }
 
     public void restoreWallet(NetworkParameters parameters, String mnemonic, List<HDPath> accounts,
-                              InputStream checkpoints) throws UnreadableWalletException {
+                              InputStream checkpoints) throws UnreadableWalletException, IOException, MnemonicException {
         if(restoreSeed == null){
+            List<String> words = Arrays.asList(mnemonic.split(" "));
+            MnemonicCode code = MnemonicCode.INSTANCE;
+            code.check(words);
             restoreSeed = new DeterministicSeed(mnemonic, null, "", 0L);
         }
         LocalWallet.WalletInfo walletInfo = new LocalWallet.WalletInfo();

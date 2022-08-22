@@ -48,7 +48,6 @@ public class QRUtil {
             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(pixels));
             return bitmap;
         } catch (final WriterException x) {
-            log.info("problem creating qr code", x);
             return null;
         }
     }

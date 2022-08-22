@@ -36,7 +36,6 @@ public class MarketCapViewModel extends AndroidViewModel {
             underlyingMarketCapLiveData = marketCapDao.findByFilter(filter.toLowerCase(Locale.US));
             isFiltered = true;
         } else {
-            Log.e("HD","Market cap find all");
             underlyingMarketCapLiveData = marketCapDao.findAll();
             isFiltered = false;
         }

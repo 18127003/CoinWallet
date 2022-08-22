@@ -50,7 +50,7 @@ public class WalletLiveData implements LocalWallet.EventListener {
         }
     }
 
-    public void refreshAvailableBalance(){ availableBalance.postValue(wallet.getPlainBalance()); wallet.check();}
+    public void refreshAvailableBalance(){ availableBalance.postValue(wallet.getPlainBalance());}
 
     public void refreshExpectedBalance(){ expectedBalance.postValue(wallet.getExpectedBalance()); }
 

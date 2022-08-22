@@ -63,13 +63,10 @@ public class MarketCapRepository {
             return;
         }
 
-        Log.e("HD","Market cap request");
-
         final Call call = httpClient().newCall(httpRequest(url));
         call.enqueue(new Callback() {
             @Override
             public void onResponse(final Call call, final Response response) {
-                Log.e("HD","Market cap request success");
                 try {
                     if (response.isSuccessful()) {
                         List<MarketCapEntity> data = marketCapHost.parse(response.body().source());
@@ -77,7 +74,6 @@ public class MarketCapRepository {
 
                         MarketCapRepository.this.lastUpdated.set(now);
                         watch.stop();
-                        log.info("fetched market caps from {}, took {}", marketCapHost.url(), watch);
                     } else {
                         log.warn("http status {} {} when fetching market caps from {}", response.code(),
                                 response.message(), marketCapHost.url());
@@ -85,7 +81,7 @@ public class MarketCapRepository {
                 } catch (final IOException x) {
                     log.warn("problem fetching market caps from " + marketCapHost.url(), x);
                 } catch (final JsonDataException j) {
-                    Log.e("HD",j.getMessage());
+                    Log.e("data exception ",j.getMessage());
                 }
             }
 
@@ -107,34 +103,30 @@ public class MarketCapRepository {
         if(!needRequest(lastUpdatedTrend, now)){
             return;
         }
-        Log.e("HD","Trend request");
+
         final Call call = httpClient().newCall(httpRequest(url));
         call.enqueue(new Callback() {
             @Override
             public void onResponse(final Call call, final Response response) {
-                Log.e("HD","Trend request success");
                 try {
                     if (response.isSuccessful()) {
                         List<MarketCapEntity> data = marketCapHost.parse(response.body().source());
                         trends.postValue(data);
                         MarketCapRepository.this.lastUpdatedTrend.set(now);
                         watch.stop();
-                        log.info("fetched trend from {}, took {}", marketCapHost.trendingUrl(), watch);
                     } else {
                         log.warn("http status {} {} when fetching trends from {}", response.code(),
                                 response.message(), marketCapHost.trendingUrl());
                     }
                 } catch (final IOException x) {
-                    Log.e("HD",x.getMessage());
                     log.warn("problem fetching trends from " + marketCapHost.trendingUrl(), x);
                 } catch (final JsonDataException j) {
-                    Log.e("HD",j.getMessage());
+                    Log.e("data exception ",j.getMessage());
                 }
             }
 
             @Override
             public void onFailure(final Call call, final IOException x) {
-                Log.e("HD","Trend request failed");
                 queryTrends();
             }
         });

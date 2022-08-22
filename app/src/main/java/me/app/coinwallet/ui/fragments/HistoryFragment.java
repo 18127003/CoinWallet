@@ -101,7 +101,6 @@ public class HistoryFragment extends Fragment {
     }
 
     private void colorFilter(@ColorInt int success, @ColorInt int fail, @ColorInt int pending, @ColorInt int all){
-        Resources res = getResources();
         this.success.setTextColor(success);
         this.fail.setTextColor(fail);
         this.pending.setTextColor(pending);

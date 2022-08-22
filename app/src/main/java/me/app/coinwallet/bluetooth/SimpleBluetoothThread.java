@@ -36,7 +36,6 @@ public abstract class SimpleBluetoothThread extends Thread{
                   final BluetoothSocket socket = listeningSocket.accept();
                   final DataInputStream is = new DataInputStream(socket.getInputStream());
                   final DataOutputStream os = new DataOutputStream(socket.getOutputStream())) {
-                Log.i("HD","accepted classic bluetooth connection");
 
                 boolean ack = true;
 
@@ -53,14 +52,13 @@ public abstract class SimpleBluetoothThread extends Thread{
                         if (!handleTx(tx))
                             ack = false;
                     } catch (final ProtocolException x) {
-                        Log.e("HD","cannot decode message received via bluetooth");
                         ack = false;
                     }
                 }
 
                 os.writeBoolean(ack);
             } catch (final IOException x) {
-                Log.e("HD","exception in bluetooth accept loop");
+                // swallow
             }
         }
     }

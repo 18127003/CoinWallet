@@ -109,8 +109,6 @@ public class ScanQrFragment extends Fragment {
             result -> {
                 if(result) {
                     barcodeView.resume();
-                } else {
-                    Log.e("HD","request not granted");
                 }
             });
 }

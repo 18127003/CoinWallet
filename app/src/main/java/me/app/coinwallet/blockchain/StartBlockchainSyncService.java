@@ -28,7 +28,6 @@ public class StartBlockchainSyncService extends JobService {
             jobInfo.setRequiresStorageNotLow(true);
         }
         PersistableBundle bundle = new PersistableBundle();
-        Log.e("HD", "Schedule with action "+action);
         bundle.putString("action", action);
         jobInfo.setExtras(bundle);
         jobScheduler.schedule(jobInfo.build());
@@ -42,7 +41,6 @@ public class StartBlockchainSyncService extends JobService {
 
     @Override
     public boolean onStartJob(final JobParameters params) {
-        Log.e("HD","Job started");
         final boolean storageLow = registerReceiver(null, new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW)) != null;
         final boolean batteryLow = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_LOW)) != null;
         final boolean powerSaveMode = pm.isPowerSaveMode();

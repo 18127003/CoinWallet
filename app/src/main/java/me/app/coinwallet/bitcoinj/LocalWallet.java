@@ -16,6 +16,7 @@ import org.bitcoinj.crypto.KeyCrypter;
 import org.bitcoinj.crypto.KeyCrypterException;
 import org.bitcoinj.crypto.KeyCrypterScrypt;
 import org.bitcoinj.kits.WalletAppKit;
+import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.uri.BitcoinURI;
 import org.bitcoinj.wallet.*;
@@ -25,6 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class LocalWallet {
+    TestNet3Params
     private static LocalWallet _instance = null;
     private static final String WALLET_FILE = "coinwallet";
 
@@ -140,14 +142,6 @@ public class LocalWallet {
         onReceive();
     }
 
-    public void check(){
-        final List<TransactionOutput> to = wallet.getUnspents();
-        Log.e("HD","UTXO num: "+to.size());
-        for(TransactionOutput txo : to){
-            Log.e("HD","Transaction value "+txo.getValue().toPlainString()+", min non dust "+txo.getMinNonDustValue());
-        }
-    }
-
     public boolean checkPassword(String password) throws IllegalStateException{
         return wallet.checkPassword(password);
     }
@@ -170,9 +164,7 @@ public class LocalWallet {
             sendRequest.aesKey = Objects.requireNonNull(wallet.getKeyCrypter()).deriveKey(password);
         }
         final Wallet.SendResult sendResult = wallet.sendCoins(walletAppKit.peerGroup(), sendRequest);
-        Log.e("HD","Sending");
         sendResult.broadcastComplete.addListener(() -> {
-            Log.e("HD", "Tx broadcast completed");
             notifyObservers(WalletNotificationType.TX_BROADCAST_COMPLETED, null);
         }, Runnable::run);
         return sendResult.tx;
@@ -190,12 +182,10 @@ public class LocalWallet {
     private void onReceive(){
         wallet.addCoinsReceivedEventListener((wallet, tx, prevBalance, newBalance) -> {
             Coin value = tx.getValueSentToMe(wallet);
-            Log.e("HD","Received tx for " + value.toFriendlyString() + ": " + tx);
             notifyObservers(WalletNotificationType.TX_RECEIVED, new EventMessage<>(tx));
             Futures.addCallback(tx.getConfidence().getDepthFuture(1), new FutureCallback<TransactionConfidence>() {
                 @Override
                 public void onSuccess(TransactionConfidence result) {
-                    Log.e("HD","Receipt of "+result.getTransactionHash().toString()+" reached 1 confirmation");
                     notifyObservers(WalletNotificationType.TX_ACCEPTED, new EventMessage<>(tx));
                 }
 
@@ -229,7 +219,6 @@ public class LocalWallet {
                 directory, WALLET_FILE, walletInfo.accountIndex) {
             @Override
             protected void onSetupCompleted() {
-                Log.e("HD", "Set up complete");
                 wallet = LocalWallet.this.walletAppKit.wallet();
                 notifyObservers(WalletNotificationType.SETUP_COMPLETED, null);
             }
@@ -238,18 +227,15 @@ public class LocalWallet {
         DownloadProgressTracker BTCListener = new DownloadProgressTracker() {
             @Override
             protected void startDownload(int blocks) {
-                Log.e("HD","Start download blocks");
                 notifyObservers(WalletNotificationType.SYNC_STARTED, null);
             }
 
             @Override
             public void progress(double pct, int blocksSoFar, Date date) {
-                Log.e("HD","Syncing..."+pct+"%");
                 notifyObservers(WalletNotificationType.SYNC_PROGRESS, new EventMessage<>(pct));
             }
             @Override
             public void doneDownload() {
-                Log.e("HD","Sync Done.");
                 notifyObservers(WalletNotificationType.SYNC_COMPLETED,null);
             }
         };
@@ -303,22 +289,10 @@ public class LocalWallet {
         walletAppKit.wallet().encrypt(passphrase);
     }
 
-    public void decryptWallet(String passphrase){
-        try{
-            wallet.decrypt(passphrase);
-        } catch (Wallet.BadWalletEncryptionKeyException e){
-            Log.e("HD","Wrong password");
-        } catch (KeyCrypterException ke){
-            Log.e("HD","Key crypter fail");
-        }
-    }
-
     /***
      * Require synced blockchain to process
      */
     public boolean handleBluetoothReceivedTx(final Transaction tx) {
-        Log.i("HD",tx.getTxId() + " arrived via bluetooth");
-
         try {
             if (wallet.isTransactionRelevant(tx)) {
                 wallet.receivePending(tx, null);

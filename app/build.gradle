@@ -10,7 +10,7 @@ android {
         applicationId "me.app.coinwallet"
         minSdkVersion 24
         targetSdkVersion 31
-        versionCode 1
+        versionCode 3
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

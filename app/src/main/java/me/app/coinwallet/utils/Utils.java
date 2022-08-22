@@ -4,6 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.text.Editable;
+import android.widget.EditText;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,6 +66,12 @@ public class Utils {
         catch (Exception e){
             return null;
         }
+    }
 
+    public static boolean emptyTextField(Editable text){
+        if (text == null){
+            return true;
+        }
+        return text.toString().trim().isEmpty();
     }
 }

@@ -27,7 +27,6 @@ public class BluetoothPaymentRequest extends DirectPaymentRequest{
     @Override
     public void send(final Protos.Payment payment) {
         executor.execute(() -> {
-            Log.i("HD","trying to send tx via bluetooth "+ bluetoothDevice.getName());
 
             if (payment.getTransactionsCount() != 1)
                 throw new IllegalArgumentException("wrong transactions count");
@@ -35,22 +34,17 @@ public class BluetoothPaymentRequest extends DirectPaymentRequest{
             try (final BluetoothSocket socket =
                          bluetoothDevice.createInsecureRfcommSocketToServiceRecord(Constants.BLUETOOTH_PAYMENT_PROTOCOL_UUID)) {
                 socket.connect();
-                Log.i("HD","connected to payment protocol "+ bluetoothDevice.getAddress());
                 final DataOutputStream os = new DataOutputStream(socket.getOutputStream());
                 final DataInputStream is = new DataInputStream(socket.getInputStream());
 
                 payment.writeDelimitedTo(os);
                 os.flush();
-                Log.i("HD","tx sent via bluetooth");
 
                 final Protos.PaymentACK paymentAck = Protos.PaymentACK.parseDelimitedFrom(is);
                 final boolean ack = "ack".equals(PaymentProtocol.parsePaymentAck(paymentAck).getMemo());
-                Log.i("HD","received "+ (ack ? "ack" : "nack") +" via bluetooth" );
 
                 onResult(ack);
             } catch (final IOException x) {
-                Log.e("HD","problem sending");
-
                 onFail(R.string.fail, x.getMessage());
             }
         });

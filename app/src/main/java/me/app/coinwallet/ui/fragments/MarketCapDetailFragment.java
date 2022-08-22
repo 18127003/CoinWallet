@@ -62,7 +62,7 @@ public class MarketCapDetailFragment extends Fragment {
         TextView highLow=view.findViewById(R.id.low_high_24h);
         TextView rank=view.findViewById(R.id.ranking);
 
-        price.setText(""+ marketCapEntity.getCurrentPrice());
+        price.setText(""+ marketCapEntity.getCurrentPrice()+"$");
         highLow.setText(""+ marketCapEntity.getLow()+"/"+ marketCapEntity.getHigh());
         marketCapDominationIndex.setText(""+ marketCapEntity.getFluctuation());
         marketCapitalization.setText(""+ marketCapEntity.getMarketCap());

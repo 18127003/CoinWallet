@@ -35,7 +35,6 @@ public class BluetoothHandler {
         launcher = fragment.registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if(result.getResultCode()== Activity.RESULT_OK){
-                        Log.e("HD","Bluetooth enabled");
                         callback.onSucceed();
                     } else {
                         callback.onRejected();
