@@ -18,6 +18,7 @@ import org.bitcoinj.crypto.KeyCrypterScrypt;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
+import org.bitcoinj.signers.LocalTransactionSigner;
 import org.bitcoinj.uri.BitcoinURI;
 import org.bitcoinj.wallet.*;
 import java.io.*;
@@ -26,7 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class LocalWallet {
-    TestNet3Params
+
     private static LocalWallet _instance = null;
     private static final String WALLET_FILE = "coinwallet";
 
