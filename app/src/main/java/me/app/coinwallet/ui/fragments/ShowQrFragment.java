@@ -55,7 +55,8 @@ public class ShowQrFragment extends Fragment {
         viewModel.getAddress().observe(requireActivity(), s -> {
             Bitmap bm = QRUtil.createQRCodeBitmap(s);
             if (bm != null) {
-                qrCodeImg.setColorFilter(MaterialColors.getColor(view, R.attr.colorOnSurface));
+                qrCodeImg.setBackgroundResource(R.color.white);
+                qrCodeImg.setColorFilter(MaterialColors.getColor(view, R.attr.colorOnBackground));
                 qrCodeImg.setImageBitmap(Bitmap.createScaledBitmap(bm,
                         Constants.QR_BITMAP_SCALE_WIDTH, Constants.QR_BITMAP_SCALE_HEIGHT, false));
             }

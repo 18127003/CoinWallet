@@ -28,8 +28,7 @@
 						app:layout_constraintTop_toTopOf="parent"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
-						android:layout_margin="32dp"
-						android:backgroundTint="?attr/colorOnSurface"
+						android:padding="32dp"
 						android:id="@+id/qr_code_img"/>
 			</androidx.constraintlayout.widget.ConstraintLayout>
 		</com.google.android.material.card.MaterialCardView>
