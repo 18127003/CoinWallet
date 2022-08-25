@@ -73,6 +73,9 @@ public class SettingViewModel extends AndroidViewModel {
         String prefName = getApplication().getString(R.string.mnemonic_preference_file);
         SharedPreferences preferences = getApplication().getSharedPreferences(prefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
+        if(seed == null){
+            return false;
+        }
         String encrypted = WalletUtil.encryptMnemonic(seed, label);
         if (encrypted == null){
             return false;

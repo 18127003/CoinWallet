@@ -90,8 +90,7 @@ public class PaymentQrFragment extends Fragment {
             BitcoinURI uri = new BitcoinURI(uriString);
             Bitmap bm = QRUtil.createQRCodeBitmap(uriString);
             if (bm != null) {
-                qrCode.setBackgroundColor(getResources().getColor(R.color.white));
-                qrCode.setColorFilter(MaterialColors.getColor(view, R.attr.colorOnBackground));
+                qrCode.setColorFilter(MaterialColors.getColor(view, R.attr.colorSurfaceInverse));
                 qrCode.setImageBitmap(Bitmap.createScaledBitmap(bm,
                         Constants.QR_BITMAP_SCALE_WIDTH, Constants.QR_BITMAP_SCALE_HEIGHT, false));
             }

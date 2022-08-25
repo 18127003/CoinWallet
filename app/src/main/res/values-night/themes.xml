@@ -23,5 +23,7 @@
 		<item name="colorPrimarySurface">@color/blue_black</item>
 		<item name="colorOnPrimarySurface">@color/yellow</item>
 		<item name="switchStyle">@style/Widget.App.Switch</item>
+		<item name="colorAccent">@color/gold</item>
+		<item name="colorSurfaceInverse">@color/black</item>
 	</style>
 </resources>

@@ -21,6 +21,7 @@ import me.app.coinwallet.R;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.transfer.PaymentRequest;
 import me.app.coinwallet.viewmodels.ScanQrPageViewModel;
+import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.uri.BitcoinURIParseException;
 
 public class ScanQrFragment extends Fragment {
@@ -64,7 +65,7 @@ public class ScanQrFragment extends Fragment {
                 Intent intent = SingleFragmentActivity.newActivity(requireContext(), TransferFragment.class, R.string.transfer_money_page_label);
                 intent.putExtra(Constants.QR_CONTENT, paymentRequest);
                 startActivity(intent);
-            } catch (BitcoinURIParseException e) {
+            } catch (BitcoinURIParseException| AddressFormatException e) {
                 // swallow
             }
         });

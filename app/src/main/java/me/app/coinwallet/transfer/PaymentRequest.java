@@ -7,10 +7,7 @@ import androidx.annotation.Nullable;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.bitcoinj.LocalWallet;
 import me.app.coinwallet.utils.WalletUtil;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.*;
 import org.bitcoinj.protocols.payments.PaymentProtocol;
 import org.bitcoinj.protocols.payments.PaymentProtocolException;
 import org.bitcoinj.script.Script;
@@ -74,7 +71,7 @@ public class PaymentRequest implements Parcelable {
         return PaymentRequest.from(address, "", sendAmount, useBluetooth);
     }
 
-    public static PaymentRequest from(final String string, NetworkParameters parameters) throws BitcoinURIParseException {
+    public static PaymentRequest from(final String string, NetworkParameters parameters) throws BitcoinURIParseException, AddressFormatException {
         if(string.startsWith("bitcoin")){
             return fromBitcoinUri(new BitcoinURI(string));
         }
