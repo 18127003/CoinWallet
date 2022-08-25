@@ -10,15 +10,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.github.mikephil.charting.charts.CandleStickChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.marketcap.MarketCapEntity;
+import me.app.coinwallet.utils.CandleStickChartUtil;
 import me.app.coinwallet.utils.ChartUtil;
 
 public class MarketCapDetailFragment extends Fragment {
     private MarketCapEntity marketCapEntity;
-    LineChart chart;
+    CandleStickChart chart;
 
     public MarketCapDetailFragment(){}
     public static MarketCapDetailFragment newInstance() {
@@ -49,11 +51,9 @@ public class MarketCapDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         chart = view.findViewById(R.id.chart);
         int color = MaterialColors.getColor(view, R.attr.colorOnSurface);
-        new ChartUtil(marketCapEntity, getResources()).chart(chart)
-                .axisColor(color)
-                .description()
-                .descriptionColor(color)
-                .visualize();
+        new CandleStickChartUtil(marketCapEntity, getResources()).chart(chart)
+                .description(MaterialColors.getColor(view,R.attr.colorOnSecondary))
+                .visualize(true,MaterialColors.getColor(view,R.attr.colorOnError));
 
         TextView price=view.findViewById(R.id.price);
         TextView marketCapDominationIndex=view.findViewById(R.id.market_cap_domination_index);

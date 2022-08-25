@@ -1,10 +1,15 @@
 package me.app.coinwallet.utils;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import com.github.mikephil.charting.charts.CandleStickChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.google.android.material.color.MaterialColors;
@@ -95,4 +100,5 @@ public class ChartUtil {
         }
         return lineDataSet;
     }
+
 }

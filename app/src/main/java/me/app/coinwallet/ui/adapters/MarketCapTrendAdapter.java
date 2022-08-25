@@ -6,13 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.github.mikephil.charting.charts.CandleStickChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.R;
 
 import me.app.coinwallet.data.marketcap.MarketCapEntity;
-import me.app.coinwallet.utils.ChartUtil;
+import me.app.coinwallet.utils.CandleStickChartUtil;
 
 public class MarketCapTrendAdapter extends BaseAdapter<MarketCapEntity, MarketCapTrendAdapter.ViewHolder>{
 
@@ -34,14 +35,17 @@ public class MarketCapTrendAdapter extends BaseAdapter<MarketCapEntity, MarketCa
         MarketCapEntity cap = data.get(position);
 
         holder.trendCard.setOnClickListener(view -> listener.onClick(cap));
-        int color = MaterialColors.getColor(holder.itemView, R.attr.colorSecondary);
-        new ChartUtil(cap, res).chart(holder.chart).axisColor(color).disableTouch().description()
-                .descriptionColor(color).visualize();
+        new CandleStickChartUtil(cap,res).chart(holder.chart)
+                .disableTouch()
+                .disableAxis()
+                .description(MaterialColors.getColor(holder.itemView,R.attr.colorOnSecondary))
+                .visualize(false,MaterialColors.getColor(holder.itemView,R.attr.colorOnError));
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public LineChart chart;
+        public CandleStickChart chart;
         public MaterialCardView trendCard;
 
         public ViewHolder(View view) {
