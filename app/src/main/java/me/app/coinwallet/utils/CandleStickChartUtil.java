@@ -3,7 +3,6 @@ package me.app.coinwallet.utils;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import androidx.annotation.ColorInt;
 import com.github.mikephil.charting.charts.CandleStickChart;
 import com.github.mikephil.charting.components.Description;
@@ -11,13 +10,12 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.*;
-import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.marketcap.MarketCapEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CandleStickChartUtil {
 
@@ -64,12 +62,10 @@ public class CandleStickChartUtil {
 
     List<CandleEntry> convertEntry(){
         List<CandleEntry> entries=new ArrayList<>();
-        Log.e("MN","entries: "+cap.getChart().size());
         for (int i = 0; i < cap.getChart().size()/24; i++) {
             List<Entry> capDaily=cap.getChart().subList(i*24,i*24+24);
-            Log.e("MN",""+capDaily.size());
-            float high= capDaily.stream().map(BaseEntry::getY).collect(Collectors.toList()).stream().max(Float::compare).get();
-            float low= capDaily.stream().map(BaseEntry::getY).collect(Collectors.toList()).stream().min(Float::compare).get();
+            float high= capDaily.stream().map(BaseEntry::getY).max(Float::compare).orElse(0F);
+            float low= capDaily.stream().map(BaseEntry::getY).min(Float::compare).orElse(0F);
             entries.add(new CandleEntry(i,high,low,capDaily.get(0).getY(),capDaily.get(capDaily.size()-1).getY()));
         }
         return entries;

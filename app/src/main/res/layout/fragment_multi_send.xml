@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".ui.fragments.MultiSendFragment">
+
+	<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical"
+					android:id="@+id/recipients">
+				<include layout="@layout/recipient_info"/>
+			</LinearLayout>
+			<Button
+					android:id="@+id/more_recipient_btn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="end"
+					android:layout_marginEnd="20dp"
+					android:text="+"
+					android:textSize="32sp"
+					style="@style/TextButton.Light"
+					android:textAlignment="textEnd"/>
+			<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/send_button"
+					android:layout_marginTop="10dp"
+					android:layout_gravity="center_horizontal"
+					style="@style/ButtonStyle"
+					android:text="@string/send_button_label"/>
+		</LinearLayout>
+	</ScrollView>
+
+</FrameLayout>

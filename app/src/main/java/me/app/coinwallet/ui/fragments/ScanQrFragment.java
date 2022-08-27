@@ -1,6 +1,7 @@
 package me.app.coinwallet.ui.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -57,14 +58,22 @@ public class ScanQrFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(ScanQrPageViewModel.class);
+        boolean returnResult = requireActivity().getIntent().getBooleanExtra("is_return", false);
         barcodeView = view.findViewById(R.id.barcode_view);
         barcodeView.setStatusText("");
         barcodeView.decodeContinuous(result -> {
             try {
                 PaymentRequest paymentRequest = viewModel.paymentRequestFromQr(result.getText());
-                Intent intent = SingleFragmentActivity.newActivity(requireContext(), TransferFragment.class, R.string.transfer_money_page_label);
-                intent.putExtra(Constants.QR_CONTENT, paymentRequest);
-                startActivity(intent);
+                if(!returnResult){
+                    Intent intent = SingleFragmentActivity.newActivity(requireContext(), TransferFragment.class, R.string.transfer_money_page_label);
+                    intent.putExtra(Constants.QR_CONTENT, paymentRequest);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.QR_CONTENT, paymentRequest);
+                    requireActivity().setResult(Activity.RESULT_OK, intent);
+                    requireActivity().finish();
+                }
             } catch (BitcoinURIParseException| AddressFormatException e) {
                 // swallow
             }

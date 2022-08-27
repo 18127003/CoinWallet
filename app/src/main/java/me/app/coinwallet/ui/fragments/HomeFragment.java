@@ -2,6 +2,9 @@ package me.app.coinwallet.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
@@ -26,7 +30,10 @@ import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.adapters.MarketCapTrendAdapter;
 import me.app.coinwallet.utils.Utils;
 import me.app.coinwallet.viewmodels.HomePageViewModel;
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.TransactionConfidence;
+
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -152,7 +159,16 @@ public class HomeFragment extends Fragment {
             return;
         }
         latestTxPlaceholder.setVisibility(View.GONE);
-        receiver.setText(tx.getReceiver().toString());
+        List<Address> addressList = tx.getReceiver();
+        String firstReceiver = addressList.get(0).toString();
+        if(addressList.size()>1){
+            SpannableString receiverStr = new SpannableString(firstReceiver +" + "+ (addressList.size() - 1) +" receiver" );
+            int color = MaterialColors.getColor(txView, R.attr.colorOnSecondary);
+            receiverStr.setSpan(new ForegroundColorSpan(color),firstReceiver.length(),receiverStr.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            receiver.setText(receiverStr);
+        } else {
+            receiver.setText(firstReceiver);
+        }
         time.setText(Utils.formatDate(tx.getTime()));
         confirmNum.setText(getResources().getText(R.string.confirmation)+": "+tx.getConfirmNum().toString());
         amount.setText(tx.getAmount().toFriendlyString());

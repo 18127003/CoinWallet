@@ -1,6 +1,9 @@
 package me.app.coinwallet.ui.adapters;
 
 import android.content.res.Resources;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.color.MaterialColors;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
 import me.app.coinwallet.utils.Utils;
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.TransactionConfidence;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class TransactionAdapter extends BaseAdapter<TransactionWrapper, TransactionAdapter.ViewHolder> {
@@ -33,7 +39,17 @@ public class TransactionAdapter extends BaseAdapter<TransactionWrapper, Transact
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TransactionWrapper tx = data.get(position);
-        holder.receiver.setText(tx.getReceiver().toString());
+        List<Address> addressList = tx.getReceiver();
+        String firstReceiver = addressList.get(0).toString();
+        if(addressList.size()>1){
+            SpannableString receiver = new SpannableString(firstReceiver +" + "+ (addressList.size() - 1) +" receiver" );
+            int color = MaterialColors.getColor(holder.itemView, R.attr.colorOnSecondary);
+            receiver.setSpan(new ForegroundColorSpan(color),firstReceiver.length(),receiver.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            holder.receiver.setText(receiver);
+        } else {
+            holder.receiver.setText(firstReceiver);
+        }
+
         holder.time.setText(Utils.formatDate(tx.getTime()));
         holder.confirmNum.setText(res.getText(R.string.confirmation)+": "+tx.getConfirmNum().toString());
         holder.amount.setText(tx.getAmount().toFriendlyString());
@@ -61,7 +77,6 @@ public class TransactionAdapter extends BaseAdapter<TransactionWrapper, Transact
         private final TextView confirmNum;
         private final ImageView status;
         private final MaterialCardView txCard;
-
         public ViewHolder(View view) {
             super(view);
             receiver = view.findViewById(R.id.tx_receiver);

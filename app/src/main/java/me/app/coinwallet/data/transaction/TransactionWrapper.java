@@ -8,17 +8,18 @@ import org.bitcoinj.wallet.Wallet;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 public class TransactionWrapper implements Serializable {
     private final Sha256Hash txId;
     private final Date time;
-    private final Address receiver;
+    private final List<Address> receiver;
     private TransactionConfidence.ConfidenceType status;
     private Integer confirmNum;
     private final Coin fee;
     private final Coin amount;
 
-    public TransactionWrapper(Sha256Hash txId, Date time, @Nullable Address receiver, TransactionConfidence.ConfidenceType status,
+    public TransactionWrapper(Sha256Hash txId, Date time, @Nullable List<Address> receiver, TransactionConfidence.ConfidenceType status,
                               Integer confirmNum, Coin fee, Coin amount) {
         this.txId = txId;
         this.time = time;
@@ -32,7 +33,7 @@ public class TransactionWrapper implements Serializable {
     public static TransactionWrapper from(Transaction tx, Wallet wallet){
         Sha256Hash txId = tx.getTxId();
         Date time = tx.getUpdateTime();
-        Address receiver = WalletUtil.getSentAddress(tx, wallet);
+        List<Address> receiver = WalletUtil.getSentAddress(tx, wallet);
         TransactionConfidence confidence = tx.getConfidence();
         Integer confirmNum = confidence.getDepthInBlocks();
         TransactionConfidence.ConfidenceType status = confidence.getConfidenceType();
@@ -52,7 +53,7 @@ public class TransactionWrapper implements Serializable {
         return time;
     }
 
-    public Address getReceiver() {
+    public List<Address> getReceiver() {
         return receiver;
     }
 

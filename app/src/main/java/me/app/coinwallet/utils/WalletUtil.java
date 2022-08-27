@@ -15,6 +15,7 @@ import org.bitcoinj.wallet.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,16 +38,17 @@ public class WalletUtil {
      * Get first address of tx output which is not belong to wallet user
      */
     @Nullable
-    public static Address getSentAddress(final Transaction tx, final Wallet wallet) {
+    public static List<Address> getSentAddress(final Transaction tx, final Wallet wallet) {
+        List<Address> receivers = new ArrayList<>();
         for (final TransactionOutput output : tx.getOutputs()) {
             if (!output.isMine(wallet)) {
                 final Script script = output.getScriptPubKey();
                 final Address address = getToAddress(script, wallet.getNetworkParameters());
                 if (address != null)
-                    return address;
+                    receivers.add(address);
             }
         }
-        return null;
+        return receivers;
     }
 
     /***

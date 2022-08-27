@@ -1,6 +1,7 @@
 package me.app.coinwallet.ui.fragments;
 
 import android.content.Context;
+import android.location.Address;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import me.app.coinwallet.R;
 import me.app.coinwallet.data.transaction.TransactionWrapper;
 import me.app.coinwallet.utils.Utils;
+
+import java.util.stream.Collectors;
 
 public class TransactionDetailFragment extends Fragment {
     TransactionWrapper transactionWrapper;
@@ -61,7 +64,7 @@ public class TransactionDetailFragment extends Fragment {
         if(transactionWrapper.isSend()){
             icon.setBackgroundResource(R.drawable.ic_send);
             type.setText(R.string.send_button_label);
-            address.setText(transactionWrapper.getReceiver().toString());
+            address.setText(transactionWrapper.getReceiver().stream().map(Object::toString).collect(Collectors.joining(",\n")));
         }
         else {
             icon.setBackgroundResource(R.drawable.ic_receive);

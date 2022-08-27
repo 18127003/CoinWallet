@@ -10,18 +10,28 @@
 			android:layout_height="match_parent">
 		<LinearLayout
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
+				android:layout_height="wrap_content"
 				android:orientation="vertical">
 			<androidx.constraintlayout.widget.ConstraintLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:paddingHorizontal="20dp"
-					android:paddingTop="20dp">
+					android:paddingTop="10dp">
+				<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						app:layout_constraintTop_toTopOf="parent"
+						app:layout_constraintRight_toRightOf="parent"
+						android:minHeight="0dp"
+						style="@style/TextButton.Light"
+						android:id="@+id/send_batch_btn"
+						android:textAllCaps="false"
+						android:text="@string/send_batch"/>
 				<com.google.android.material.textfield.TextInputLayout
 						android:id="@+id/address_layout"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						app:layout_constraintTop_toTopOf="parent"
+						app:layout_constraintTop_toBottomOf="@id/send_batch_btn"
 						app:layout_constraintRight_toRightOf="parent"
 						app:layout_constraintBottom_toTopOf="@id/amount_layout"
 						android:hint="@string/address"
@@ -31,6 +41,7 @@
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:id="@+id/address_text_field"
+							android:inputType="textMultiLine"
 							style="@style/normal"/>
 				</com.google.android.material.textfield.TextInputLayout>
 				<com.google.android.material.textfield.TextInputLayout

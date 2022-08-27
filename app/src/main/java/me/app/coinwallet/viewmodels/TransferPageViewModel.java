@@ -19,11 +19,13 @@ import me.app.coinwallet.utils.Utils;
 import org.bitcoin.protocols.payments.Protos;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.protocols.payments.PaymentProtocol;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TransferPageViewModel extends AndroidViewModel {
     private final AddressBookDao addressBookDao;
@@ -42,10 +44,29 @@ public class TransferPageViewModel extends AndroidViewModel {
         addressBookDao.insertOrUpdate(new AddressBookEntry(address, label));
     }
 
-    public void send(String sendAddress, String value, String password){
+    public void send(Recipient recipient, String password){
         try{
-            Address sendTo = Address.fromString(localWallet.parameters(), sendAddress);
-            paymentRequest = PaymentRequest.from(sendTo, value, false);
+            Address sendTo = Address.fromString(localWallet.parameters(), recipient.address);
+            paymentRequest = PaymentRequest.from(sendTo, recipient.amount, false);
+            send(password);
+        } catch (AddressFormatException addressFormatException){
+            configuration.toastUtil.postToast("Wrong address format", Toast.LENGTH_SHORT);
+        } catch (IllegalArgumentException coinParse){
+            configuration.toastUtil.postToast("Wrong coin amount format", Toast.LENGTH_SHORT);
+        }
+    }
+
+    public void send(List<Recipient> recipients, String password){
+        if(recipients.isEmpty()){
+            configuration.toastUtil.postToast("No available recipient", Toast.LENGTH_SHORT);
+            return;
+        }
+        try {
+            List<PaymentRequest> paymentRequests = recipients.stream().map(recipient -> {
+                Address sendTo = Address.fromString(localWallet.parameters(), recipient.address);
+                return PaymentRequest.from(sendTo, recipient.amount, false);
+            }).collect(Collectors.toList());
+            paymentRequest = PaymentRequest.merge(paymentRequests);
             send(password);
         } catch (AddressFormatException addressFormatException){
             configuration.toastUtil.postToast("Wrong address format", Toast.LENGTH_SHORT);
@@ -116,5 +137,14 @@ public class TransferPageViewModel extends AndroidViewModel {
 
     public LiveData<List<AddressBookEntry>> getAddressBook() {
         return addressBookDao.getAll();
+    }
+
+    public static class Recipient{
+        public String address;
+        public String amount;
+        public Recipient(String address, String amount){
+            this.address = address;
+            this.amount = amount;
+        }
     }
 }

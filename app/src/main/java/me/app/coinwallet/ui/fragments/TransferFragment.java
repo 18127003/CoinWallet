@@ -46,6 +46,7 @@ public class TransferFragment extends Fragment {
     private FrameLayout saveContactLayout;
     private RecyclerView addressBook;
     private Button sendBtn;
+    Button sendBatchBtn;
     private TransferPageViewModel viewModel;
     private AuthenticateHandler authenticateHandler;
     private TextView selectedSendMethodHint;
@@ -84,7 +85,7 @@ public class TransferFragment extends Fragment {
                     }
                     viewModel.send(password);
                 } else {
-                    viewModel.send(sendAddressText, sendAmountText, password);
+                    viewModel.send(new TransferPageViewModel.Recipient(sendAddressText, sendAmountText), password);
                 }
                 saveContact(sendAddressText);
                 addressText.getText().clear();
@@ -109,6 +110,7 @@ public class TransferFragment extends Fragment {
         sendBtn = view.findViewById(R.id.send_button);
         saveContactLayout = view.findViewById(R.id.save_contact_layout);
         selectedSendMethodHint = view.findViewById(R.id.selected_method_hint);
+        sendBatchBtn = view.findViewById(R.id.send_batch_btn);
         sendBtn.setOnClickListener(v -> authenticateHandler.accessPasswordDialog());
         saveContactView = LayoutInflater.from(getContext()).inflate(R.layout.save_contact_view, saveContactLayout, false);
         AddressBookAdapter adapter = new AddressBookAdapter(item -> addressText.setText(item.getAddress()));
@@ -130,6 +132,7 @@ public class TransferFragment extends Fragment {
             selectSendMethodLauncher.launch(viewModel.sendMethod.getValue());
         });
         viewModel.sendMethod.observe(this, s->selectedSendMethodHint.setText(s.toString()));
+        sendBatchBtn.setOnClickListener(v->((BaseActivity) requireActivity()).loadFragmentOut(MultiSendFragment.class, R.string.multi_send));
     }
 
     private void saveContact(String address){

@@ -56,6 +56,18 @@ public class PaymentRequest implements Parcelable {
         this(Standard.NONE,address.getParameters(), buildSimplePayTo(Coin.ZERO, address), addressLabel, false);
     }
 
+    public static PaymentRequest merge(final List<PaymentRequest> paymentRequests) throws IllegalArgumentException{
+        if(paymentRequests.stream().map(r->r.parameters).unordered().distinct().count() > 1){
+            throw new IllegalArgumentException("Addresses don't have same network");
+        }
+        NetworkParameters networkParameters = paymentRequests.get(0).parameters;
+        List<Output> outputs = new ArrayList<>(paymentRequests.size());
+        for (PaymentRequest paymentRequest: paymentRequests){
+            outputs.addAll(paymentRequest.outputs);
+        }
+        return new PaymentRequest(Standard.NONE, networkParameters, outputs, null, false);
+    }
+
     public static PaymentRequest from(final Address address, @Nullable final String addressLabel) {
         return new PaymentRequest(address, addressLabel);
     }
