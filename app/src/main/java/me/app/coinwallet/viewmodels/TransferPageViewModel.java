@@ -44,35 +44,22 @@ public class TransferPageViewModel extends AndroidViewModel {
         addressBookDao.insertOrUpdate(new AddressBookEntry(address, label));
     }
 
-    public void send(Recipient recipient, String password){
-        try{
-            Address sendTo = Address.fromString(localWallet.parameters(), recipient.address);
-            paymentRequest = PaymentRequest.from(sendTo, recipient.amount, false);
-            send(password);
-        } catch (AddressFormatException addressFormatException){
-            configuration.toastUtil.postToast("Wrong address format", Toast.LENGTH_SHORT);
-        } catch (IllegalArgumentException coinParse){
-            configuration.toastUtil.postToast("Wrong coin amount format", Toast.LENGTH_SHORT);
-        }
+    public void send(Recipient recipient, String password) throws AddressFormatException, IllegalArgumentException{
+        Address sendTo = Address.fromString(localWallet.parameters(), recipient.address);
+        paymentRequest = PaymentRequest.from(sendTo, recipient.amount, false);
+        send(password);
     }
 
-    public void send(List<Recipient> recipients, String password){
+    public void send(List<Recipient> recipients, String password) throws AddressFormatException, IllegalArgumentException{
         if(recipients.isEmpty()){
-            configuration.toastUtil.postToast("No available recipient", Toast.LENGTH_SHORT);
-            return;
+            throw new IllegalArgumentException("No available recipients");
         }
-        try {
-            List<PaymentRequest> paymentRequests = recipients.stream().map(recipient -> {
-                Address sendTo = Address.fromString(localWallet.parameters(), recipient.address);
-                return PaymentRequest.from(sendTo, recipient.amount, false);
-            }).collect(Collectors.toList());
-            paymentRequest = PaymentRequest.merge(paymentRequests);
-            send(password);
-        } catch (AddressFormatException addressFormatException){
-            configuration.toastUtil.postToast("Wrong address format", Toast.LENGTH_SHORT);
-        } catch (IllegalArgumentException coinParse){
-            configuration.toastUtil.postToast("Wrong coin amount format", Toast.LENGTH_SHORT);
-        }
+        List<PaymentRequest> paymentRequests = recipients.stream().map(recipient -> {
+            Address sendTo = Address.fromString(localWallet.parameters(), recipient.address);
+            return PaymentRequest.from(sendTo, recipient.amount, false);
+        }).collect(Collectors.toList());
+        paymentRequest = PaymentRequest.merge(paymentRequests);
+        send(password);
     }
 
     public void send(String password){

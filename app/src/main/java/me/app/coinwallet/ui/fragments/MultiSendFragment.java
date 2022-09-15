@@ -25,9 +25,12 @@ import me.app.coinwallet.R;
 import me.app.coinwallet.transfer.PaymentRequest;
 import me.app.coinwallet.transfer.SendMethod;
 import me.app.coinwallet.ui.activities.BaseActivity;
+import me.app.coinwallet.ui.activities.HomeActivity;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
+import me.app.coinwallet.utils.ToastUtil;
 import me.app.coinwallet.utils.Utils;
 import me.app.coinwallet.viewmodels.TransferPageViewModel;
+import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.signers.CustomTransactionSigner;
 
@@ -59,6 +62,7 @@ public class MultiSendFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        ToastUtil toastUtil = Configuration.get().toastUtil;
         authenticateHandler = new AuthenticateHandler(this, new AuthenticateHandler.AuthenticateResultCallback() {
             @Override
             public void onPasswordVerified(String password) {
@@ -68,7 +72,16 @@ public class MultiSendFragment extends Fragment {
                         .map(recipientView -> new TransferPageViewModel.Recipient(
                                 recipientView.address.getText().toString(), recipientView.amount.getText().toString()))
                         .collect(Collectors.toList());
-                viewModel.send(recipients, password);
+                try{
+                    viewModel.send(recipients, password);
+                    Intent intent = new Intent(context, HomeActivity.class);
+                    intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, HistoryFragment.class);
+                    startActivity(intent);
+                } catch (AddressFormatException addressFormatException){
+                    toastUtil.postToast("Wrong address format", Toast.LENGTH_SHORT);
+                } catch (IllegalArgumentException coinParse){
+                    toastUtil.postToast(coinParse.getMessage(), Toast.LENGTH_SHORT);
+                }
             }
 
             @Override

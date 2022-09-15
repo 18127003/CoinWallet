@@ -50,7 +50,6 @@ public class MarketCapDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         chart = view.findViewById(R.id.chart);
-        int color = MaterialColors.getColor(view, R.attr.colorOnSurface);
         new CandleStickChartUtil(marketCapEntity, getResources()).chart(chart)
                 .description(MaterialColors.getColor(view,R.attr.colorOnSecondary))
                 .visualize(true,MaterialColors.getColor(view,R.attr.colorOnError));

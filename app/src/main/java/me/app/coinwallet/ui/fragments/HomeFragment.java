@@ -162,7 +162,8 @@ public class HomeFragment extends Fragment {
         List<Address> addressList = tx.getReceiver();
         String firstReceiver = addressList.get(0).toString();
         if(addressList.size()>1){
-            SpannableString receiverStr = new SpannableString(firstReceiver +" + "+ (addressList.size() - 1) +" receiver" );
+            int others = addressList.size()-1;
+            SpannableString receiverStr = new SpannableString(firstReceiver +" " + getResources().getQuantityString(R.plurals.number_of_receiver, others, others) );
             int color = MaterialColors.getColor(txView, R.attr.colorOnSecondary);
             receiverStr.setSpan(new ForegroundColorSpan(color),firstReceiver.length(),receiverStr.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             receiver.setText(receiverStr);

@@ -2,11 +2,13 @@ package me.app.coinwallet.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import me.app.coinwallet.Constants;
 import me.app.coinwallet.ui.fragments.HistoryFragment;
 import me.app.coinwallet.ui.fragments.HomeFragment;
 import me.app.coinwallet.ui.fragments.SettingFragment;
@@ -50,7 +52,12 @@ public class HomeActivity extends BaseActivity {
             }
             return true;
         });
-        loadFragment(HomeFragment.class);
+        Intent intent = getIntent();
+        Class<? extends Fragment> startFragment = (Class<? extends Fragment>) intent.getSerializableExtra(Constants.INIT_FRAGMENT_EXTRA_NAME);
+        if (startFragment == null){
+            startFragment = HomeFragment.class;
+        }
+        loadFragment(startFragment);
     }
 
     @Override

@@ -25,14 +25,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
+import me.app.coinwallet.Configuration;
 import me.app.coinwallet.Constants;
 import me.app.coinwallet.R;
 import me.app.coinwallet.transfer.SendMethod;
 import me.app.coinwallet.ui.activities.BaseActivity;
+import me.app.coinwallet.ui.activities.HomeActivity;
 import me.app.coinwallet.ui.activities.SingleFragmentActivity;
 import me.app.coinwallet.ui.adapters.AddressBookAdapter;
 import me.app.coinwallet.transfer.PaymentRequest;
+import me.app.coinwallet.utils.ToastUtil;
 import me.app.coinwallet.viewmodels.TransferPageViewModel;
+import org.bitcoinj.core.AddressFormatException;
 
 import java.util.Objects;
 
@@ -74,22 +78,33 @@ public class TransferFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        ToastUtil toastUtil = Configuration.get().toastUtil;
         authenticateHandler = new AuthenticateHandler(this, new AuthenticateHandler.AuthenticateResultCallback() {
             @Override
             public void onPasswordVerified(String password) {
                 final String sendAddressText = Objects.requireNonNull(addressText.getText()).toString();
                 final String sendAmountText =  Objects.requireNonNull(amountText.getText()).toString();
-                if(viewModel.paymentRequest != null){
-                    if(!viewModel.paymentRequest.hasAmount()){
-                        viewModel.paymentRequest = viewModel.paymentRequest.mergeWithEditedValues(sendAmountText);
+                try{
+                    if(viewModel.paymentRequest != null){
+                        if(!viewModel.paymentRequest.hasAmount()){
+                            viewModel.paymentRequest = viewModel.paymentRequest.mergeWithEditedValues(sendAmountText);
+                        }
+                        viewModel.send(password);
+                    } else {
+                        viewModel.send(new TransferPageViewModel.Recipient(sendAddressText, sendAmountText), password);
                     }
-                    viewModel.send(password);
-                } else {
-                    viewModel.send(new TransferPageViewModel.Recipient(sendAddressText, sendAmountText), password);
+                    saveContact(sendAddressText);
+                    Intent intent = new Intent(context, HomeActivity.class);
+                    intent.putExtra(Constants.INIT_FRAGMENT_EXTRA_NAME, HistoryFragment.class);
+                    startActivity(intent);
+                } catch (AddressFormatException addressFormatException){
+                    toastUtil.postToast("Wrong address format", Toast.LENGTH_SHORT);
+                } catch (IllegalArgumentException coinParse){
+                    toastUtil.postToast(coinParse.getMessage(), Toast.LENGTH_SHORT);
                 }
-                saveContact(sendAddressText);
-                addressText.getText().clear();
-                amountText.getText().clear();
+
+//                addressText.getText().clear();
+//                amountText.getText().clear();
             }
 
             @Override

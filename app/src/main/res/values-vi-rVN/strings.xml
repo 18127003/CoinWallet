@@ -107,4 +107,8 @@
 	<string name="account_index_note">*chỉ số tài khoản là số thứ 3 trên đường dẫn khóa kể từ gốc (M), theo thiết kế BIP44.</string>
 	<string name="send_batch"><u>Gửi đa địa chỉ?</u></string>
 	<string name="multi_send">Gửi đa địa chỉ</string>
+	<plurals name="number_of_receiver">
+		<item quantity="one"> + %d địa chỉ nhận</item>
+		<item quantity="other"> + %d địa chỉ nhận</item>
+	</plurals>
 </resources>

@@ -138,4 +138,8 @@
 	<string name="account_index_note">*account is the third number in your key path ,starting from root (M), following BIP44 design.</string>
 	<string name="send_batch"><u>Send batch?</u></string>
 	<string name="multi_send">Multi Send</string>
+	<plurals name="number_of_receiver">
+		<item quantity="one"> + %d receiver</item>
+		<item quantity="other"> + %d receivers</item>
+	</plurals>
 </resources>

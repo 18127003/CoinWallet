@@ -42,7 +42,8 @@ public class TransactionAdapter extends BaseAdapter<TransactionWrapper, Transact
         List<Address> addressList = tx.getReceiver();
         String firstReceiver = addressList.get(0).toString();
         if(addressList.size()>1){
-            SpannableString receiver = new SpannableString(firstReceiver +" + "+ (addressList.size() - 1) +" receiver" );
+            int others = addressList.size()-1;
+            SpannableString receiver = new SpannableString(firstReceiver +" "+ res.getQuantityString(R.plurals.number_of_receiver, others, others));
             int color = MaterialColors.getColor(holder.itemView, R.attr.colorOnSecondary);
             receiver.setSpan(new ForegroundColorSpan(color),firstReceiver.length(),receiver.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             holder.receiver.setText(receiver);

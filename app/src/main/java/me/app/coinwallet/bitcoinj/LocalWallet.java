@@ -57,6 +57,7 @@ public class LocalWallet {
     private Context context;
 
     public Address getAddress(){
+        Log.e("HD", wallet.getUnspents().toString());
         try{
             return wallet.currentReceiveAddress();
         } catch (DeterministicUpgradeRequiredException e){
@@ -297,7 +298,6 @@ public class LocalWallet {
         try {
             if (wallet.isTransactionRelevant(tx)) {
                 wallet.receivePending(tx, null);
-
                 walletAppKit.peerGroup().broadcastTransaction(tx);
             } else {
                 Log.e("HD", tx.getTxId() + " tx is irrelevant");
